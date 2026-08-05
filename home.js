@@ -63,7 +63,7 @@ function matchesForLeague(name){
 }
 
 function buildClubButtons(){
-  const matches = matchesForLeague(league);
+  const matches = matchesForLeague(league).filter(m=>season===null || season===seasonLabel(m.season));
   const clubs = new Set();
   matches.forEach(m=>{clubs.add(m.home.name); clubs.add(m.away.name)});
   clubsGrid.innerHTML = '<button class="active" data-club="all"><i>' + matches.length + '</i><span>Tous</span></button>' +
@@ -94,8 +94,9 @@ function selectLeague(name,fromSearch){
   buildClubButtons();
 }
 function selectSeason(label){
-  season=label;
+  season=label;club="all";
   document.querySelectorAll(".season-tabs button").forEach(b=>b.classList.toggle("active",b.textContent===season));
+  buildClubButtons();
 }
 
 function formatDate(iso){

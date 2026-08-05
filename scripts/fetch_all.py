@@ -26,6 +26,14 @@ WINDOW_DAYS_PAST = 45
 WINDOW_DAYS_FUTURE = 45
 OUT_PATH = Path(__file__).resolve().parent.parent / "data" / "matches.json"
 
+# Le match de référence du projet (Arsenal-Manchester City, sur lequel tout le
+# MatchLab est construit) doit toujours rester disponible dans les données,
+# même quand la fenêtre glissante ("aujourd'hui" +/- 45 jours) ne le couvre
+# plus. On le récupère systématiquement en plus, et on fusionne sans doublon.
+ANCHOR_WINDOWS = {
+    "Premier League": {"date_from": date(2025, 2, 1), "date_to": date(2025, 2, 3), "season": 2024},
+}
+
 
 def season_for(d: date) -> int:
     """Convention du football européen : une saison commence en juillet."""
@@ -74,6 +82,27 @@ def main() -> int:
             print(f"  Erreur pour {competition.name}: {exc} (compétition ignorée)")
             continue
         print(f"  {len(matches)} match(s)")
+
+        anchor = ANCHOR_WINDOWS.get(competition.name)
+        if anchor:
+            print(f"  + fenêtre de référence {anchor['date_from']} -> {anchor['date_to']}...")
+            try:
+                anchor_matches = provider.matches(
+                    competition_id=competition.id,
+                    season=anchor["season"],
+                    date_from=anchor["date_from"],
+                    date_to=anchor["date_to"],
+                )
+                existing_ids = {m.id for m in matches}
+                added = 0
+                for m in anchor_matches:
+                    if m.id not in existing_ids:
+                        matches.append(m)
+                        added += 1
+                print(f"    {added} match(s) de référence ajouté(s) (hors doublons)")
+            except ProviderError as exc:
+                print(f"    Erreur sur la fenêtre de référence: {exc} (ignorée)")
+
         result["competitions"].append(
             {
                 "competition": asdict(competition),
