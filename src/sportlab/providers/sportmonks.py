@@ -123,6 +123,19 @@ class SportMonksProvider(FootballDataProvider):
             )
         return result
 
+    def get_raw_fixture(self, fixture_id: str, *, include: str) -> JsonObject:
+        """Retourne la réponse brute (non normalisée) d'un match précis.
+
+        Utile pour des besoins ponctuels et riches (compositions, événements,
+        statistiques, xG) qui dépassent le modèle normalisé minimal de
+        `Match`. Contrairement à `matches()`, ceci ne transforme rien : on
+        obtient exactement ce que l'API renvoie.
+        """
+        rows, _ = self._get(f"fixtures/{fixture_id}", {"include": include})
+        if not rows:
+            raise ProviderError(f"Aucune donnée pour le match {fixture_id}")
+        return rows[0]
+
     def matches(
         self,
         *,

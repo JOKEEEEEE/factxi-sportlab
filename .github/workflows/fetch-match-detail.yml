@@ -1,0 +1,41 @@
+name: Récupérer le détail d'un match
+
+on:
+  workflow_dispatch:
+    inputs:
+      fixture_id:
+        description: "ID du match SportMonks (pré-rempli : Arsenal 5-1 Manchester City)"
+        required: true
+        default: "19134564"
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-match-detail:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Récupérer le détail du match
+        env:
+          SPORTMONKS_API_TOKEN: ${{ secrets.SPORTMONKS_API_TOKEN }}
+        run: python3 scripts/fetch_match_detail.py --fixture-id "${{ github.event.inputs.fixture_id }}"
+
+      - name: Publier le résultat si changement
+        run: |
+          git config user.name "sportlab-bot"
+          git config user.email "actions@github.com"
+          git add data/match-detail-*.json
+          if git diff --cached --quiet; then
+            echo "Aucun changement détecté."
+          else
+            git commit -m "Détail du match ${{ github.event.inputs.fixture_id }}"
+            git push
+          fi
