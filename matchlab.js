@@ -4,10 +4,10 @@ const events=[
  {t:55,d:"55’",type:"goal",team:"MCI",title:"Haaland",detail:"Égalisation de la tête sur un centre de Savinho",h:1,a:1},
  {t:56,d:"56’",type:"goal",team:"ARS",title:"Partey",detail:"Arsenal reprend l’avantage 105 secondes plus tard",h:2,a:1},
  {t:62,d:"62’",type:"goal",team:"ARS",title:"Lewis-Skelly",detail:"Premier but avec l’équipe première",h:3,a:1},
- {t:72,d:"72’",type:"sub",team:"MCI",title:"Triple changement",detail:"De Bruyne, Gündoğan et McAtee entrent",h:3,a:1},
+ {t:72,d:"72’",type:"sub",team:"MCI",title:"Double changement",detail:"De Bruyne et McAtee entrent",h:3,a:1},
  {t:76,d:"76’",type:"goal",team:"ARS",title:"Havertz",detail:"But en transition rapide",h:4,a:1},
  {t:84,d:"84’",type:"sub",team:"ARS",title:"Double changement",detail:"Nwaneri et Merino entrent",h:4,a:1},
- {t:90,d:"90’",type:"sub",team:"ARS",title:"Sterling entre",detail:"Dernier changement d’Arsenal",h:4,a:1},
+ {t:90,d:"90’",type:"sub",team:"ARS",title:"Double changement",detail:"Calafiori et Sterling entrent",h:4,a:1},
  {t:93,d:"90+3’",type:"goal",team:"ARS",title:"Nwaneri",detail:"Frappe enroulée pour conclure",h:5,a:1}
 ];
 const points=[
@@ -37,13 +37,13 @@ document.querySelectorAll(".page-tabs button").forEach(button=>button.onclick=()
 document.querySelectorAll(".studio-tabs button").forEach(button=>button.onclick=()=>{document.querySelectorAll(".studio-tabs button").forEach(b=>b.classList.toggle("active",b===button));document.querySelectorAll(".output").forEach(panel=>panel.classList.toggle("active",panel.id===button.dataset.output))});
 async function copyText(text,button){try{await navigator.clipboard.writeText(text);let old=button.textContent;button.textContent="Copié ✓";setTimeout(()=>button.textContent=old,1500)}catch{button.textContent="Sélectionnez le texte"}}
 document.querySelectorAll(".copy-button").forEach(button=>button.onclick=()=>copyText(document.querySelector(`#${button.dataset.copy}`).innerText,button));
-document.querySelector("#copySource").onclick=()=>copyText("Arsenal 5–1 Manchester City · Premier League J24 · 02/02/2025 · Stats : possession 46–54, tirs 12–7, xG 1,04–0,81 · Sources : PremierLeague.com et ManCity.com",document.querySelector("#copySource"));
-const periodData={full:{groups:[{g:"Attaque",rows:[["12","Tirs","7"],["1,04","xG","0,81"]]},{g:"Possession et construction",rows:[["46 %","Possession","54 %"],["341","Passes réussies","422"],["5","Corners","2"]]},{g:"Discipline",rows:[["6","Fautes","7"]]}],pending:["Tirs cadrés","Arrêts du gardien","Touches dans la surface"],note:"Source : rapport officiel Manchester City."},first:{groups:null,pending:null,note:"Les statistiques de première période seront injectées par API-Football. Aucune valeur n’est simulée."},second:{groups:null,pending:null,note:"Les statistiques de seconde période seront injectées par API-Football. Aucune valeur n’est simulée."}};
+document.querySelector("#copySource").onclick=()=>copyText("Arsenal 5–1 Manchester City · Premier League J24 · 02/02/2025 · Stats : possession 46–54, tirs 12–7, xG 1,27–1,04 · Source : SportMonks",document.querySelector("#copySource"));
+const periodData={full:{groups:[{g:"Attaque",rows:[["12","Tirs","7"],["7","Tirs cadrés","4"],["1,27","xG","1,04"],["2","Grosses occasions créées","1"]]},{g:"Possession et construction",rows:[["46 %","Possession","54 %"],["347","Passes réussies","426"],["5","Corners","2"]]},{g:"Discipline",rows:[["6","Fautes","7"],["2","Cartons jaunes","0"],["3","Hors-jeu","1"]]},{g:"Duels et défense",rows:[["38","Duels gagnés","29"],["9","Dribbles réussis","2"],["16","Tacles","14"],["3","Arrêts du gardien","2"]]}],pending:null,note:"Source : SportMonks (match id 19134564)."},first:{groups:null,pending:null,note:"Les statistiques de première période seront injectées par SportMonks. Aucune valeur n’est simulée."},second:{groups:null,pending:null,note:"Les statistiques de seconde période seront injectées par SportMonks. Aucune valeur n’est simulée."}};
 function parseStatNum(v){return parseFloat(String(v).replace("%","").replace(",","."))}
 function statRow(r){const a=parseStatNum(r[0]),b=parseStatNum(r[2]),total=a+b||1,pa=Math.round(a/total*100),pb=100-pa;return `<div class="stat-row"><div class="stat-label"><span>${r[0]}</span><b>${r[1]}</b><span>${r[2]}</span></div><div class="stat-bar"><i class="home" style="width:${pa}%"></i><i class="away" style="width:${pb}%"></i></div></div>`}
 function renderStats(period="full"){const data=periodData[period],root=document.querySelector("#periodStats");
  if(!data.groups){root.innerHTML=`<div class="stats-empty"><strong>En attente de l’API</strong><span>La structure est réservée ; les données ne sont pas encore disponibles.</span></div>`;document.querySelector("#periodNote").textContent=data.note;return}
- root.innerHTML=data.groups.map(group=>`<div class="stat-group"><h4>${group.g}</h4>${group.rows.map(statRow).join("")}</div>`).join("")+`<div class="stat-group pending"><h4>Autres indicateurs</h4>${data.pending.map(p=>`<div class="stat-row pending-row"><span>${p}</span><em>Non disponible sur cette source</em></div>`).join("")}</div>`;
+ root.innerHTML=data.groups.map(group=>`<div class="stat-group"><h4>${group.g}</h4>${group.rows.map(statRow).join("")}</div>`).join("")+(data.pending?`<div class="stat-group pending"><h4>Autres indicateurs</h4>${data.pending.map(p=>`<div class="stat-row pending-row"><span>${p}</span><em>Non disponible sur cette source</em></div>`).join("")}</div>`:"");
  document.querySelector("#periodNote").textContent=data.note}
 document.querySelectorAll(".period-tabs button").forEach(button=>button.onclick=()=>{document.querySelectorAll(".period-tabs button").forEach(b=>b.classList.toggle("active",b===button));renderStats(button.dataset.period)});renderStats();
 const carouselSlides=[
@@ -52,7 +52,7 @@ const carouselSlides=[
  {k:"LE FAUX CALME",title:"1–1 · 55’",body:"Haaland vient d’égaliser. Le match semble relancé."},
  {k:"LA BASCULE",title:"105 secondes",body:"Le temps entre l’égalisation de City et le but de Partey.",accent:true},
  {k:"L’EFFONDREMENT",title:"4 buts",body:"Arsenal marque quatre fois après la 55e minute."},
- {k:"LA LECTURE",title:"Chirurgical.",body:"12 tirs, 1,04 xG, 5 buts. Le score amplifie une bascule réelle."}
+ {k:"LA LECTURE",title:"Chirurgical.",body:"12 tirs, 1,27 xG, 5 buts. Le score amplifie une bascule réelle."}
 ];
 function rounded(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
 function wrap(ctx,text,x,y,max,line){const words=text.split(" ");let row="",cy=y;for(const word of words){const test=row+word+" ";if(ctx.measureText(test).width>max&&row){ctx.fillText(row.trim(),x,cy);row=word+" ";cy+=line}else row=test}ctx.fillText(row.trim(),x,cy)}
