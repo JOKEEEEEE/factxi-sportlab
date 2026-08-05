@@ -1,5 +1,7 @@
 """Récupère automatiquement les matchs des compétitions couvertes par
-l'abonnement SportMonks et écrit le résultat dans data/matches.json.
+l'abonnement SportMonks : la liste (résumé) dans data/matches.json, et le
+détail complet (compositions, événements, statistiques, xG) de chaque match
+terminé dans data/match-detail-<id>.json.
 
 Conçu pour tourner sans interaction humaine, déclenché automatiquement par
 .github/workflows/update-data.yml. Peut aussi être lancé à la main en local
@@ -7,6 +9,10 @@ pour tester (voir README.md).
 
 Fenêtre de dates : 45 jours dans le passé, 45 jours dans le futur, à partir
 d'aujourd'hui. Ajustez WINDOW_DAYS_PAST / WINDOW_DAYS_FUTURE si besoin.
+
+Le détail complet n'est récupéré qu'une fois par match (fichier déjà présent
+= pas re-téléchargé), pour ne pas gaspiller le quota de requêtes sur des
+matchs déjà connus.
 """
 
 from __future__ import annotations
@@ -24,12 +30,21 @@ from sportlab.providers.sportmonks import ProviderError, SportMonksProvider  # n
 
 WINDOW_DAYS_PAST = 45
 WINDOW_DAYS_FUTURE = 45
-OUT_PATH = Path(__file__).resolve().parent.parent / "data" / "matches.json"
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+OUT_PATH = DATA_DIR / "matches.json"
+
+DETAIL_INCLUDES = (
+    "participants;scores;state;venue;round;coaches.country;"
+    "events.type;events.period;events.player;"
+    "lineups.player.country;lineups.details;lineups.xGlineup;"
+    "statistics.type;"
+    "xGFixture"
+)
 
 # Le match de référence du projet (Arsenal-Manchester City, sur lequel tout le
-# MatchLab est construit) doit toujours rester disponible dans les données,
-# même quand la fenêtre glissante ("aujourd'hui" +/- 45 jours) ne le couvre
-# plus. On le récupère systématiquement en plus, et on fusionne sans doublon.
+# MatchLab a été construit et vérifié) doit toujours rester disponible, même
+# quand la fenêtre glissante ("aujourd'hui" +/- 45 jours) ne le couvre plus.
+# On le récupère systématiquement en plus, et on fusionne sans doublon.
 ANCHOR_WINDOWS = {
     "Premier League": {"date_from": date(2025, 2, 1), "date_to": date(2025, 2, 3), "season": 2024},
 }
@@ -44,6 +59,39 @@ def _json_default(value):
     if isinstance(value, datetime | date):
         return value.isoformat()
     raise TypeError(f"Type non sérialisable: {type(value)!r}")
+
+
+def _fixture_id_from(match_id: str) -> str:
+    return match_id.removeprefix("sportmonks:fixture:")
+
+
+def fetch_match_details(provider: SportMonksProvider, matches: list) -> None:
+    """Récupère le détail complet de chaque match terminé, sauf s'il existe déjà."""
+    for m in matches:
+        if m.status.value != "finished":
+            continue
+        fixture_id = _fixture_id_from(m.id)
+        out_path = DATA_DIR / f"match-detail-{fixture_id}.json"
+        if out_path.exists():
+            continue
+        print(f"  Détail du match {fixture_id} ({m.home.name} - {m.away.name})...")
+        try:
+            raw = provider.get_raw_fixture(fixture_id, include=DETAIL_INCLUDES)
+        except ProviderError as exc:
+            print(f"    Erreur : {exc} (ignoré, réessaiera demain)")
+            continue
+        payload = {
+            "fetched_at": datetime.now(UTC).isoformat(),
+            "fixture_id": fixture_id,
+            "includes_requested": DETAIL_INCLUDES,
+            "note": "Récupéré automatiquement par le robot quotidien.",
+            "raw": raw,
+        }
+        out_path.write_text(
+            json.dumps(payload, indent=2, ensure_ascii=False, default=_json_default),
+            encoding="utf-8",
+        )
+        print(f"    Écrit : {out_path}")
 
 
 def main() -> int:
@@ -109,6 +157,8 @@ def main() -> int:
                 "matches": [asdict(m) for m in matches],
             }
         )
+
+        fetch_match_details(provider, matches)
 
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUT_PATH.write_text(

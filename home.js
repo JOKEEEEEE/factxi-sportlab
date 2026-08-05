@@ -8,16 +8,16 @@ const matchdayGrid=document.querySelector("#matchdayGrid"),clubsGrid=document.qu
 // double-clic (sans hébergement) ou si data/matches.json est indisponible.
 const FALLBACK_DATA = {
   "Premier League": [
-    {home:{name:"Nottingham Forest"}, away:{name:"Brighton & Hove Albion"}, home_score:7, away_score:0, kickoff:"2025-02-01T12:30:00+00:00", status:"finished", season:2024},
-    {home:{name:"AFC Bournemouth"}, away:{name:"Liverpool"}, home_score:0, away_score:2, kickoff:"2025-02-01T15:00:00+00:00", status:"finished", season:2024},
-    {home:{name:"Everton"}, away:{name:"Leicester City"}, home_score:4, away_score:0, kickoff:"2025-02-01T15:00:00+00:00", status:"finished", season:2024},
-    {home:{name:"Ipswich Town"}, away:{name:"Southampton"}, home_score:1, away_score:2, kickoff:"2025-02-01T15:00:00+00:00", status:"finished", season:2024},
-    {home:{name:"Newcastle United"}, away:{name:"Fulham"}, home_score:1, away_score:2, kickoff:"2025-02-01T15:00:00+00:00", status:"finished", season:2024},
-    {home:{name:"Wolverhampton Wanderers"}, away:{name:"Aston Villa"}, home_score:2, away_score:0, kickoff:"2025-02-01T17:30:00+00:00", status:"finished", season:2024},
-    {home:{name:"Brentford"}, away:{name:"Tottenham Hotspur"}, home_score:0, away_score:2, kickoff:"2025-02-02T14:00:00+00:00", status:"finished", season:2024},
-    {home:{name:"Manchester United"}, away:{name:"Crystal Palace"}, home_score:0, away_score:2, kickoff:"2025-02-02T14:00:00+00:00", status:"finished", season:2024},
-    {home:{name:"Arsenal"}, away:{name:"Manchester City"}, home_score:5, away_score:1, kickoff:"2025-02-02T16:30:00+00:00", status:"finished", season:2024},
-    {home:{name:"Chelsea"}, away:{name:"West Ham United"}, home_score:2, away_score:1, kickoff:"2025-02-03T20:00:00+00:00", status:"finished", season:2024}
+    {id:"sportmonks:fixture:19134571", home:{name:"Nottingham Forest"}, away:{name:"Brighton & Hove Albion"}, home_score:7, away_score:0, kickoff:"2025-02-01T12:30:00+00:00", status:"finished", season:2024},
+    {id:"sportmonks:fixture:19134563", home:{name:"AFC Bournemouth"}, away:{name:"Liverpool"}, home_score:0, away_score:2, kickoff:"2025-02-01T15:00:00+00:00", status:"finished", season:2024},
+    {id:"sportmonks:fixture:19134567", home:{name:"Everton"}, away:{name:"Leicester City"}, home_score:4, away_score:0, kickoff:"2025-02-01T15:00:00+00:00", status:"finished", season:2024},
+    {id:"sportmonks:fixture:19134568", home:{name:"Ipswich Town"}, away:{name:"Southampton"}, home_score:1, away_score:2, kickoff:"2025-02-01T15:00:00+00:00", status:"finished", season:2024},
+    {id:"sportmonks:fixture:19134570", home:{name:"Newcastle United"}, away:{name:"Fulham"}, home_score:1, away_score:2, kickoff:"2025-02-01T15:00:00+00:00", status:"finished", season:2024},
+    {id:"sportmonks:fixture:19134572", home:{name:"Wolverhampton Wanderers"}, away:{name:"Aston Villa"}, home_score:2, away_score:0, kickoff:"2025-02-01T17:30:00+00:00", status:"finished", season:2024},
+    {id:"sportmonks:fixture:19134565", home:{name:"Brentford"}, away:{name:"Tottenham Hotspur"}, home_score:0, away_score:2, kickoff:"2025-02-02T14:00:00+00:00", status:"finished", season:2024},
+    {id:"sportmonks:fixture:19134569", home:{name:"Manchester United"}, away:{name:"Crystal Palace"}, home_score:0, away_score:2, kickoff:"2025-02-02T14:00:00+00:00", status:"finished", season:2024},
+    {id:"sportmonks:fixture:19134564", home:{name:"Arsenal"}, away:{name:"Manchester City"}, home_score:5, away_score:1, kickoff:"2025-02-02T16:30:00+00:00", status:"finished", season:2024},
+    {id:"sportmonks:fixture:19134566", home:{name:"Chelsea"}, away:{name:"West Ham United"}, home_score:2, away_score:1, kickoff:"2025-02-03T20:00:00+00:00", status:"finished", season:2024}
   ]
 };
 
@@ -109,8 +109,9 @@ function renderCard(m){
   const score = (m.home_score!=null && m.away_score!=null) ? `${m.home_score}–${m.away_score}` : "—";
   const dateTxt = formatDate(m.kickoff);
   const badge = dataSource==="live" ? "Donnée réelle · mise à jour auto" : "Donnée réelle · SportMonks (05/08)";
-  if(m.featured){
-    return `<a class="match-card" href="match.html"><div class="cover"><span class="status">${badge}</span><div class="club-score"><i class="ars">${homeInit}</i><strong>${score}</strong><i class="mci">${awayInit}</i></div></div><div class="match-info"><span>PREMIER LEAGUE</span><h3>${m.home.name} — ${m.away.name}</h3><p>${dateTxt}</p><div><b>Ouvrir le MatchLab</b><i>→</i></div></div></a>`;
+  const fixtureId = (m.id||"").split(":").pop();
+  if(m.status==="finished" && fixtureId){
+    return `<a class="match-card" href="match.html?id=${fixtureId}"><div class="cover"><span class="status">${badge}</span><div class="club-score"><i class="ars">${homeInit}</i><strong>${score}</strong><i class="mci">${awayInit}</i></div></div><div class="match-info"><span>PREMIER LEAGUE</span><h3>${m.home.name} — ${m.away.name}</h3><p>${dateTxt}</p><div><b>Ouvrir le MatchLab</b><i>→</i></div></div></a>`;
   }
   return `<div class="match-card disabled"><div class="cover"><span class="status muted">${badge}</span><div class="club-score"><i>${homeInit}</i><strong>${score}</strong><i>${awayInit}</i></div></div><div class="match-info"><span>PREMIER LEAGUE</span><h3>${m.home.name} — ${m.away.name}</h3><p>${dateTxt}</p><div><b>MatchLab à venir</b></div></div></div>`;
 }
