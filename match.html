@@ -1,0 +1,151 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SportLab — Arsenal 5–1 Manchester City</title><link rel="stylesheet" href="matchlab.css"><link rel="stylesheet" href="editorial.css"><link rel="stylesheet" href="product.css"><link rel="stylesheet" href="revision.css"><link rel="stylesheet" href="logos.css"></head><body>
+<header><div class="nav"><a class="brand" href="index.html"><span>S</span>Sport<em>Lab</em></a><nav class="site-tabs"><a class="site-tab" href="index.html">Accueil</a><a class="site-tab active" href="match.html">Match Lab</a></nav><span class="crumb">Replay historique / J24</span><div class="nav-right"><b>Premier League 2024/25</b><b>Prototype v0.7</b></div></div></header>
+<main>
+ <section class="score-card card"><p class="eyebrow">Replay historique interactif · Terminé</p><div class="match"><div class="team"><i class="badge ars">A</i><strong>Arsenal</strong></div><div class="score"><strong>5–1</strong><span>Mi-temps 1–0</span></div><div class="team away"><strong>Manchester<br>City</strong><i class="badge mci">M</i></div></div><div class="meta"><span>2 février 2025 · 16:30</span><span>Emirates Stadium</span><span>Premier League · J24</span><span>Données publiques vérifiées</span></div></section>
+
+ <div class="page-tabs" role="tablist"><button class="active" data-tab="analyse">Analyse</button><button data-tab="studio">Studio éditorial</button></div>
+
+ <div class="page-tab-panel active" id="tab-analyse">
+
+  <section class="card panel sofa-stats"><div class="panel-head"><div><span class="tag fact">Faits observés</span><h2>Statistiques du match</h2></div><div class="period-tabs"><button data-period="first">1re MT</button><button data-period="second">2e MT</button><button data-period="full" class="active">Match</button></div></div><div class="team-labels"><b class="ars-label">Arsenal</b><b class="mci-label">Man City</b></div><div class="stat-body" id="periodStats"></div><p class="period-note" id="periodNote">Source : rapport officiel Manchester City.</p></section>
+
+  <div class="layout">
+   <section class="panel card"><div class="panel-head"><div><span class="tag estimate">Estimation · modèle démo v0.1</span><h2>Comment le match a basculé</h2></div><div class="legend"><button data-series="all" class="active">Toutes</button><button data-series="ars"><i class="ars-c"></i>ARS</button><button data-series="draw"><i class="draw-c"></i>Nul</button><button data-series="mci"><i class="mci-c"></i>MCI</button></div></div>
+    <div class="chartbox"><svg id="chart" viewBox="0 0 900 330" aria-label="Probabilités de victoire estimées au fil du match"></svg><div id="chartEvents"></div></div>
+    <div class="event-key"><span>⚽ But</span><span class="red-key"></span><span>Carton rouge</span></div>
+    <div class="compare"><article id="before" class="state"></article><i>→</i><article id="after" class="state active"></article></div>
+   </section>
+   <aside class="side">
+    <section class="card feed"><div class="feed-head"><span class="tag fact">Faits sourcés</span><h2>Fil du match</h2></div><div id="feed"></div></section>
+   </aside>
+  </div>
+
+  <section class="card panel"><div class="panel-head"><div><span class="tag fact">Compositions officielles</span><h2>Onze de départ</h2></div></div><div class="squads">
+   <article>
+    <div class="squad-title"><b>Arsenal</b><span>4–3–3</span></div>
+    <div class="pitch ars-pitch"><i style="--x:50%;--y:90%">22<small>Raya</small></i><i style="--x:13%;--y:70%">12<small>Timber</small></i><i style="--x:38%;--y:76%">2<small>Saliba</small></i><i style="--x:62%;--y:76%">6<small>Gabriel</small></i><i style="--x:87%;--y:70%">49<small>Lewis-Skelly</small></i><i style="--x:25%;--y:48%">5<small>Partey</small></i><i style="--x:50%;--y:55%">41<small>Rice</small></i><i style="--x:75%;--y:48%">8<small>Ødegaard</small></i><i style="--x:18%;--y:20%">11<small>Martinelli</small></i><i style="--x:50%;--y:13%">29<small>Havertz</small></i><i style="--x:82%;--y:20%">19<small>Trossard</small></i></div>
+    <div class="squad-zone">
+    <h4>Titulaires</h4>
+    <div class="squad-list">
+     <div class="squad-row"><em>22</em><span>Raya</span></div>
+     <div class="squad-row"><em>12</em><span>Timber</span></div>
+     <div class="squad-row"><em>2</em><span>Saliba</span></div>
+     <div class="squad-row"><em>6</em><span>Gabriel</span></div>
+     <div class="squad-row"><em>49</em><span>Lewis-Skelly</span></div>
+     <div class="squad-row"><em>5</em><span>Partey</span></div>
+     <div class="squad-row"><em>41</em><span>Rice</span></div>
+     <div class="squad-row"><em>8</em><span>Ødegaard</span></div>
+     <div class="squad-row"><em>11</em><span>Martinelli</span></div>
+     <div class="squad-row"><em>29</em><span>Havertz</span></div>
+     <div class="squad-row"><em>19</em><span>Trossard</span></div>
+    </div>
+    </div>
+    <div class="squad-zone subs">
+    <h4>Remplaçants</h4>
+    <div class="squad-list">
+     <div class="squad-row sub-in"><em>↗</em><span>Nwaneri<small>entré 84’</small></span></div>
+     <div class="squad-row sub-in"><em>↗</em><span>Merino<small>entré 84’</small></span></div>
+     <div class="squad-row sub-in"><em>↗</em><span>Sterling<small>entré 90’</small></span></div>
+     <div class="squad-row sub-unused"><em>—</em><span>Neto</span></div>
+     <div class="squad-row sub-unused"><em>—</em><span>Zinchenko</span></div>
+     <div class="squad-row sub-unused"><em>—</em><span>Tierney</span></div>
+     <div class="squad-row sub-unused"><em>—</em><span>Jorginho</span></div>
+    </div>
+    </div>
+    <div class="squad-zone coach"><h4>Entraîneur</h4><div class="squad-list"><div class="squad-row"><span>Mikel Arteta</span></div></div></div>
+   </article>
+   <article>
+    <div class="squad-title"><b>Manchester City</b><span>4–2–3–1</span></div>
+    <div class="pitch city-pitch"><i style="--x:50%;--y:90%">18<small>Ortega</small></i><i style="--x:13%;--y:70%">27<small>Nunes</small></i><i style="--x:38%;--y:76%">5<small>Stones</small></i><i style="--x:62%;--y:76%">25<small>Akanji</small></i><i style="--x:87%;--y:70%">24<small>Gvardiol</small></i><i style="--x:35%;--y:54%">8<small>Kovačić</small></i><i style="--x:65%;--y:54%">20<small>Bernardo (C)</small></i><i style="--x:18%;--y:30%">26<small>Savinho</small></i><i style="--x:50%;--y:36%">47<small>Foden</small></i><i style="--x:82%;--y:30%">7<small>Marmoush</small></i><i style="--x:50%;--y:13%">9<small>Haaland</small></i></div>
+    <div class="squad-zone">
+    <h4>Titulaires</h4>
+    <div class="squad-list">
+     <div class="squad-row"><em>18</em><span>Ortega</span></div>
+     <div class="squad-row"><em>27</em><span>Nunes</span></div>
+     <div class="squad-row"><em>5</em><span>Stones</span></div>
+     <div class="squad-row"><em>25</em><span>Akanji</span></div>
+     <div class="squad-row"><em>24</em><span>Gvardiol</span></div>
+     <div class="squad-row"><em>8</em><span>Kovačić</span></div>
+     <div class="squad-row"><em>20</em><span>Bernardo<b class="captain-tag">C</b></span></div>
+     <div class="squad-row"><em>26</em><span>Savinho</span></div>
+     <div class="squad-row"><em>47</em><span>Foden</span></div>
+     <div class="squad-row"><em>7</em><span>Marmoush</span></div>
+     <div class="squad-row"><em>9</em><span>Haaland</span></div>
+    </div>
+    </div>
+    <div class="squad-zone subs">
+    <h4>Remplaçants</h4>
+    <div class="squad-list">
+     <div class="squad-row sub-in"><em>↗</em><span>De Bruyne<small>entré 72’</small></span></div>
+     <div class="squad-row sub-in"><em>↗</em><span>McAtee<small>entré 72’</small></span></div>
+     <div class="squad-row sub-in"><em>↗</em><span>Gündoğan<small>entré 72’</small></span></div>
+     <div class="squad-row sub-unused"><em>—</em><span>Carson</span></div>
+     <div class="squad-row sub-unused"><em>—</em><span>Grealish</span></div>
+     <div class="squad-row sub-unused"><em>—</em><span>Reis</span></div>
+     <div class="squad-row sub-unused"><em>—</em><span>Khusanov</span></div>
+     <div class="squad-row sub-unused"><em>—</em><span>O’Reilly</span></div>
+     <div class="squad-row sub-unused"><em>—</em><span>Lewis</span></div>
+    </div>
+    </div>
+    <div class="squad-zone coach"><h4>Entraîneur</h4><div class="squad-list"><div class="squad-row"><span>Pep Guardiola</span></div></div></div>
+   </article>
+  </div>
+  <p class="squad-note">Capitaine : identifié quand la source officielle le précise explicitement (cas de Bernardo Silva ici). Nationalités, drapeaux et note de match par joueur : non inclus pour l’instant — à connecter via l’endpoint <code>players</code> / <code>fixtures/players</code> d’API-Football, qui les fournit.</p>
+  </section>
+
+  <section class="card panel players-panel"><div class="panel-head"><div><span class="tag estimate">Structure prête · données à connecter</span><h2>Performances par joueur</h2></div></div>
+   <div class="players-grid">
+    <div class="players-team"><b class="ars-label">Arsenal</b>
+     <div class="player-row"><i class="p-avatar">DR</i><span>Raya<small>GK</small></span><em>22</em></div>
+     <div class="player-row"><i class="p-avatar">JT</i><span>Timber<small>DF</small></span><em>12</em></div>
+     <div class="player-row"><i class="p-avatar">WS</i><span>Saliba<small>DF</small></span><em>2</em></div>
+     <div class="player-row"><i class="p-avatar">GM</i><span>Gabriel<small>DF</small></span><em>6</em></div>
+     <div class="player-row"><i class="p-avatar">ML</i><span>Lewis-Skelly<small>DF</small></span><em>49</em></div>
+     <div class="player-row"><i class="p-avatar">TP</i><span>Partey<small>MF</small></span><em>5</em></div>
+     <div class="player-row"><i class="p-avatar">DR</i><span>Rice<small>MF</small></span><em>41</em></div>
+     <div class="player-row"><i class="p-avatar">MØ</i><span>Ødegaard<small>MF</small></span><em>8</em></div>
+     <div class="player-row"><i class="p-avatar">GM</i><span>Martinelli<small>FW</small></span><em>11</em></div>
+     <div class="player-row"><i class="p-avatar">KH</i><span>Havertz<small>FW</small></span><em>29</em></div>
+     <div class="player-row"><i class="p-avatar">LT</i><span>Trossard<small>FW</small></span><em>19</em></div>
+    </div>
+    <div class="players-team"><b class="mci-label">Manchester City</b>
+     <div class="player-row"><i class="p-avatar">SO</i><span>Ortega<small>GK</small></span><em>18</em></div>
+     <div class="player-row"><i class="p-avatar">MN</i><span>Nunes<small>DF</small></span><em>27</em></div>
+     <div class="player-row"><i class="p-avatar">JS</i><span>Stones<small>DF</small></span><em>5</em></div>
+     <div class="player-row"><i class="p-avatar">MA</i><span>Akanji<small>DF</small></span><em>25</em></div>
+     <div class="player-row"><i class="p-avatar">JG</i><span>Gvardiol<small>DF</small></span><em>24</em></div>
+     <div class="player-row"><i class="p-avatar">MK</i><span>Kovačić<small>MF</small></span><em>8</em></div>
+     <div class="player-row"><i class="p-avatar">BS</i><span>Bernardo<small>MF</small></span><em>20</em></div>
+     <div class="player-row"><i class="p-avatar">SA</i><span>Savinho<small>AM</small></span><em>26</em></div>
+     <div class="player-row"><i class="p-avatar">PF</i><span>Foden<small>AM</small></span><em>47</em></div>
+     <div class="player-row"><i class="p-avatar">OM</i><span>Marmoush<small>AM</small></span><em>7</em></div>
+     <div class="player-row"><i class="p-avatar">EH</i><span>Haaland<small>FW</small></span><em>9</em></div>
+    </div>
+   </div>
+   <p class="players-note">Statistiques par joueur (tirs, passes, duels, note) : disponibles via l’endpoint <code>fixtures/players</code> d’API-Football selon la couverture de la compétition — reste à connecter. Cartes de chaleur : non disponibles chez API-Football ni SportMonks en formule standard, elles nécessitent un fournisseur de tracking (type Opta ou StatsBomb) ; non prévues à ce stade.</p>
+  </section>
+
+  <section class="card panel method"><span class="tag estimate">Sources</span><details open><summary>Sources et audit de reproductibilité</summary><a href="https://www.premierleague.com/en/news/4237257" target="_blank">Premier League — rapport officiel</a><a href="https://www.mancity.com/news/mens/arsenal-v-manchester-city-premier-league-match-report-february-2025-63874107" target="_blank">Manchester City — rapport officiel et statistiques</a><a href="https://www.mancity.com/news/mens/arsenal-v-manchester-city-2025-premier-league-team-news-63874104" target="_blank">Manchester City — compositions officielles</a></details></section>
+
+ </div>
+
+ <div class="page-tab-panel" id="tab-studio">
+  <section class="editorial card">
+   <div class="editorial-head"><div><span class="tag calc">Structure fixe · texte à valider</span><h2>Studio éditorial · FACT XI</h2></div><button class="secondary" id="copySource">Copier la fiche source</button></div>
+   <div class="phases">
+    <article><span>PHASE 01 · 0’–15’</span><b>Arsenal frappe immédiatement</b><p>Ødegaard ouvre le score après 103 secondes. Un deuxième but est refusé quatre minutes plus tard.</p><footer><strong>1–0</strong><i>Initiative ARS</i></footer></article>
+    <article><span>PHASE 02 · 16’–55’</span><b>City reprend le contrôle</b><p>Les visiteurs terminent avec 54 % de possession et reviennent par Haaland au début de la seconde période.</p><footer><strong>1–1</strong><i>Contrôle MCI</i></footer></article>
+    <article class="turn"><span>PHASE 03 · 56’–62’</span><b>Le match bascule en 6 minutes</b><p>Partey répond 105 secondes après l’égalisation, puis Lewis-Skelly donne deux buts d’avance à Arsenal.</p><footer><strong>3–1</strong><i>Bascule décisive</i></footer></article>
+    <article><span>PHASE 04 · 63’–90+3’</span><b>Arsenal transforme la victoire en correction</b><p>Havertz puis Nwaneri portent le score à 5–1 malgré un total de seulement 1,04 xG.</p><footer><strong>5–1</strong><i>Efficacité ARS</i></footer></article>
+   </div>
+   <div class="story-angle"><div><span>L’ANGLE FACT XI</span><h3>Arsenal a marqué cinq fois avec 1,04 xG : le score raconte surtout l’effondrement de City après l’égalisation.</h3></div><dl><div><dt>Chiffre fort</dt><dd>4 buts entre la 56e et la 90+3e</dd></div><div><dt>Contradiction</dt><dd>46 % de possession, mais victoire 5–1</dd></div><div><dt>Précaution</dt><dd>xG fournisseur : 1,04–0,81</dd></div></dl></div>
+   <div class="studio">
+    <div class="studio-tabs" role="tablist"><button class="active" data-output="xpost">Post X</button><button data-output="thread">Thread X</button><button data-output="carousel">Carrousel</button></div>
+    <div class="output active" id="xpost"><div class="output-head"><div><span>POST X</span><b>Le chiffre raconte</b></div><button class="copy-button" data-copy="xpost-copy">Copier</button></div><div class="copy-text" id="xpost-copy">Arsenal a battu Manchester City 5–1 avec… 1,04 xG.\n\nLe score était encore de 1–1 à la 55e. Les Gunners ont ensuite marqué quatre fois, malgré seulement 46 % de possession sur l’ensemble du match.\n\nUne victoire moins dominante que chirurgicale.\n\nSource : Premier League / Man City</div></div>
+    <div class="output" id="thread"><div class="output-head"><div><span>THREAD X · 4 POSTS</span><b>Le match en quatre phases</b></div><button class="copy-button" data-copy="thread-copy">Copier</button></div><div class="copy-text thread-copy" id="thread-copy"><p><b>1/4</b> Arsenal 5–1 Manchester City. Le score évoque une domination totale. Les données racontent un match plus étrange : 46 % de possession et seulement 1,04 xG pour Arsenal.</p><p><b>2/4</b> Arsenal frappe après 103 secondes, mais City reprend ensuite le ballon et égalise par Haaland à la 55e. À cet instant, le match est encore ouvert : 1–1.</p><p><b>3/4</b> La bascule dure 105 secondes. Partey redonne immédiatement l’avantage aux Gunners. Six minutes plus tard, Lewis-Skelly porte le score à 3–1.</p><p><b>4/4</b> Havertz et Nwaneri concluent : quatre buts après l’égalisation de City. Pas une avalanche d’occasions, mais une efficacité extrême et un adversaire qui s’effondre.</p></div></div>
+    <div class="output" id="carousel"><div class="output-head"><div><span>CARROUSEL · 6 IMAGES · 800 × 800 PX</span><b>Exports FACT XI prêts pour X</b></div><div><button class="copy-button" data-copy="carousel-copy">Copier le texte</button><button class="copy-button primary-export" id="generateCarousel">Régénérer les 6 images</button></div></div><div class="carousel" id="carousel-copy"><article><small>01 · AFFICHE</small><strong>Arsenal<br>5–1 City</strong><p>2 février 2025 · Emirates Stadium.</p></article><article><small>02 · LE CONTRASTE</small><strong>46 %</strong><p>Arsenal a moins eu le ballon que City — et a gagné 5–1.</p></article><article><small>03 · LE FAUX CALME</small><strong>1–1 · 55’</strong><p>Haaland vient d’égaliser. Le match semble relancé.</p></article><article class="accent"><small>04 · LA BASCULE</small><strong>105 secondes</strong><p>Le temps entre l’égalisation de City et le but de Partey.</p></article><article><small>05 · L’EFFONDREMENT</small><strong>4 buts</strong><p>Arsenal marque quatre fois après la 55e minute.</p></article><article><small>06 · LA LECTURE</small><strong>Chirurgical.</strong><p>12 tirs, 1,04 xG, 5 buts. Le score amplifie une bascule réelle.</p></article></div><div id="carouselExports" class="carousel-exports"><p>Génération automatique des six images carrées avec le logo FACT XI.</p></div></div>
+   </div>
+  </section>
+ </div>
+
+</main><div id="toast"></div><script src="matchlab.js"></script></body></html>

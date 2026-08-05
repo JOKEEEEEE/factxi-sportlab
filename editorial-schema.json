@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0.0",
+  "content_type": "fact_xi_match_carousel",
+  "format": {"width": 800, "height": 800, "ratio": "1:1", "slides": 6},
+  "immutable_structure": [
+    {"position": 1, "role": "match_cover", "fields": ["competition", "matchday", "date", "venue", "home_logo", "away_logo", "score"]},
+    {"position": 2, "role": "contrast", "fields": ["kicker", "stat", "explanation"]},
+    {"position": 3, "role": "setup", "fields": ["kicker", "score_and_minute", "explanation"]},
+    {"position": 4, "role": "turning_point", "fields": ["kicker", "stat", "explanation"]},
+    {"position": 5, "role": "consequence", "fields": ["kicker", "stat", "explanation"]},
+    {"position": 6, "role": "conclusion", "fields": ["kicker", "headline", "explanation", "source"]}
+  ],
+  "pipeline": ["api_football_raw", "normalized_match", "deterministic_calculations", "llm_editorial_copy", "validation", "image_render"]
+}
