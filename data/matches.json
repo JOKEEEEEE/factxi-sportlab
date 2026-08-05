@@ -1,7 +1,9 @@
 {
-  "generated_at": "2026-08-05T08:00:00+00:00",
-  "window": {"from": "2025-02-01", "to": "2025-02-03"},
-  "note": "Amorce initiale écrite à la main, au même format que ce que produit scripts/fetch_all.py. Sera remplacée par le robot GitHub Actions dès son premier passage.",
+  "generated_at": "2026-08-05T12:16:35.391963+00:00",
+  "window": {
+    "from": "2026-06-21",
+    "to": "2026-09-19"
+  },
   "competitions": [
     {
       "competition": {
@@ -9,19 +11,4228 @@
         "name": "Premier League",
         "country": "England",
         "competition_type": "domestic",
-        "logo_url": "https://cdn.sportmonks.com/images/soccer/leagues/8/8.png"
+        "logo_url": "https://cdn.sportmonks.com/images/soccer/leagues/8/8.png",
+        "trace": {
+          "provider": "sportmonks",
+          "endpoint": "/leagues",
+          "collected_at": "2026-08-05T12:16:34.468186+00:00",
+          "scope": {},
+          "calculation": null,
+          "provider_ids": {
+            "league": 8
+          }
+        }
       },
       "matches": [
-        {"home": {"name": "Nottingham Forest"}, "away": {"name": "Brighton & Hove Albion"}, "home_score": 7, "away_score": 0, "kickoff": "2025-02-01T12:30:00+00:00", "status": "finished", "season": 2024},
-        {"home": {"name": "AFC Bournemouth"}, "away": {"name": "Liverpool"}, "home_score": 0, "away_score": 2, "kickoff": "2025-02-01T15:00:00+00:00", "status": "finished", "season": 2024},
-        {"home": {"name": "Everton"}, "away": {"name": "Leicester City"}, "home_score": 4, "away_score": 0, "kickoff": "2025-02-01T15:00:00+00:00", "status": "finished", "season": 2024},
-        {"home": {"name": "Ipswich Town"}, "away": {"name": "Southampton"}, "home_score": 1, "away_score": 2, "kickoff": "2025-02-01T15:00:00+00:00", "status": "finished", "season": 2024},
-        {"home": {"name": "Newcastle United"}, "away": {"name": "Fulham"}, "home_score": 1, "away_score": 2, "kickoff": "2025-02-01T15:00:00+00:00", "status": "finished", "season": 2024},
-        {"home": {"name": "Wolverhampton Wanderers"}, "away": {"name": "Aston Villa"}, "home_score": 2, "away_score": 0, "kickoff": "2025-02-01T17:30:00+00:00", "status": "finished", "season": 2024},
-        {"home": {"name": "Brentford"}, "away": {"name": "Tottenham Hotspur"}, "home_score": 0, "away_score": 2, "kickoff": "2025-02-02T14:00:00+00:00", "status": "finished", "season": 2024},
-        {"home": {"name": "Manchester United"}, "away": {"name": "Crystal Palace"}, "home_score": 0, "away_score": 2, "kickoff": "2025-02-02T14:00:00+00:00", "status": "finished", "season": 2024},
-        {"home": {"name": "Arsenal"}, "away": {"name": "Manchester City"}, "home_score": 5, "away_score": 1, "kickoff": "2025-02-02T16:30:00+00:00", "status": "finished", "season": 2024},
-        {"home": {"name": "Chelsea"}, "away": {"name": "West Ham United"}, "home_score": 2, "away_score": 1, "kickoff": "2025-02-03T20:00:00+00:00", "status": "finished", "season": 2024}
+        {
+          "id": "sportmonks:fixture:19722203",
+          "kickoff": "2026-08-21T19:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:19",
+            "name": "Arsenal"
+          },
+          "away": {
+            "id": "sportmonks:team:117",
+            "name": "Coventry City"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722203,
+              "league": "8",
+              "home_team": 19,
+              "away_team": 117
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722202",
+          "kickoff": "2026-08-22T11:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:22",
+            "name": "Hull City"
+          },
+          "away": {
+            "id": "sportmonks:team:14",
+            "name": "Manchester United"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722202,
+              "league": "8",
+              "home_team": 22,
+              "away_team": 14
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722199",
+          "kickoff": "2026-08-22T14:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:63",
+            "name": "Nottingham Forest"
+          },
+          "away": {
+            "id": "sportmonks:team:71",
+            "name": "Leeds United"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722199,
+              "league": "8",
+              "home_team": 63,
+              "away_team": 71
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722200",
+          "kickoff": "2026-08-22T14:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:116",
+            "name": "Ipswich Town"
+          },
+          "away": {
+            "id": "sportmonks:team:3",
+            "name": "Sunderland"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722200,
+              "league": "8",
+              "home_team": 116,
+              "away_team": 3
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722201",
+          "kickoff": "2026-08-22T14:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:13",
+            "name": "Everton"
+          },
+          "away": {
+            "id": "sportmonks:team:51",
+            "name": "Crystal Palace"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722201,
+              "league": "8",
+              "home_team": 13,
+              "away_team": 51
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722198",
+          "kickoff": "2026-08-22T16:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:236",
+            "name": "Brentford"
+          },
+          "away": {
+            "id": "sportmonks:team:6",
+            "name": "Tottenham Hotspur"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722198,
+              "league": "8",
+              "home_team": 236,
+              "away_team": 6
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722196",
+          "kickoff": "2026-08-23T13:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:9",
+            "name": "Manchester City"
+          },
+          "away": {
+            "id": "sportmonks:team:52",
+            "name": "AFC Bournemouth"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722196,
+              "league": "8",
+              "home_team": 9,
+              "away_team": 52
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722197",
+          "kickoff": "2026-08-23T13:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:78",
+            "name": "Brighton & Hove Albion"
+          },
+          "away": {
+            "id": "sportmonks:team:15",
+            "name": "Aston Villa"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722197,
+              "league": "8",
+              "home_team": 78,
+              "away_team": 15
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722195",
+          "kickoff": "2026-08-23T15:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:20",
+            "name": "Newcastle United"
+          },
+          "away": {
+            "id": "sportmonks:team:8",
+            "name": "Liverpool"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722195,
+              "league": "8",
+              "home_team": 20,
+              "away_team": 8
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722194",
+          "kickoff": "2026-08-24T19:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:11",
+            "name": "Fulham"
+          },
+          "away": {
+            "id": "sportmonks:team:18",
+            "name": "Chelsea"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722194,
+              "league": "8",
+              "home_team": 11,
+              "away_team": 18
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722189",
+          "kickoff": "2026-08-28T19:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:51",
+            "name": "Crystal Palace"
+          },
+          "away": {
+            "id": "sportmonks:team:9",
+            "name": "Manchester City"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722189,
+              "league": "8",
+              "home_team": 51,
+              "away_team": 9
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722187",
+          "kickoff": "2026-08-29T11:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:8",
+            "name": "Liverpool"
+          },
+          "away": {
+            "id": "sportmonks:team:63",
+            "name": "Nottingham Forest"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722187,
+              "league": "8",
+              "home_team": 8,
+              "away_team": 63
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722190",
+          "kickoff": "2026-08-29T14:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:117",
+            "name": "Coventry City"
+          },
+          "away": {
+            "id": "sportmonks:team:22",
+            "name": "Hull City"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722190,
+              "league": "8",
+              "home_team": 117,
+              "away_team": 22
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722193",
+          "kickoff": "2026-08-29T14:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:52",
+            "name": "AFC Bournemouth"
+          },
+          "away": {
+            "id": "sportmonks:team:13",
+            "name": "Everton"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722193,
+              "league": "8",
+              "home_team": 52,
+              "away_team": 13
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722184",
+          "kickoff": "2026-08-29T16:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:6",
+            "name": "Tottenham Hotspur"
+          },
+          "away": {
+            "id": "sportmonks:team:20",
+            "name": "Newcastle United"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722184,
+              "league": "8",
+              "home_team": 6,
+              "away_team": 20
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722185",
+          "kickoff": "2026-08-30T13:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3",
+            "name": "Sunderland"
+          },
+          "away": {
+            "id": "sportmonks:team:11",
+            "name": "Fulham"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722185,
+              "league": "8",
+              "home_team": 3,
+              "away_team": 11
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722188",
+          "kickoff": "2026-08-30T13:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:71",
+            "name": "Leeds United"
+          },
+          "away": {
+            "id": "sportmonks:team:236",
+            "name": "Brentford"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722188,
+              "league": "8",
+              "home_team": 71,
+              "away_team": 236
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722191",
+          "kickoff": "2026-08-30T13:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:18",
+            "name": "Chelsea"
+          },
+          "away": {
+            "id": "sportmonks:team:78",
+            "name": "Brighton & Hove Albion"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722191,
+              "league": "8",
+              "home_team": 18,
+              "away_team": 78
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722186",
+          "kickoff": "2026-08-30T15:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:14",
+            "name": "Manchester United"
+          },
+          "away": {
+            "id": "sportmonks:team:116",
+            "name": "Ipswich Town"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722186,
+              "league": "8",
+              "home_team": 14,
+              "away_team": 116
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722192",
+          "kickoff": "2026-08-31T19:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:15",
+            "name": "Aston Villa"
+          },
+          "away": {
+            "id": "sportmonks:team:19",
+            "name": "Arsenal"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722192,
+              "league": "8",
+              "home_team": 15,
+              "away_team": 19
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722177",
+          "kickoff": "2026-09-04T19:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:116",
+            "name": "Ipswich Town"
+          },
+          "away": {
+            "id": "sportmonks:team:8",
+            "name": "Liverpool"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722177,
+              "league": "8",
+              "home_team": 116,
+              "away_team": 8
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722175",
+          "kickoff": "2026-09-05T11:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:20",
+            "name": "Newcastle United"
+          },
+          "away": {
+            "id": "sportmonks:team:52",
+            "name": "AFC Bournemouth"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722175,
+              "league": "8",
+              "home_team": 20,
+              "away_team": 52
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722174",
+          "kickoff": "2026-09-05T14:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:63",
+            "name": "Nottingham Forest"
+          },
+          "away": {
+            "id": "sportmonks:team:6",
+            "name": "Tottenham Hotspur"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722174,
+              "league": "8",
+              "home_team": 63,
+              "away_team": 6
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722176",
+          "kickoff": "2026-09-05T14:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:9",
+            "name": "Manchester City"
+          },
+          "away": {
+            "id": "sportmonks:team:117",
+            "name": "Coventry City"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722176,
+              "league": "8",
+              "home_team": 9,
+              "away_team": 117
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19722179",
+          "kickoff": "2026-09-05T14:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:8",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:11",
+            "name": "Fulham"
+          },
+          "away": {
+            "id": "sportmonks:team:51",
+            "name": "Crystal Palace"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:35.392063+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:8",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19722179,
+              "league": "8",
+              "home_team": 11,
+              "away_team": 51
+            }
+          }
+        }
+      ]
+    },
+    {
+      "competition": {
+        "id": "sportmonks:league:82",
+        "name": "Bundesliga",
+        "country": "Germany",
+        "competition_type": "domestic",
+        "logo_url": "https://cdn.sportmonks.com/images/soccer/leagues/18/82.png",
+        "trace": {
+          "provider": "sportmonks",
+          "endpoint": "/leagues",
+          "collected_at": "2026-08-05T12:16:34.468186+00:00",
+          "scope": {},
+          "calculation": null,
+          "provider_ids": {
+            "league": 82
+          }
+        }
+      },
+      "matches": [
+        {
+          "id": "sportmonks:fixture:19735197",
+          "kickoff": "2026-08-28T18:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:503",
+            "name": "FC Bayern München"
+          },
+          "away": {
+            "id": "sportmonks:team:3319",
+            "name": "VfB Stuttgart"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735197,
+              "league": "82",
+              "home_team": 503,
+              "away_team": 3319
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735189",
+          "kickoff": "2026-08-29T13:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3588",
+            "name": "Elversberg"
+          },
+          "away": {
+            "id": "sportmonks:team:3321",
+            "name": "Bayer 04 Leverkusen"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735189,
+              "league": "82",
+              "home_team": 3588,
+              "away_team": 3321
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735190",
+          "kickoff": "2026-08-29T13:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3320",
+            "name": "FC Köln"
+          },
+          "away": {
+            "id": "sportmonks:team:2726",
+            "name": "TSG Hoffenheim"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735190,
+              "league": "82",
+              "home_team": 3320,
+              "away_team": 2726
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735191",
+          "kickoff": "2026-08-29T13:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:1079",
+            "name": "FC Union Berlin"
+          },
+          "away": {
+            "id": "sportmonks:team:366",
+            "name": "Eintracht Frankfurt"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735191,
+              "league": "82",
+              "home_team": 1079,
+              "away_team": 366
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735192",
+          "kickoff": "2026-08-29T13:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:794",
+            "name": "FSV Mainz 05"
+          },
+          "away": {
+            "id": "sportmonks:team:2642",
+            "name": "Paderborn"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735192,
+              "league": "82",
+              "home_team": 794,
+              "away_team": 2642
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735195",
+          "kickoff": "2026-08-29T13:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:277",
+            "name": "RB Leipzig"
+          },
+          "away": {
+            "id": "sportmonks:team:683",
+            "name": "Borussia Mönchengladbach"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735195,
+              "league": "82",
+              "home_team": 277,
+              "away_team": 683
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735196",
+          "kickoff": "2026-08-29T16:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:68",
+            "name": "Borussia Dortmund"
+          },
+          "away": {
+            "id": "sportmonks:team:2708",
+            "name": "Hamburger SV"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735196,
+              "league": "82",
+              "home_team": 68,
+              "away_team": 2708
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735194",
+          "kickoff": "2026-08-30T13:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3543",
+            "name": "SC Freiburg"
+          },
+          "away": {
+            "id": "sportmonks:team:82",
+            "name": "Werder Bremen"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735194,
+              "league": "82",
+              "home_team": 3543,
+              "away_team": 82
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735193",
+          "kickoff": "2026-08-30T15:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:90",
+            "name": "FC Augsburg"
+          },
+          "away": {
+            "id": "sportmonks:team:67",
+            "name": "Schalke 04"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735193,
+              "league": "82",
+              "home_team": 90,
+              "away_team": 67
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735188",
+          "kickoff": "2026-09-04T18:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3319",
+            "name": "VfB Stuttgart"
+          },
+          "away": {
+            "id": "sportmonks:team:3320",
+            "name": "FC Köln"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735188,
+              "league": "82",
+              "home_team": 3319,
+              "away_team": 3320
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735180",
+          "kickoff": "2026-09-05T13:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:2642",
+            "name": "Paderborn"
+          },
+          "away": {
+            "id": "sportmonks:team:3543",
+            "name": "SC Freiburg"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735180,
+              "league": "82",
+              "home_team": 2642,
+              "away_team": 3543
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735182",
+          "kickoff": "2026-09-05T13:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:82",
+            "name": "Werder Bremen"
+          },
+          "away": {
+            "id": "sportmonks:team:277",
+            "name": "RB Leipzig"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735182,
+              "league": "82",
+              "home_team": 82,
+              "away_team": 277
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735184",
+          "kickoff": "2026-09-05T13:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:683",
+            "name": "Borussia Mönchengladbach"
+          },
+          "away": {
+            "id": "sportmonks:team:3588",
+            "name": "Elversberg"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735184,
+              "league": "82",
+              "home_team": 683,
+              "away_team": 3588
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735186",
+          "kickoff": "2026-09-05T13:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3321",
+            "name": "Bayer 04 Leverkusen"
+          },
+          "away": {
+            "id": "sportmonks:team:1079",
+            "name": "FC Union Berlin"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735186,
+              "league": "82",
+              "home_team": 3321,
+              "away_team": 1079
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735187",
+          "kickoff": "2026-09-05T13:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:2726",
+            "name": "TSG Hoffenheim"
+          },
+          "away": {
+            "id": "sportmonks:team:68",
+            "name": "Borussia Dortmund"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735187,
+              "league": "82",
+              "home_team": 2726,
+              "away_team": 68
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735181",
+          "kickoff": "2026-09-05T16:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:67",
+            "name": "Schalke 04"
+          },
+          "away": {
+            "id": "sportmonks:team:503",
+            "name": "FC Bayern München"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735181,
+              "league": "82",
+              "home_team": 67,
+              "away_team": 503
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735183",
+          "kickoff": "2026-09-06T13:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:2708",
+            "name": "Hamburger SV"
+          },
+          "away": {
+            "id": "sportmonks:team:794",
+            "name": "FSV Mainz 05"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735183,
+              "league": "82",
+              "home_team": 2708,
+              "away_team": 794
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735185",
+          "kickoff": "2026-09-06T15:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:366",
+            "name": "Eintracht Frankfurt"
+          },
+          "away": {
+            "id": "sportmonks:team:90",
+            "name": "FC Augsburg"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735185,
+              "league": "82",
+              "home_team": 366,
+              "away_team": 90
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735173",
+          "kickoff": "2026-09-11T18:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:1079",
+            "name": "FC Union Berlin"
+          },
+          "away": {
+            "id": "sportmonks:team:67",
+            "name": "Schalke 04"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735173,
+              "league": "82",
+              "home_team": 1079,
+              "away_team": 67
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735174",
+          "kickoff": "2026-09-12T13:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:794",
+            "name": "FSV Mainz 05"
+          },
+          "away": {
+            "id": "sportmonks:team:366",
+            "name": "Eintracht Frankfurt"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735174,
+              "league": "82",
+              "home_team": 794,
+              "away_team": 366
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735175",
+          "kickoff": "2026-09-12T13:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:90",
+            "name": "FC Augsburg"
+          },
+          "away": {
+            "id": "sportmonks:team:3321",
+            "name": "Bayer 04 Leverkusen"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735175,
+              "league": "82",
+              "home_team": 90,
+              "away_team": 3321
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735176",
+          "kickoff": "2026-09-12T13:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3543",
+            "name": "SC Freiburg"
+          },
+          "away": {
+            "id": "sportmonks:team:683",
+            "name": "Borussia Mönchengladbach"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735176,
+              "league": "82",
+              "home_team": 3543,
+              "away_team": 683
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735177",
+          "kickoff": "2026-09-12T13:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:2726",
+            "name": "TSG Hoffenheim"
+          },
+          "away": {
+            "id": "sportmonks:team:3319",
+            "name": "VfB Stuttgart"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735177,
+              "league": "82",
+              "home_team": 2726,
+              "away_team": 3319
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735179",
+          "kickoff": "2026-09-12T13:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:68",
+            "name": "Borussia Dortmund"
+          },
+          "away": {
+            "id": "sportmonks:team:2642",
+            "name": "Paderborn"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735179,
+              "league": "82",
+              "home_team": 68,
+              "away_team": 2642
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19735172",
+          "kickoff": "2026-09-12T16:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:82",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3320",
+            "name": "FC Köln"
+          },
+          "away": {
+            "id": "sportmonks:team:82",
+            "name": "Werder Bremen"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.028395+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:82",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19735172,
+              "league": "82",
+              "home_team": 3320,
+              "away_team": 82
+            }
+          }
+        }
+      ]
+    },
+    {
+      "competition": {
+        "id": "sportmonks:league:301",
+        "name": "Ligue 1",
+        "country": "France",
+        "competition_type": "domestic",
+        "logo_url": "https://cdn.sportmonks.com/images/soccer/leagues/13/301.png",
+        "trace": {
+          "provider": "sportmonks",
+          "endpoint": "/leagues",
+          "collected_at": "2026-08-05T12:16:34.468186+00:00",
+          "scope": {},
+          "calculation": null,
+          "provider_ids": {
+            "league": 301
+          }
+        }
+      },
+      "matches": [
+        {
+          "id": "sportmonks:fixture:19715633",
+          "kickoff": "2026-08-21T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:44",
+            "name": "Olympique Marseille"
+          },
+          "away": {
+            "id": "sportmonks:team:686",
+            "name": "Strasbourg"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715633,
+              "league": "301",
+              "home_team": 44,
+              "away_team": 686
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715634",
+          "kickoff": "2026-08-22T15:15:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:271",
+            "name": "Lens"
+          },
+          "away": {
+            "id": "sportmonks:team:3682",
+            "name": "Auxerre"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715634,
+              "league": "301",
+              "home_team": 271,
+              "away_team": 3682
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715629",
+          "kickoff": "2026-08-22T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:7047",
+            "name": "Troyes"
+          },
+          "away": {
+            "id": "sportmonks:team:4508",
+            "name": "Paris"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715629,
+              "league": "301",
+              "home_team": 7047,
+              "away_team": 4508
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715630",
+          "kickoff": "2026-08-22T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:289",
+            "name": "Toulouse"
+          },
+          "away": {
+            "id": "sportmonks:team:79",
+            "name": "Olympique Lyonnais"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715630,
+              "league": "301",
+              "home_team": 289,
+              "away_team": 79
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715632",
+          "kickoff": "2026-08-22T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:450",
+            "name": "Nice"
+          },
+          "away": {
+            "id": "sportmonks:team:9257",
+            "name": "Lorient"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715632,
+              "league": "301",
+              "home_team": 450,
+              "away_team": 9257
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715635",
+          "kickoff": "2026-08-22T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:7758",
+            "name": "Le Mans"
+          },
+          "away": {
+            "id": "sportmonks:team:266",
+            "name": "Brest"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715635,
+              "league": "301",
+              "home_team": 7758,
+              "away_team": 266
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715637",
+          "kickoff": "2026-08-23T13:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:776",
+            "name": "Angers SCO"
+          },
+          "away": {
+            "id": "sportmonks:team:690",
+            "name": "LOSC Lille"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715637,
+              "league": "301",
+              "home_team": 776,
+              "away_team": 690
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715636",
+          "kickoff": "2026-08-23T15:15:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:1055",
+            "name": "Le Havre"
+          },
+          "away": {
+            "id": "sportmonks:team:6789",
+            "name": "Monaco"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715636,
+              "league": "301",
+              "home_team": 1055,
+              "away_team": 6789
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715631",
+          "kickoff": "2026-08-23T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:591",
+            "name": "Paris Saint Germain"
+          },
+          "away": {
+            "id": "sportmonks:team:598",
+            "name": "Rennes"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715631,
+              "league": "301",
+              "home_team": 591,
+              "away_team": 598
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715620",
+          "kickoff": "2026-08-28T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:690",
+            "name": "LOSC Lille"
+          },
+          "away": {
+            "id": "sportmonks:team:591",
+            "name": "Paris Saint Germain"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715620,
+              "league": "301",
+              "home_team": 690,
+              "away_team": 591
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715621",
+          "kickoff": "2026-08-29T15:15:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:686",
+            "name": "Strasbourg"
+          },
+          "away": {
+            "id": "sportmonks:team:271",
+            "name": "Lens"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715621,
+              "league": "301",
+              "home_team": 686,
+              "away_team": 271
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715625",
+          "kickoff": "2026-08-29T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:79",
+            "name": "Olympique Lyonnais"
+          },
+          "away": {
+            "id": "sportmonks:team:1055",
+            "name": "Le Havre"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715625,
+              "league": "301",
+              "home_team": 79,
+              "away_team": 1055
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715626",
+          "kickoff": "2026-08-29T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:9257",
+            "name": "Lorient"
+          },
+          "away": {
+            "id": "sportmonks:team:7047",
+            "name": "Troyes"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715626,
+              "league": "301",
+              "home_team": 9257,
+              "away_team": 7047
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715627",
+          "kickoff": "2026-08-29T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:266",
+            "name": "Brest"
+          },
+          "away": {
+            "id": "sportmonks:team:289",
+            "name": "Toulouse"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715627,
+              "league": "301",
+              "home_team": 266,
+              "away_team": 289
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715628",
+          "kickoff": "2026-08-29T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3682",
+            "name": "Auxerre"
+          },
+          "away": {
+            "id": "sportmonks:team:776",
+            "name": "Angers SCO"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715628,
+              "league": "301",
+              "home_team": 3682,
+              "away_team": 776
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715623",
+          "kickoff": "2026-08-30T13:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:4508",
+            "name": "Paris"
+          },
+          "away": {
+            "id": "sportmonks:team:450",
+            "name": "Nice"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715623,
+              "league": "301",
+              "home_team": 4508,
+              "away_team": 450
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715622",
+          "kickoff": "2026-08-30T15:15:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:598",
+            "name": "Rennes"
+          },
+          "away": {
+            "id": "sportmonks:team:7758",
+            "name": "Le Mans"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715622,
+              "league": "301",
+              "home_team": 598,
+              "away_team": 7758
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715624",
+          "kickoff": "2026-08-30T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:6789",
+            "name": "Monaco"
+          },
+          "away": {
+            "id": "sportmonks:team:44",
+            "name": "Olympique Marseille"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715624,
+              "league": "301",
+              "home_team": 6789,
+              "away_team": 44
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715612",
+          "kickoff": "2026-09-03T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:289",
+            "name": "Toulouse"
+          },
+          "away": {
+            "id": "sportmonks:team:690",
+            "name": "LOSC Lille"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715612,
+              "league": "301",
+              "home_team": 289,
+              "away_team": 690
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715613",
+          "kickoff": "2026-09-04T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:591",
+            "name": "Paris Saint Germain"
+          },
+          "away": {
+            "id": "sportmonks:team:6789",
+            "name": "Monaco"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715613,
+              "league": "301",
+              "home_team": 591,
+              "away_team": 6789
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715616",
+          "kickoff": "2026-09-05T00:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:79",
+            "name": "Olympique Lyonnais"
+          },
+          "away": {
+            "id": "sportmonks:team:3682",
+            "name": "Auxerre"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715616,
+              "league": "301",
+              "home_team": 79,
+              "away_team": 3682
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715617",
+          "kickoff": "2026-09-05T15:15:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:271",
+            "name": "Lens"
+          },
+          "away": {
+            "id": "sportmonks:team:9257",
+            "name": "Lorient"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715617,
+              "league": "301",
+              "home_team": 271,
+              "away_team": 9257
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715614",
+          "kickoff": "2026-09-05T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:450",
+            "name": "Nice"
+          },
+          "away": {
+            "id": "sportmonks:team:7758",
+            "name": "Le Mans"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715614,
+              "league": "301",
+              "home_team": 450,
+              "away_team": 7758
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715618",
+          "kickoff": "2026-09-05T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:1055",
+            "name": "Le Havre"
+          },
+          "away": {
+            "id": "sportmonks:team:266",
+            "name": "Brest"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715618,
+              "league": "301",
+              "home_team": 1055,
+              "away_team": 266
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19715611",
+          "kickoff": "2026-09-06T13:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:301",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:7047",
+            "name": "Troyes"
+          },
+          "away": {
+            "id": "sportmonks:team:686",
+            "name": "Strasbourg"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:36.664011+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:301",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19715611,
+              "league": "301",
+              "home_team": 7047,
+              "away_team": 686
+            }
+          }
+        }
+      ]
+    },
+    {
+      "competition": {
+        "id": "sportmonks:league:384",
+        "name": "Serie A",
+        "country": "Italy",
+        "competition_type": "domestic",
+        "logo_url": "https://cdn.sportmonks.com/images/soccer/leagues/0/384.png",
+        "trace": {
+          "provider": "sportmonks",
+          "endpoint": "/leagues",
+          "collected_at": "2026-08-05T12:16:34.468186+00:00",
+          "scope": {},
+          "calculation": null,
+          "provider_ids": {
+            "league": 384
+          }
+        }
+      },
+      "matches": [
+        {
+          "id": "sportmonks:fixture:19713609",
+          "kickoff": "2026-08-22T16:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:346",
+            "name": "Udinese"
+          },
+          "away": {
+            "id": "sportmonks:team:268",
+            "name": "Como"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713609,
+              "league": "384",
+              "home_team": 346,
+              "away_team": 268
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713613",
+          "kickoff": "2026-08-22T16:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:2930",
+            "name": "Inter"
+          },
+          "away": {
+            "id": "sportmonks:team:1628",
+            "name": "Monza"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713613,
+              "league": "384",
+              "home_team": 2930,
+              "away_team": 1628
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713612",
+          "kickoff": "2026-08-22T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:398",
+            "name": "Parma"
+          },
+          "away": {
+            "id": "sportmonks:team:585",
+            "name": "Cagliari"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713612,
+              "league": "384",
+              "home_team": 398,
+              "away_team": 585
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713614",
+          "kickoff": "2026-08-22T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:102",
+            "name": "Genoa"
+          },
+          "away": {
+            "id": "sportmonks:team:597",
+            "name": "Napoli"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713614,
+              "league": "384",
+              "home_team": 102,
+              "away_team": 597
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713608",
+          "kickoff": "2026-08-23T16:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:267",
+            "name": "Venezia"
+          },
+          "away": {
+            "id": "sportmonks:team:7790",
+            "name": "Lecce"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713608,
+              "league": "384",
+              "home_team": 267,
+              "away_team": 7790
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713615",
+          "kickoff": "2026-08-23T16:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:4070",
+            "name": "Frosinone"
+          },
+          "away": {
+            "id": "sportmonks:team:625",
+            "name": "Juventus"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713615,
+              "league": "384",
+              "home_team": 4070,
+              "away_team": 625
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713610",
+          "kickoff": "2026-08-23T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:613",
+            "name": "Torino"
+          },
+          "away": {
+            "id": "sportmonks:team:113",
+            "name": "AC Milan"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713610,
+              "league": "384",
+              "home_team": 613,
+              "away_team": 113
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713617",
+          "kickoff": "2026-08-23T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:708",
+            "name": "Atalanta"
+          },
+          "away": {
+            "id": "sportmonks:team:2714",
+            "name": "Sassuolo"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713617,
+              "league": "384",
+              "home_team": 708,
+              "away_team": 2714
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713616",
+          "kickoff": "2026-08-24T16:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:8513",
+            "name": "Bologna"
+          },
+          "away": {
+            "id": "sportmonks:team:43",
+            "name": "Lazio"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713616,
+              "league": "384",
+              "home_team": 8513,
+              "away_team": 43
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713611",
+          "kickoff": "2026-08-24T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:37",
+            "name": "Roma"
+          },
+          "away": {
+            "id": "sportmonks:team:109",
+            "name": "Fiorentina"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713611,
+              "league": "384",
+              "home_team": 37,
+              "away_team": 109
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713601",
+          "kickoff": "2026-08-28T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:113",
+            "name": "AC Milan"
+          },
+          "away": {
+            "id": "sportmonks:team:267",
+            "name": "Venezia"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713601,
+              "league": "384",
+              "home_team": 113,
+              "away_team": 267
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713598",
+          "kickoff": "2026-08-29T16:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:2714",
+            "name": "Sassuolo"
+          },
+          "away": {
+            "id": "sportmonks:team:613",
+            "name": "Torino"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713598,
+              "league": "384",
+              "home_team": 2714,
+              "away_team": 613
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713600",
+          "kickoff": "2026-08-29T16:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:1628",
+            "name": "Monza"
+          },
+          "away": {
+            "id": "sportmonks:team:346",
+            "name": "Udinese"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713600,
+              "league": "384",
+              "home_team": 1628,
+              "away_team": 346
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713605",
+          "kickoff": "2026-08-29T16:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:109",
+            "name": "Fiorentina"
+          },
+          "away": {
+            "id": "sportmonks:team:4070",
+            "name": "Frosinone"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713605,
+              "league": "384",
+              "home_team": 109,
+              "away_team": 4070
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713604",
+          "kickoff": "2026-08-29T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:625",
+            "name": "Juventus"
+          },
+          "away": {
+            "id": "sportmonks:team:398",
+            "name": "Parma"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713604,
+              "league": "384",
+              "home_team": 625,
+              "away_team": 398
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713599",
+          "kickoff": "2026-08-30T16:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:597",
+            "name": "Napoli"
+          },
+          "away": {
+            "id": "sportmonks:team:268",
+            "name": "Como"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713599,
+              "league": "384",
+              "home_team": 597,
+              "away_team": 268
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713603",
+          "kickoff": "2026-08-30T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:43",
+            "name": "Lazio"
+          },
+          "away": {
+            "id": "sportmonks:team:102",
+            "name": "Genoa"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713603,
+              "league": "384",
+              "home_team": 43,
+              "away_team": 102
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713606",
+          "kickoff": "2026-08-30T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:585",
+            "name": "Cagliari"
+          },
+          "away": {
+            "id": "sportmonks:team:2930",
+            "name": "Inter"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713606,
+              "league": "384",
+              "home_team": 585,
+              "away_team": 2930
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713602",
+          "kickoff": "2026-08-31T16:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:7790",
+            "name": "Lecce"
+          },
+          "away": {
+            "id": "sportmonks:team:37",
+            "name": "Roma"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713602,
+              "league": "384",
+              "home_team": 7790,
+              "away_team": 37
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713607",
+          "kickoff": "2026-08-31T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:708",
+            "name": "Atalanta"
+          },
+          "away": {
+            "id": "sportmonks:team:8513",
+            "name": "Bologna"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713607,
+              "league": "384",
+              "home_team": 708,
+              "away_team": 8513
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713593",
+          "kickoff": "2026-09-04T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:102",
+            "name": "Genoa"
+          },
+          "away": {
+            "id": "sportmonks:team:268",
+            "name": "Como"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713593,
+              "league": "384",
+              "home_team": 102,
+              "away_team": 268
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713595",
+          "kickoff": "2026-09-05T13:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:109",
+            "name": "Fiorentina"
+          },
+          "away": {
+            "id": "sportmonks:team:613",
+            "name": "Torino"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713595,
+              "league": "384",
+              "home_team": 109,
+              "away_team": 613
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713592",
+          "kickoff": "2026-09-05T16:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:2930",
+            "name": "Inter"
+          },
+          "away": {
+            "id": "sportmonks:team:597",
+            "name": "Napoli"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713592,
+              "league": "384",
+              "home_team": 2930,
+              "away_team": 597
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713589",
+          "kickoff": "2026-09-05T18:45:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:37",
+            "name": "Roma"
+          },
+          "away": {
+            "id": "sportmonks:team:708",
+            "name": "Atalanta"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713589,
+              "league": "384",
+              "home_team": 37,
+              "away_team": 708
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19713590",
+          "kickoff": "2026-09-06T13:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:384",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:398",
+            "name": "Parma"
+          },
+          "away": {
+            "id": "sportmonks:team:1628",
+            "name": "Monza"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.027245+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:384",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19713590,
+              "league": "384",
+              "home_team": 398,
+              "away_team": 1628
+            }
+          }
+        }
+      ]
+    },
+    {
+      "competition": {
+        "id": "sportmonks:league:564",
+        "name": "La Liga",
+        "country": "Spain",
+        "competition_type": "domestic",
+        "logo_url": "https://cdn.sportmonks.com/images/soccer/leagues/20/564.png",
+        "trace": {
+          "provider": "sportmonks",
+          "endpoint": "/leagues",
+          "collected_at": "2026-08-05T12:16:34.468186+00:00",
+          "scope": {},
+          "calculation": null,
+          "provider_ids": {
+            "league": 564
+          }
+        }
+      },
+      "matches": [
+        {
+          "id": "sportmonks:fixture:19732742",
+          "kickoff": "2026-08-15T17:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:2975",
+            "name": "Deportivo Alavés"
+          },
+          "away": {
+            "id": "sportmonks:team:106",
+            "name": "Getafe"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732742,
+              "league": "564",
+              "home_team": 2975,
+              "away_team": 106
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732734",
+          "kickoff": "2026-08-15T19:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:676",
+            "name": "Sevilla"
+          },
+          "away": {
+            "id": "sportmonks:team:377",
+            "name": "Rayo Vallecano"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732734,
+              "league": "564",
+              "home_team": 676,
+              "away_team": 377
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732736",
+          "kickoff": "2026-08-16T15:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:9818",
+            "name": "Racing Santander"
+          },
+          "away": {
+            "id": "sportmonks:team:3477",
+            "name": "Villarreal"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732736,
+              "league": "564",
+              "home_team": 9818,
+              "away_team": 3477
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732738",
+          "kickoff": "2026-08-16T17:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:528",
+            "name": "Espanyol"
+          },
+          "away": {
+            "id": "sportmonks:team:3457",
+            "name": "Levante"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732738,
+              "league": "564",
+              "home_team": 528,
+              "away_team": 3457
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732740",
+          "kickoff": "2026-08-16T19:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:36",
+            "name": "Celta de Vigo"
+          },
+          "away": {
+            "id": "sportmonks:team:459",
+            "name": "Osasuna"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732740,
+              "league": "564",
+              "home_team": 36,
+              "away_team": 459
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732739",
+          "kickoff": "2026-08-17T19:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:429",
+            "name": "Deportivo La Coruña"
+          },
+          "away": {
+            "id": "sportmonks:team:1099",
+            "name": "Elche"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732739,
+              "league": "564",
+              "home_team": 429,
+              "away_team": 1099
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732741",
+          "kickoff": "2026-08-19T19:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:7980",
+            "name": "Atlético de Madrid"
+          },
+          "away": {
+            "id": "sportmonks:team:126",
+            "name": "Málaga"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732741,
+              "league": "564",
+              "home_team": 7980,
+              "away_team": 126
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732724",
+          "kickoff": "2026-08-20T19:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:377",
+            "name": "Rayo Vallecano"
+          },
+          "away": {
+            "id": "sportmonks:team:2975",
+            "name": "Deportivo Alavés"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732724,
+              "league": "564",
+              "home_team": 377,
+              "away_team": 2975
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732730",
+          "kickoff": "2026-08-21T19:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:485",
+            "name": "Real Betis"
+          },
+          "away": {
+            "id": "sportmonks:team:594",
+            "name": "Real Sociedad"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732730,
+              "league": "564",
+              "home_team": 485,
+              "away_team": 594
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732732",
+          "kickoff": "2026-08-22T15:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:13258",
+            "name": "Athletic Club"
+          },
+          "away": {
+            "id": "sportmonks:team:676",
+            "name": "Sevilla"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732732,
+              "league": "564",
+              "home_team": 13258,
+              "away_team": 676
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732723",
+          "kickoff": "2026-08-22T17:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:214",
+            "name": "Valencia"
+          },
+          "away": {
+            "id": "sportmonks:team:36",
+            "name": "Celta de Vigo"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732723,
+              "league": "564",
+              "home_team": 214,
+              "away_team": 36
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732728",
+          "kickoff": "2026-08-22T19:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:528",
+            "name": "Espanyol"
+          },
+          "away": {
+            "id": "sportmonks:team:3468",
+            "name": "Real Madrid"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732728,
+              "league": "564",
+              "home_team": 528,
+              "away_team": 3468
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732731",
+          "kickoff": "2026-08-23T15:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:7980",
+            "name": "Atlético de Madrid"
+          },
+          "away": {
+            "id": "sportmonks:team:3477",
+            "name": "Villarreal"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732731,
+              "league": "564",
+              "home_team": 7980,
+              "away_team": 3477
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732727",
+          "kickoff": "2026-08-23T17:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:106",
+            "name": "Getafe"
+          },
+          "away": {
+            "id": "sportmonks:team:9818",
+            "name": "Racing Santander"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732727,
+              "league": "564",
+              "home_team": 106,
+              "away_team": 9818
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732729",
+          "kickoff": "2026-08-23T19:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:1099",
+            "name": "Elche"
+          },
+          "away": {
+            "id": "sportmonks:team:83",
+            "name": "FC Barcelona"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732729,
+              "league": "564",
+              "home_team": 1099,
+              "away_team": 83
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732725",
+          "kickoff": "2026-08-24T17:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:459",
+            "name": "Osasuna"
+          },
+          "away": {
+            "id": "sportmonks:team:3457",
+            "name": "Levante"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732725,
+              "league": "564",
+              "home_team": 459,
+              "away_team": 3457
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732726",
+          "kickoff": "2026-08-24T19:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:126",
+            "name": "Málaga"
+          },
+          "away": {
+            "id": "sportmonks:team:429",
+            "name": "Deportivo La Coruña"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732726,
+              "league": "564",
+              "home_team": 126,
+              "away_team": 429
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732733",
+          "kickoff": "2026-08-25T19:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:214",
+            "name": "Valencia"
+          },
+          "away": {
+            "id": "sportmonks:team:485",
+            "name": "Real Betis"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732733,
+              "league": "564",
+              "home_team": 214,
+              "away_team": 485
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732735",
+          "kickoff": "2026-08-26T19:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3468",
+            "name": "Real Madrid"
+          },
+          "away": {
+            "id": "sportmonks:team:594",
+            "name": "Real Sociedad"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732735,
+              "league": "564",
+              "home_team": 3468,
+              "away_team": 594
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732737",
+          "kickoff": "2026-08-27T19:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:83",
+            "name": "FC Barcelona"
+          },
+          "away": {
+            "id": "sportmonks:team:13258",
+            "name": "Athletic Club"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732737,
+              "league": "564",
+              "home_team": 83,
+              "away_team": 13258
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732716",
+          "kickoff": "2026-08-28T17:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:9818",
+            "name": "Racing Santander"
+          },
+          "away": {
+            "id": "sportmonks:team:1099",
+            "name": "Elche"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732716,
+              "league": "564",
+              "home_team": 9818,
+              "away_team": 1099
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732722",
+          "kickoff": "2026-08-28T19:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:2975",
+            "name": "Deportivo Alavés"
+          },
+          "away": {
+            "id": "sportmonks:team:3477",
+            "name": "Villarreal"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732722,
+              "league": "564",
+              "home_team": 2975,
+              "away_team": 3477
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732718",
+          "kickoff": "2026-08-29T15:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3457",
+            "name": "Levante"
+          },
+          "away": {
+            "id": "sportmonks:team:485",
+            "name": "Real Betis"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732718,
+              "league": "564",
+              "home_team": 3457,
+              "away_team": 485
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732714",
+          "kickoff": "2026-08-29T17:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:594",
+            "name": "Real Sociedad"
+          },
+          "away": {
+            "id": "sportmonks:team:528",
+            "name": "Espanyol"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732714,
+              "league": "564",
+              "home_team": 594,
+              "away_team": 528
+            }
+          }
+        },
+        {
+          "id": "sportmonks:fixture:19732713",
+          "kickoff": "2026-08-29T19:30:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:564",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:676",
+            "name": "Sevilla"
+          },
+          "away": {
+            "id": "sportmonks:team:7980",
+            "name": "Atlético de Madrid"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-05T12:16:37.655206+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:564",
+              "include": "participants;scores;state"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19732713,
+              "league": "564",
+              "home_team": 676,
+              "away_team": 7980
+            }
+          }
+        }
       ]
     }
   ]
