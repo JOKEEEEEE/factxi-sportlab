@@ -1,0 +1,38 @@
+name: Mettre à jour les données SportMonks
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Récupérer les données SportMonks
+        env:
+          SPORTMONKS_API_TOKEN: ${{ secrets.SPORTMONKS_API_TOKEN }}
+        run: python3 scripts/fetch_all.py
+
+      - name: Publier data/matches.json si changement
+        run: |
+          git config user.name "sportlab-bot"
+          git config user.email "actions@github.com"
+          git add data/matches.json
+          if git diff --cached --quiet; then
+            echo "Aucun changement détecté."
+          else
+            git commit -m "Mise à jour automatique des données SportMonks"
+            git push
+          fi
