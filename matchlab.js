@@ -81,14 +81,27 @@ function init(){
 
 function renderScoreCard(home,away){
   const hs=currentScore(home.id), as=currentScore(away.id);
-  document.querySelector("#matchScore").innerHTML=`<div class="team"><i class="badge" style="background:#20304a">${initials(home.name)}</i><strong>${home.name}</strong></div><div class="score"><strong>${hs!=null?hs:"—"}–${as!=null?as:"—"}</strong><span>${(RAW.state&&RAW.state.name)||""}</span></div><div class="team away"><strong>${away.name}</strong><i class="badge" style="background:#20304a">${initials(away.name)}</i></div>`;
+  const homeBadge = home.image_path ? `<img src="${home.image_path}" alt="">` : initials(home.name);
+  const awayBadge = away.image_path ? `<img src="${away.image_path}" alt="">` : initials(away.name);
+  document.querySelector("#matchScore").innerHTML=`<div class="team"><i class="badge">${homeBadge}</i><strong>${home.name}</strong></div><div class="score"><strong>${hs!=null?hs:"—"}–${as!=null?as:"—"}</strong><span>${(RAW.state&&RAW.state.name)||""}</span></div><div class="team away"><strong>${away.name}</strong><i class="badge">${awayBadge}</i></div>`;
   let dateTxt="", timeTxt="";
   if(RAW.starting_at){
     const kickoff=new Date(RAW.starting_at.replace(" ","T")+"Z");
     dateTxt=kickoff.toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
     timeTxt=kickoff.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
   }
-  document.querySelector("#matchMeta").innerHTML=`${dateTxt?`<span>${dateTxt} · ${timeTxt}</span>`:""}${RAW.venue?`<span>${RAW.venue.name}</span>`:""}${RAW.round?`<span>Journée ${RAW.round.name}</span>`:""}<span>Données SportMonks</span>`;
+  const ICONS={
+    calendar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+    stadium:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="12" rx="9" ry="6"/><path d="M3 12c0 2 4 3 9 3s9-1 9-3"/></svg>',
+    people:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.5 3-6 7-6s7 2.5 7 6"/><circle cx="18" cy="9" r="2.3"/><path d="M15.5 14.2c2.7.4 4.5 2.4 4.5 5.8"/></svg>',
+    flag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 21V4"/><path d="M5 4h13l-3 4 3 4H5"/></svg>'
+  };
+  const metaItems=[];
+  if(dateTxt) metaItems.push(`<span>${ICONS.calendar}${dateTxt} · ${timeTxt}</span>`);
+  if(RAW.venue) metaItems.push(`<span>${ICONS.stadium}${RAW.venue.name}</span>`);
+  if(RAW.venue && RAW.venue.capacity) metaItems.push(`<span>${ICONS.people}Capacité : ${RAW.venue.capacity.toLocaleString("fr-FR")}</span>`);
+  if(RAW.round) metaItems.push(`<span>${ICONS.flag}Journée ${RAW.round.name}</span>`);
+  document.querySelector("#matchMeta").innerHTML=metaItems.join("");
   document.querySelector("#navRight").innerHTML=`<b>${home.name} vs ${away.name}</b>`;
   document.querySelector("#crumb").textContent = RAW.round ? `Journée ${RAW.round.name}` : "";
   document.title=`SportLab — ${home.name} vs ${away.name}`;
@@ -115,14 +128,17 @@ function momentumAt(pressureIdx,minute){
   }
   return n?sum/n:0;
 }
+let PRESSURE_IDX={}, HAS_PRESSURE=false, MAX_MINUTE=95;
 function buildProbabilityModel(){
   const major=(RAW.events||[]).filter(e=>e.type && ["goal","owngoal","redcard"].includes(e.type.code))
     .sort((a,b)=>(a.minute+((a.extra_minute||0)/10))-(b.minute+((b.extra_minute||0)/10)));
   events=major;
   const pressureIdx=buildPressureIndex();
   const hasPressure=Object.keys(pressureIdx).length>0;
+  PRESSURE_IDX=pressureIdx; HAS_PRESSURE=hasPressure;
   const lastEventT=major.length?major[major.length-1].minute+((major[major.length-1].extra_minute||0)/10):0;
   const maxMinute=Math.max(95,lastEventT+1);
+  MAX_MINUTE=maxMinute;
   const sampleTimes=new Set();
   for(let t=0;t<=maxMinute;t+=2) sampleTimes.add(t);
   major.forEach(e=>sampleTimes.add(e.minute+((e.extra_minute||0)/10)));
@@ -174,7 +190,10 @@ function icon(code){
 }
 
 function renderChart(){
+  const root=document.querySelector("#chart");
+  if(HAS_PRESSURE){ renderMomentumChart(root); return; }
   let svg="";
+  svg+=`<text x="450" y="20" text-anchor="middle" fill="var(--muted)" font-size="9">Momentum indisponible (données de pression absentes pour ce match) — repli sur le modèle de probabilité.</text>`;
   [0,.25,.5,.75,1].forEach(v=>svg+=`<line class="grid" x1="48" y1="${y(v)}" x2="878" y2="${y(v)}"/><text x="5" y="${y(v)+3}">${v*100}%</text>`);
   [0,15,30,45,60,75,90].forEach(v=>svg+=`<text x="${x(v)}" y="320" text-anchor="middle">${v}’</text>`);
   events.forEach((e,i)=>{
@@ -182,11 +201,47 @@ function renderChart(){
     svg+=`<line class="event-marker ${i===selected?"active":""}" x1="${x(t)}" y1="24" x2="${x(t)}" y2="294" stroke-dasharray="3,4"/>`;
   });
   colors.forEach((c,i)=>svg+=`<path class="curve ${series===seriesKeys[i]?"focus":""}" stroke="${c}" d="${path(i)}"/>`);
-  document.querySelector("#chart").innerHTML=svg;
-  document.querySelector("#chart").classList.toggle("dim",series!=="all");
+  root.innerHTML=svg;
+  root.classList.remove("dim");
   document.querySelector("#chartEvents").innerHTML=events.map((e,i)=>{
     const t=e.minute+((e.extra_minute||0)/10);
     return `<button class="chart-event ${i===selected?"active":""}" data-i="${i}" style="--x:${5.3+t/95*92.2}%;--y:${i%2===0?8:20}%" title="${fmtMinute(e)} · ${e.player_name||""}">${icon(e.type.code)}</button>`;
+  }).join("");
+  document.querySelectorAll(".chart-event").forEach(b=>b.onclick=()=>select(+b.dataset.i));
+}
+
+function renderMomentumChart(root){
+  const bucket=2;
+  const buckets=[];
+  for(let t=0;t<=MAX_MINUTE;t+=bucket){
+    let sum=0,n=0;
+    for(let m=t;m<t+bucket;m++){ const e=PRESSURE_IDX[Math.round(m)]; if(e){ sum+=(e.home-e.away); n++; } }
+    buckets.push({t, diff: n?sum/n:0});
+  }
+  const maxAbs=Math.max(10, ...buckets.map(b=>Math.abs(b.diff)));
+  const midY=159, halfH=120;
+  const barW=Math.max(3, (830/buckets.length)-1.5);
+  let svg="";
+  svg+=`<line x1="48" y1="${midY}" x2="878" y2="${midY}" class="grid"/>`;
+  [0,15,30,45,60,75,90].forEach(v=>svg+=`<text x="${x(v)}" y="320" text-anchor="middle">${v}’</text>`);
+  buckets.forEach(b=>{
+    const h=Math.round((Math.abs(b.diff)/maxAbs)*halfH);
+    if(h<1) return;
+    const isHome=b.diff>=0;
+    const bx=x(b.t)-barW/2;
+    const by=isHome ? midY-h : midY;
+    svg+=`<rect x="${bx}" y="${by}" width="${barW}" height="${h}" rx="${Math.min(3,barW/2)}" fill="${isHome?colors[0]:colors[2]}" opacity=".92"/>`;
+  });
+  events.forEach((e,i)=>{
+    const t=e.minute+((e.extra_minute||0)/10);
+    svg+=`<line class="event-marker ${i===selected?"active":""}" x1="${x(t)}" y1="24" x2="${x(t)}" y2="294" stroke-dasharray="3,4"/>`;
+  });
+  root.innerHTML=svg;
+  root.classList.remove("dim");
+  document.querySelector("#chartEvents").innerHTML=events.map((e,i)=>{
+    const t=e.minute+((e.extra_minute||0)/10);
+    const isHome=e.participant_id===HOME_ID;
+    return `<button class="chart-event ${i===selected?"active":""}" data-i="${i}" style="--x:${5.3+t/95*92.2}%;--y:${isHome?6:78}%" title="${fmtMinute(e)} · ${e.player_name||""}">${icon(e.type.code)}</button>`;
   }).join("");
   document.querySelectorAll(".chart-event").forEach(b=>b.onclick=()=>select(+b.dataset.i));
 }
@@ -286,6 +341,11 @@ function lastName(s){
   const parts=(s.player_name||"").split(" ");
   return parts[parts.length-1]||s.player_name||"";
 }
+function entryMinute(s){
+  const ev=(RAW.events||[]).find(e=>e.type && e.type.code==="substitution" && e.player_name===s.player_name);
+  if(!ev) return null;
+  return ev.extra_minute ? `90+${ev.extra_minute}` : String(ev.minute);
+}
 function renderSquads(){
   const lineups=RAW.lineups||[];
   const teams=[{id:HOME_ID,name:HOME_NAME,cls:"ars-pitch"},{id:AWAY_ID,name:AWAY_NAME,cls:"city-pitch"}];
@@ -311,7 +371,7 @@ function renderSquads(){
       return `<i style="--x:${xPct}%;--y:${yPct}%" class="${photo?"has-photo":""}">${photoHtml}<small>${lastName(s)}${isCaptain(s)?" (C)":""}</small></i>`;
     }).join("");
     const listRow=s=>`<div class="squad-row">${avatarImg(s)}<em>${s.jersey_number||"—"}</em><span>${flagImg(s.player)}${s.player_name}${isCaptain(s)?'<b class="captain-tag">C</b>':""}</span>${ratingBadge(s)}</div>`;
-    const subInRow=s=>{const mins=(s.details||[]).find(d=>d.type_id===119);return `<div class="squad-row sub-in">${avatarImg(s)}<em>↗</em><span>${flagImg(s.player)}${s.player_name}<small>entré${mins?` ${mins.data.value}’`:""}</small></span>${ratingBadge(s)}</div>`};
+    const subInRow=s=>{const em=entryMinute(s);return `<div class="squad-row sub-in">${avatarImg(s)}<em>↗</em><span>${flagImg(s.player)}${s.player_name}<small>entré${em?` ${em}’`:""}</small></span>${ratingBadge(s)}</div>`};
     const subOutRow=s=>`<div class="squad-row sub-unused">${avatarImg(s)}<em>—</em><span>${flagImg(s.player)}${s.player_name}</span></div>`;
     return `<article><div class="squad-title"><b>${team.name}</b></div>
       <div class="pitch ${team.cls}">${pitchIcons}</div>
@@ -374,6 +434,7 @@ function sortIstats(team,col){
   renderIndividualStats();
 }
 window.sortIstats=sortIstats;
+function ratingClass(v){return v==null?"none":v>=7.5?"great":v>=6.5?"good":v>=5.5?"mid":"low"}
 function renderIndividualStatsTable(team,teamKey,cls){
   const lineups=(RAW.lineups||[]).filter(l=>l.team_id===team.id && ((l.type_id===11 && l.formation_field)||(l.type_id===12 && (l.details||[]).length>0)));
   const cat=PLAYER_STAT_CATALOG[statCategory];
@@ -401,7 +462,7 @@ function renderIndividualStatsTable(team,teamKey,cls){
   const arrow=col=>sort.col===col?`<span class="sort-arrow">${sort.dir==="asc"?"▲":"▼"}</span>`:"";
   const th=(col,label,alignNum)=>`<th class="${sort.col===col?"sorted":""}${alignNum?" num":""}" onclick="sortIstats('${teamKey}','${col}')">${label}${arrow(col)}</th>`;
   const head=`<tr>${th("name","Joueur")}${th("minutes","Min",true)}${th("rating","Note",true)}${cat.map(c=>th(c.id,c.label,true)).join("")}</tr>`;
-  const body=rows.map(r=>`<tr><td class="p-name">${avatarImg(r.l)}${r.name}${isCaptain(r.l)?'<b class="captain-tag">C</b>':""}</td><td class="num">${r.minutes!=null?r.minutes+"’":"—"}</td><td class="num">${r.rating!=null?r.rating.toFixed(1):"—"}</td>${cat.map(c=>`<td class="num">${fmtStatCell(r.values[c.id],c.id)}</td>`).join("")}</tr>`).join("");
+  const body=rows.map(r=>`<tr><td class="p-name">${avatarImg(r.l)}${r.name}${isCaptain(r.l)?'<b class="captain-tag">C</b>':""}</td><td class="num">${r.minutes!=null?r.minutes+"’":"—"}</td><td class="num"><em class="rating ${ratingClass(r.rating)}">${r.rating!=null?r.rating.toFixed(1):"—"}</em></td>${cat.map(c=>`<td class="num">${fmtStatCell(r.values[c.id],c.id)}</td>`).join("")}</tr>`).join("");
   return `<div class="istats-table-block"><h5 class="${cls}">${team.name}</h5><div class="istable-wrap"><table class="istable"><thead>${head}</thead><tbody>${body||`<tr><td colspan="${3+cat.length}">Aucune donnée disponible.</td></tr>`}</tbody></table></div></div>`;
 }
 function renderIndividualStats(){

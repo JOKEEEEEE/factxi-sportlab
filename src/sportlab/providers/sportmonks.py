@@ -153,7 +153,7 @@ class SportMonksProvider(FootballDataProvider):
         endpoint = f"fixtures/between/{date_from.isoformat()}/{date_to.isoformat()}"
         params = {
             "filters": f"fixtureLeagues:{league_id}",
-            "include": "participants;scores;state",
+            "include": "participants;scores;state;round",
         }
         rows, collected_at = self._get(endpoint, params)
         return [
@@ -185,10 +185,19 @@ class SportMonksProvider(FootballDataProvider):
             status=_normalise_status((row.get("state") or {}).get("short_name")),
             competition_id=f"sportmonks:league:{league_id}",
             season=season,
-            home=TeamRef(f"sportmonks:team:{home['id']}", str(home.get("name", ""))),
-            away=TeamRef(f"sportmonks:team:{away['id']}", str(away.get("name", ""))),
+            home=TeamRef(
+                f"sportmonks:team:{home['id']}",
+                str(home.get("name", "")),
+                home.get("image_path"),
+            ),
+            away=TeamRef(
+                f"sportmonks:team:{away['id']}",
+                str(away.get("name", "")),
+                away.get("image_path"),
+            ),
             home_score=_extract_score(scores, "home"),
             away_score=_extract_score(scores, "away"),
+            round=((row.get("round") or {}).get("name")),
             trace=SourceTrace(
                 provider=self.name,
                 endpoint="/fixtures/between",

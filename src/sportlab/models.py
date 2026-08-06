@@ -41,6 +41,7 @@ class Competition:
 class TeamRef:
     id: str
     name: str
+    logo_url: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -55,4 +56,4 @@ class Match:
     home_score: int | None
     away_score: int | None
     trace: SourceTrace
-
+    round: str | None = None
