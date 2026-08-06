@@ -83,19 +83,27 @@ function matchdayGridInit(){
 function resetSelection(){
   league=null;season=null;club="all";matchday="all";searchDriven=false;
   document.querySelectorAll(".competition").forEach(b=>b.classList.remove("active"));
-  document.querySelectorAll(".season-tabs button").forEach(b=>b.classList.remove("active"));
+  document.querySelector("#seasonTabs").innerHTML="";
   document.querySelectorAll("#matchdayGrid button").forEach(b=>b.classList.toggle("active",b.dataset.matchday==="all"));
+}
+function buildSeasonTabs(){
+  const seasons=new Set(matchesForLeague(league).map(m=>m.season));
+  const sorted=[...seasons].sort((a,b)=>b-a);
+  const tabs=document.querySelector("#seasonTabs");
+  if(!sorted.length){tabs.innerHTML=`<span style="font-size:9px;color:var(--muted)">Aucune saison disponible pour cette compétition.</span>`;return}
+  tabs.innerHTML=sorted.map(y=>`<button data-season="${y}">${seasonLabel(y)}</button>`).join("");
+  tabs.querySelectorAll("button").forEach(b=>b.onclick=()=>{selectSeason(b.textContent);refresh()});
 }
 function selectLeague(name,fromSearch){
   league=name;season=null;club="all";matchday="all";searchDriven=!!fromSearch;
   document.querySelectorAll(".competition").forEach(b=>b.classList.toggle("active",b.dataset.league===league));
-  document.querySelectorAll(".season-tabs button").forEach(b=>b.classList.remove("active"));
   document.querySelectorAll("#matchdayGrid button").forEach(b=>b.classList.toggle("active",b.dataset.matchday==="all"));
+  buildSeasonTabs();
   buildClubButtons();
 }
 function selectSeason(label){
   season=label;club="all";
-  document.querySelectorAll(".season-tabs button").forEach(b=>b.classList.toggle("active",b.textContent===season));
+  document.querySelectorAll("#seasonTabs button").forEach(b=>b.classList.toggle("active",b.textContent===season));
   buildClubButtons();
 }
 
@@ -139,7 +147,6 @@ function refresh(){
 }
 
 document.querySelectorAll(".competition").forEach(button=>button.onclick=()=>{selectLeague(button.dataset.league,false);refresh()});
-document.querySelectorAll(".season-tabs button").forEach(button=>button.onclick=()=>{selectSeason(button.textContent);refresh()});
 search.oninput=()=>{
   const q=search.value.toLowerCase().trim();
   const hasMatch = Object.values(REAL_DATA).some(list=>list.some(m=>(m.home.name+" "+m.away.name).toLowerCase().includes(q)));

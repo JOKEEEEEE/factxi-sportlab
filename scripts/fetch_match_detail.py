@@ -31,11 +31,11 @@ from sportlab.config import ConfigurationError, Settings  # noqa: E402
 from sportlab.providers.sportmonks import ProviderError, SportMonksProvider  # noqa: E402
 
 INCLUDES = (
-    "participants;scores;state;venue;round;coaches;"
+    "participants;scores;state;venue;round;coaches.country;"
     "events.type;events.period;events.player;"
-    "lineups.player;lineups.details;lineups.xGlineup;"
+    "lineups.player.country;lineups.details;lineups.xGlineup;"
     "statistics.type;"
-    "xGFixture"
+    "xGFixture;pressure"
 )
 
 

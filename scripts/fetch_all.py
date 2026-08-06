@@ -38,7 +38,7 @@ DETAIL_INCLUDES = (
     "events.type;events.period;events.player;"
     "lineups.player.country;lineups.details;lineups.xGlineup;"
     "statistics.type;"
-    "xGFixture"
+    "xGFixture;pressure"
 )
 
 # Le match de référence du projet (Arsenal-Manchester City, sur lequel tout le
