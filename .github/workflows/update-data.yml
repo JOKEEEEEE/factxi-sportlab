@@ -32,9 +32,15 @@ jobs:
 
       - name: Publier les données si changement
         run: |
+          shopt -s nullglob
           git config user.name "sportlab-bot"
           git config user.email "actions@github.com"
-          git add data/matches.json data/match-detail-*.json data/standings-*.json data/topscorers-*.json
+          FILES=(data/matches.json data/match-detail-*.json data/standings-*.json data/topscorers-*.json)
+          if [ ${#FILES[@]} -eq 0 ]; then
+            echo "Aucun fichier de données trouvé, rien à publier."
+            exit 0
+          fi
+          git add "${FILES[@]}"
           if git diff --cached --quiet; then
             echo "Aucun changement détecté."
           else
