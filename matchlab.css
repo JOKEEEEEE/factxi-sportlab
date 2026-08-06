@@ -14,7 +14,9 @@
 .squad-zone h4{font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 4px}
 .squad-zone.coach{background:#f2eee7}
 .squad-list{margin-top:0;border-top:0}
-.squad-row{display:grid;grid-template-columns:24px 1fr;gap:8px;align-items:center;padding:6px 2px;border-bottom:1px solid var(--line);font-size:10px}
+.squad-row{display:grid;grid-template-columns:26px 24px 1fr auto;gap:8px;align-items:center;padding:6px 2px;border-bottom:1px solid var(--line);font-size:10px}
+.squad-row .p-avatar{width:26px;height:26px;font-size:8px}
+.squad-row .rating{justify-self:end}
 .squad-zone.coach .squad-row{grid-template-columns:1fr;border-bottom:0;padding:2px}
 .squad-row:last-child{border-bottom:0}
 .squad-row em{font-style:normal;color:var(--muted);font-weight:800;font-size:9px}
@@ -33,8 +35,16 @@
 .stat-group.pending{border-top:1px solid var(--line);padding-top:10px}.pending-row{display:flex;justify-content:space-between;font-size:9px;color:var(--muted);padding:6px 0}.pending-row em{font-style:normal;background:#f2eee7;border-radius:99px;padding:3px 8px;font-size:8px}
 .players-panel{margin-top:14px}.players-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}.players-team>b{display:block;font-size:11px;margin-bottom:9px}.players-team .ars-label{color:var(--coral)}.players-team .mci-label{color:var(--blue)}
 .player-row{display:grid;grid-template-columns:32px 1fr auto;align-items:center;gap:10px;padding:7px 4px;border-top:1px solid var(--line);font-size:10px}
-.p-avatar{width:30px;height:30px;border-radius:50%;background:#f0e8dd;color:var(--ink);display:grid;place-items:center;font-size:9px;font-weight:900;font-style:normal}
+.p-avatar{width:30px;height:30px;border-radius:50%;background:#f0e8dd;color:var(--ink);display:grid;place-items:center;font-size:9px;font-weight:900;font-style:normal;object-fit:cover}
+.flag{width:14px!important;height:10px!important;max-width:14px;border-radius:2px;object-fit:cover;flex:0 0 auto;display:inline-block}
 .player-row span{display:flex;align-items:baseline;gap:6px}.player-row span small{color:var(--muted);font-size:8px;font-weight:800}
 .player-row em{font-style:normal;color:var(--muted);font-size:9px;font-weight:800}
+.rating{display:inline-grid;place-items:center;min-width:30px;padding:3px 6px;border-radius:6px;font-weight:900;font-size:10px}
+.rating.great{background:#dcebe3;color:#2d6a4f}
+.rating.good{background:#e3edf2;color:#3e6c81}
+.rating.mid{background:#f1e5cc;color:#805e1f}
+.rating.low{background:#f3dcd5;color:#b95845}
+.rating.none{background:transparent;color:var(--muted)}
+.player-row.sub-in{opacity:.92}
 .players-note{font-size:8px;line-height:1.6;color:var(--muted);margin:16px 0 0;border-top:1px solid var(--line);padding-top:12px}.players-note code{background:#f2eee7;border-radius:4px;padding:1px 5px;font-size:8px}
 #toast{position:fixed;right:18px;bottom:18px;background:var(--ink);color:white;border-radius:9px;padding:10px;font-size:9px;opacity:0}@media(max-width:980px){.layout,.bottom{grid-template-columns:1fr}}@media(max-width:680px){.crumb,.nav-right b:first-child,.site-tabs{display:none}.players-grid{grid-template-columns:1fr}.stat-body{grid-template-columns:1fr}.match{grid-template-columns:1fr 85px 1fr}.team{font-size:13px;display:grid;text-align:center!important;justify-items:center}.team.away{justify-content:normal}.badge{width:48px;height:48px}.score strong{font-size:37px}.compare,.squads{grid-template-columns:1fr}.compare>i{transform:rotate(90deg)}.chartbox{overflow-x:auto}.chartbox svg{min-width:720px}.event-key small{display:none}}

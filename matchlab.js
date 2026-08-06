@@ -4,6 +4,26 @@ const fixtureId = params.get("id") || "19134564";
 const STAT_GROUP_LABELS = {offensive:"Attaque", defensive:"Discipline et défense", overall:"Ensemble"};
 const colors = ["#d9705c","#d6a443","#76a9c0"], seriesKeys = ["ars","draw","mci"];
 
+const STAT_NAME_FR = {
+  "ball-possession":"Possession","shots-total":"Tirs","shots-on-target":"Tirs cadrés","shots-off-target":"Tirs non cadrés",
+  "shots-insidebox":"Tirs dans la surface","shots-outsidebox":"Tirs hors surface","shots-blocked":"Tirs contrés",
+  "corners":"Corners","fouls":"Fautes","offsides":"Hors-jeu","yellowcards":"Cartons jaunes","redcards":"Cartons rouges",
+  "passes":"Passes","successful-passes":"Passes réussies","successful-passes-percentage":"Passes réussies (%)",
+  "long-passes":"Passes longues","successful-long-passes":"Passes longues réussies","successful-long-passes-percentage":"Passes longues réussies (%)",
+  "saves":"Arrêts","goal-kicks":"Dégagements du gardien","free-kicks":"Coups francs","throwins":"Touches",
+  "duels-won":"Duels gagnés","dribble-attempts":"Tentatives de dribble","successful-dribbles":"Dribbles réussis","successful-dribbles-percentage":"Dribbles réussis (%)",
+  "tackles":"Tacles","interceptions":"Interceptions","assists":"Passes décisives","key-passes":"Passes clés",
+  "big-chances-created":"Grosses occasions créées","big-chances-missed":"Grosses occasions manquées",
+  "hit-woodwork":"Poteaux touchés","successful-headers":"Duels aériens gagnés","attacks":"Attaques","dangerous-attacks":"Attaques dangereuses",
+  "ball-safe":"Ballons sécurisés","total-crosses":"Centres tentés","accurate-crosses":"Centres réussis","goal-attempts":"Tentatives de but",
+  "counter-attacks":"Contre-attaques","substitutions":"Remplacements","goals":"Buts"
+};
+const EVENT_NAME_FR = {
+  "goal":"But","owngoal":"But contre son camp","substitution":"Remplacement","yellowcard":"Carton jaune","redcard":"Carton rouge","var":"VAR"
+};
+function statLabel(t){return STAT_NAME_FR[t.code] || t.name}
+function eventLabel(type){return (type && (EVENT_NAME_FR[type.code] || type.name)) || ""}
+
 let RAW=null, HOME_ID=null, AWAY_ID=null, HOME_NAME="", AWAY_NAME="";
 let names=["DOM","NUL","EXT"], events=[], points=[], selected=0, series="all";
 
@@ -29,7 +49,7 @@ function currentScore(participantId){
 }
 function fmtMinute(e){return e.extra_minute?`90+${e.extra_minute}’`:`${e.minute}’`}
 function flagImg(player){
-  if(player && player.country && player.country.image_path) return `<img class="flag" src="${player.country.image_path}" alt="">`;
+  if(player && player.country && player.country.image_path) return `<img class="flag" src="${player.country.image_path}" alt="" width="14" height="10">`;
   return "";
 }
 
@@ -45,7 +65,6 @@ function init(){
   renderChart();
   select(events.length?0:-1);
   renderSquads();
-  renderPlayers();
   renderStudio();
 
   document.querySelector("#loadingState").hidden=true;
@@ -98,15 +117,14 @@ function probsAt(t){
 }
 
 const x=t=>48+t/95*830, y=p=>24+(1-p)*270;
-function sampleCurve(){
-  const maxT=points[points.length-1].t;
-  const dense=[];
-  for(let t=0;t<=maxT;t+=1) dense.push({t,p:probsAt(t)});
-  return dense;
+function curvePoints(){
+  return points.map(p=>({t:p.t, p:probsAtState(p.diff,p.red,p.t)}));
 }
 function path(idx){
-  const dense=sampleCurve();
-  return "M"+dense.map(d=>`${x(d.t)},${y(d.p[idx])}`).join("L");
+  const pts=curvePoints().map(d=>[x(d.t),y(d.p[idx])]);
+  let d=`M${pts[0][0]},${pts[0][1]}`;
+  for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],mx=(a[0]+b[0])/2;d+=` C${mx},${a[1]} ${mx},${b[1]} ${b[0]},${b[1]}`}
+  return d;
 }
 function icon(code){return code==="goal"||code==="owngoal"?"⚽":code==="redcard"?'<span class="red-card-icon"></span>':code==="substitution"?'<span class="sub-icon"><i>↗</i><b>↙</b></span>':`<span class="var-badge">${(code||"?").slice(0,3).toUpperCase()}</span>`}
 
@@ -146,7 +164,7 @@ function renderCompare(){
   const afterScore=e.result?e.result.replace("-","–"):beforeScore;
   const bp=probsAt(Math.max(0,t-0.15)), ap=probsAt(t);
   document.querySelector("#before").innerHTML=`<small>Juste avant · ${fmtMinute(e)}</small><h3>État avant l’événement</h3><div class="state-score">${beforeScore}</div>${boxes(bp)}`;
-  document.querySelector("#after").innerHTML=`<small>Juste après · ${fmtMinute(e)}</small><h3>${icon(e.type.code)} ${e.player_name||e.type.name}</h3><div class="state-score">${afterScore}</div>${boxes(ap,bp)}`;
+  document.querySelector("#after").innerHTML=`<small>Juste après · ${fmtMinute(e)}</small><h3>${icon(e.type.code)} ${e.player_name||eventLabel(e.type)}</h3><div class="state-score">${afterScore}</div>${boxes(ap,bp)}`;
 }
 
 function renderFeed(){
@@ -156,7 +174,7 @@ function renderFeed(){
   const row=e=>{
     const majorIndex=events.indexOf(e);
     const detail = e.type.code==="substitution" ? `${e.player_name||""}${e.related_player_name?` ↔ ${e.related_player_name}`:""}` : (e.info||e.addition||"");
-    return `<button class="feed-event ${majorIndex===selected?"active":""}" data-major="${majorIndex}"><time>${fmtMinute(e)}</time><span class="symbol">${icon(e.type.code)}</span><b>${e.player_name||e.type.name}<small> · ${detail}</small></b>${e.result?`<strong>${e.result.replace("-","–")}</strong>`:""}</button>`;
+    return `<button class="feed-event ${majorIndex===selected?"active":""}" data-major="${majorIndex}"><time>${fmtMinute(e)}</time><span class="symbol">${icon(e.type.code)}</span><b>${e.player_name||eventLabel(e.type)}<small> · ${detail}</small></b>${e.result?`<strong>${e.result.replace("-","–")}</strong>`:""}</button>`;
   };
   document.querySelector("#feed").innerHTML=
     `<div class="period"><span>1re mi-temps</span></div>${first.map(row).join("")}<div class="period"><span>2e mi-temps</span></div>${second.map(row).join("")}`;
@@ -191,17 +209,29 @@ function renderStats(){
     : `<div class="stats-empty"><strong>En attente de l’API</strong><span>Aucune statistique disponible pour ce match.</span></div>`;
 }
 function statRow(t){
-  if(t.home==null || t.away==null) return `<div class="stat-row pending-row"><span>${t.name}</span><em>Non disponible</em></div>`;
+  if(t.home==null || t.away==null) return `<div class="stat-row pending-row"><span>${statLabel(t)}</span><em>Non disponible</em></div>`;
   const isPct = t.code && t.code.includes("percentage");
   if(isPct){
     const a=Number(t.home);
-    return `<div class="stat-row"><div class="stat-label"><span>${t.home}%</span><b>${t.name}</b><span>${t.away}%</span></div><div class="stat-bar"><i class="home" style="width:${a}%"></i><i class="away" style="width:${100-a}%"></i></div></div>`;
+    return `<div class="stat-row"><div class="stat-label"><span>${t.home}%</span><b>${statLabel(t)}</b><span>${t.away}%</span></div><div class="stat-bar"><i class="home" style="width:${a}%"></i><i class="away" style="width:${100-a}%"></i></div></div>`;
   }
   const a=Number(t.home), b=Number(t.away), total=(a+b)||1, pa=Math.round(a/total*100);
-  return `<div class="stat-row"><div class="stat-label"><span>${t.home}</span><b>${t.name}</b><span>${t.away}</span></div><div class="stat-bar"><i class="home" style="width:${pa}%"></i><i class="away" style="width:${100-pa}%"></i></div></div>`;
+  return `<div class="stat-row"><div class="stat-label"><span>${t.home}</span><b>${statLabel(t)}</b><span>${t.away}</span></div><div class="stat-bar"><i class="home" style="width:${pa}%"></i><i class="away" style="width:${100-pa}%"></i></div></div>`;
 }
 
 function isCaptain(l){return (l.details||[]).some(d=>d.type_id===40 && d.data && d.data.value===true)}
+function ratingBadge(l){
+  const rating=(l.details||[]).find(d=>d.type_id===118);
+  if(!rating) return "";
+  const v=Number(rating.data.value).toFixed(1);
+  const cls = v>=7.5?"great":v>=6.5?"good":v>=5.5?"mid":"low";
+  return `<em class="rating ${cls}">${v}</em>`;
+}
+function avatarImg(l){
+  const photo=l.player && l.player.image_path;
+  const initialsTxt=initials(l.player_name);
+  return photo?`<img class="p-avatar" src="${photo}" alt="${l.player_name}" loading="lazy" onerror="this.outerHTML='&lt;i class=&quot;p-avatar&quot;&gt;${initialsTxt}&lt;/i&gt;'">`:`<i class="p-avatar">${initialsTxt}</i>`;
+}
 function renderSquads(){
   const lineups=RAW.lineups||[];
   const teams=[{id:HOME_ID,name:HOME_NAME,cls:"ars-pitch"},{id:AWAY_ID,name:AWAY_NAME,cls:"city-pitch"}];
@@ -221,33 +251,15 @@ function renderSquads(){
       const yPct=maxRow<=1?90:(90-(r-1)/(maxRow-1)*77);
       return `<i style="--x:${xPct}%;--y:${yPct}%">${s.jersey_number||""}<small>${s.player_name}${isCaptain(s)?" (C)":""}</small></i>`;
     }).join("");
-    const listRow=s=>`<div class="squad-row"><em>${s.jersey_number||"—"}</em><span>${flagImg(s.player)}${s.player_name}${isCaptain(s)?'<b class="captain-tag">C</b>':""}</span></div>`;
-    const subInRow=s=>{const mins=(s.details||[]).find(d=>d.type_id===119);return `<div class="squad-row sub-in"><em>↗</em><span>${flagImg(s.player)}${s.player_name}<small>entré${mins?` ${mins.data.value}’`:""}</small></span></div>`};
-    const subOutRow=s=>`<div class="squad-row sub-unused"><em>—</em><span>${flagImg(s.player)}${s.player_name}</span></div>`;
+    const listRow=s=>`<div class="squad-row">${avatarImg(s)}<em>${s.jersey_number||"—"}</em><span>${flagImg(s.player)}${s.player_name}${isCaptain(s)?'<b class="captain-tag">C</b>':""}</span>${ratingBadge(s)}</div>`;
+    const subInRow=s=>{const mins=(s.details||[]).find(d=>d.type_id===119);return `<div class="squad-row sub-in">${avatarImg(s)}<em>↗</em><span>${flagImg(s.player)}${s.player_name}<small>entré${mins?` ${mins.data.value}’`:""}</small></span>${ratingBadge(s)}</div>`};
+    const subOutRow=s=>`<div class="squad-row sub-unused">${avatarImg(s)}<em>—</em><span>${flagImg(s.player)}${s.player_name}</span></div>`;
     return `<article><div class="squad-title"><b>${team.name}</b></div>
       <div class="pitch ${team.cls}">${pitchIcons}</div>
       <div class="squad-zone"><h4>Titulaires</h4><div class="squad-list">${starters.map(listRow).join("")}</div></div>
       <div class="squad-zone subs"><h4>Remplaçants</h4><div class="squad-list">${subsUsed.map(subInRow).join("")}${subsUnused.map(subOutRow).join("")}</div></div>
       <div class="squad-zone coach"><h4>Entraîneur</h4><div class="squad-list"><div class="squad-row">${flagImg(coach)}<span>${coach?(coach.display_name||coach.name):"Non communiqué"}</span></div></div></div>
     </article>`;
-  }).join("");
-}
-
-function renderPlayers(){
-  const lineups=(RAW.lineups||[]).filter(l=>(l.details||[]).length>0);
-  const teams=[{id:HOME_ID,name:HOME_NAME,cls:"ars-label"},{id:AWAY_ID,name:AWAY_NAME,cls:"mci-label"}];
-  document.querySelector("#playersGrid").innerHTML=teams.map(team=>{
-    const list=lineups.filter(l=>l.team_id===team.id).sort((a,b)=>a.type_id-b.type_id);
-    const rows=list.map(l=>{
-      const rating=(l.details||[]).find(d=>d.type_id===118);
-      const minutes=(l.details||[]).find(d=>d.type_id===119);
-      const ratingVal=rating?Number(rating.data.value).toFixed(1):null;
-      const ratingClass = ratingVal==null?"none":ratingVal>=7.5?"great":ratingVal>=6.5?"good":ratingVal>=5.5?"mid":"low";
-      const photo=l.player && l.player.image_path;
-      const initialsTxt=initials(l.player_name);
-      return `<div class="player-row${l.type_id===12?" sub-in":""}">${photo?`<img class="p-avatar" src="${photo}" alt="${l.player_name}" loading="lazy" onerror="this.outerHTML='&lt;i class=&quot;p-avatar&quot;&gt;${initialsTxt}&lt;/i&gt;'">`:`<i class="p-avatar">${initialsTxt}</i>`}<span>${flagImg(l.player)}${l.player_name}${isCaptain(l)?'<b class="captain-tag">C</b>':""}<small>${l.jersey_number?`n°${l.jersey_number}`:""}${minutes?` · ${minutes.data.value}’`:""}${l.type_id===12?" (entré)":""}</small></span><em class="rating ${ratingClass}">${ratingVal??"—"}</em></div>`;
-    }).join("");
-    return `<div class="players-team"><b class="${team.cls}">${team.name}</b>${rows}</div>`;
   }).join("");
 }
 
@@ -272,9 +284,9 @@ function renderStudio(){
 
   const goals=events.filter(e=>e.type.code==="goal"||e.type.code==="owngoal");
   document.querySelector("#phases").innerHTML = goals.length
-    ? goals.map((g,i)=>`<article><span>BUT ${i+1} · ${fmtMinute(g)}</span><b>${g.player_name||g.type.name}</b><p>${g.info||""}${g.related_player_name?` (passe de ${g.related_player_name})`:""}</p><footer><strong>${g.result?g.result.replace("-","–"):""}</strong></footer></article>`).join("")
+    ? goals.map((g,i)=>`<article><span>BUT ${i+1} · ${fmtMinute(g)}</span><b>${g.player_name||eventLabel(g.type)}</b><p>${g.info||""}${g.related_player_name?` (passe de ${g.related_player_name})`:""}</p><footer><strong>${g.result?g.result.replace("-","–"):""}</strong></footer></article>`).join("")
     : `<p style="font-size:9px;color:var(--muted)">Aucun but marqué dans ce match.</p>`;
-  document.querySelector("#thread-copy").innerHTML = goals.map((g,i)=>`<p><b>${i+1}/${goals.length}</b> ${g.player_name||g.type.name} marque à la ${fmtMinute(g)}${g.related_player_name?` (passe de ${g.related_player_name})`:""}. Score : ${g.result?g.result.replace("-","–"):""}.</p>`).join("");
+  document.querySelector("#thread-copy").innerHTML = goals.map((g,i)=>`<p><b>${i+1}/${goals.length}</b> ${g.player_name||eventLabel(g.type)} marque à la ${fmtMinute(g)}${g.related_player_name?` (passe de ${g.related_player_name})`:""}. Score : ${g.result?g.result.replace("-","–"):""}.</p>`).join("");
 
   document.querySelector("#copySource").onclick=()=>copyText(`${HOME_NAME} ${hs}–${as} ${AWAY_NAME} · Source : SportMonks (fixture ${fixtureId})`,document.querySelector("#copySource"));
 }

@@ -153,5 +153,15 @@ search.oninput=()=>{
 };
 
 matchdayGridInit();
-loadLiveData().then(refresh);
+function updateCompetitionCounts(){
+  document.querySelectorAll(".competition").forEach(btn=>{
+    const league=btn.dataset.league;
+    const count=(REAL_DATA[league]||[]).length;
+    const em=btn.querySelector("em");
+    if(em) em.textContent = `${count} match${count>1?"s":""}`;
+  });
+}
+
+loadLiveData().then(()=>{updateCompetitionCounts();refresh()});
+updateCompetitionCounts();
 refresh();
