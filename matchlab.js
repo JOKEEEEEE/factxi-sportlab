@@ -94,13 +94,22 @@ function renderScoreCard(home,away){
     calendar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
     stadium:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="12" rx="9" ry="6"/><path d="M3 12c0 2 4 3 9 3s9-1 9-3"/></svg>',
     people:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.5 3-6 7-6s7 2.5 7 6"/><circle cx="18" cy="9" r="2.3"/><path d="M15.5 14.2c2.7.4 4.5 2.4 4.5 5.8"/></svg>',
-    flag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 21V4"/><path d="M5 4h13l-3 4 3 4H5"/></svg>'
+    flag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 21V4"/><path d="M5 4h13l-3 4 3 4H5"/></svg>',
+    weather:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="4"/><path d="M13 15h5a3 3 0 0 0 0-6 5 5 0 0 0-9.6-1.5"/></svg>'
   };
   const metaItems=[];
   if(dateTxt) metaItems.push(`<span>${ICONS.calendar}${dateTxt} · ${timeTxt}</span>`);
   if(RAW.venue) metaItems.push(`<span>${ICONS.stadium}${RAW.venue.name}</span>`);
   if(RAW.venue && RAW.venue.capacity) metaItems.push(`<span>${ICONS.people}Capacité : ${RAW.venue.capacity.toLocaleString("fr-FR")}</span>`);
   if(RAW.round) metaItems.push(`<span>${ICONS.flag}Journée ${RAW.round.name}</span>`);
+  if(RAW.attendance) metaItems.push(`<span>${ICONS.people}${Number(RAW.attendance).toLocaleString("fr-FR")} spectateurs</span>`);
+  const wr=RAW.weatherReport;
+  if(wr){
+    const tempObj = wr.temperature_celsius || wr.temperature_celcius || wr.temperature;
+    const t = tempObj ? Math.round(tempObj.temp ?? tempObj) : null;
+    const desc = wr.description || wr.type || "";
+    if(t!=null || desc) metaItems.push(`<span>${ICONS.weather}${desc}${t!=null?` ${t}°C`:""}</span>`);
+  }
   document.querySelector("#matchMeta").innerHTML=metaItems.join("");
   document.querySelector("#navRight").innerHTML=`<b>${home.name} vs ${away.name}</b>`;
   document.querySelector("#crumb").textContent = RAW.round ? `Journée ${RAW.round.name}` : "";
@@ -342,9 +351,12 @@ function avatarImg(l){
   return photo?`<img class="p-avatar" src="${photo}" alt="${l.player_name}" loading="lazy" onerror="this.outerHTML='&lt;i class=&quot;p-avatar&quot;&gt;${initialsTxt}&lt;/i&gt;'">`:`<i class="p-avatar">${initialsTxt}</i>`;
 }
 function lastName(s){
-  if(s.player && s.player.lastname) return s.player.lastname;
-  const parts=(s.player_name||"").split(" ");
-  return parts[parts.length-1]||s.player_name||"";
+  // s.player.lastname est parfois le patronyme légal complet (ex. portugais/espagnol :
+  // "Mota Veiga de Carvalho e Silva" pour Bernardo Silva) — illisible sur le terrain.
+  // On préfère le dernier mot du nom d'usage (display_name / player_name).
+  const src=(s.player && s.player.display_name) || s.player_name || "";
+  const parts=src.split(" ");
+  return parts[parts.length-1]||src;
 }
 function entryMinute(s){
   const ev=(RAW.events||[]).find(e=>e.type && e.type.code==="substitution" && e.player_name===s.player_name);
