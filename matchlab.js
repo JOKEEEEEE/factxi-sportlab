@@ -21,6 +21,13 @@ const STAT_NAME_FR = {
 const EVENT_NAME_FR = {
   "goal":"But","owngoal":"But contre son camp","substitution":"Remplacement","yellowcard":"Carton jaune","redcard":"Carton rouge","var":"VAR"
 };
+const INFO_FR = {
+  "Left foot shot":"Tir du pied gauche","Right foot shot":"Tir du pied droit","Header":"Tête",
+  "Penalty":"Penalty","Free kick":"Coup franc","Tripping":"Antijeu","Foul":"Faute",
+  "Unsportsmanlike conduct":"Comportement antisportif","Dissent":"Contestation",
+  "Professional foul":"Faute tactique","Time wasting":"Perte de temps volontaire"
+};
+function infoLabel(info){return INFO_FR[info] || info}
 function statLabel(t){return STAT_NAME_FR[t.code] || t.name}
 function eventLabel(type){return (type && (EVENT_NAME_FR[type.code] || type.name)) || ""}
 
@@ -126,18 +133,29 @@ function path(idx){
   for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],mx=(a[0]+b[0])/2;d+=` C${mx},${a[1]} ${mx},${b[1]} ${b[0]},${b[1]}`}
   return d;
 }
-function icon(code){return code==="goal"||code==="owngoal"?"⚽":code==="redcard"?'<span class="red-card-icon"></span>':code==="substitution"?'<span class="sub-icon"><i>↗</i><b>↙</b></span>':`<span class="var-badge">${(code||"?").slice(0,3).toUpperCase()}</span>`}
+function icon(code){
+  if(code==="goal"||code==="owngoal") return "⚽";
+  if(code==="redcard") return '<span class="red-card-icon"></span>';
+  if(code==="yellowcard") return '<span class="yellow-card-icon"></span>';
+  if(code==="substitution") return '<span class="sub-icon"><i>↗</i><b>↙</b></span>';
+  if(code==="var") return '<span class="var-badge">VAR</span>';
+  return `<span class="var-badge">${(code||"?").slice(0,3).toUpperCase()}</span>`;
+}
 
 function renderChart(){
   let svg="";
   [0,.25,.5,.75,1].forEach(v=>svg+=`<line class="grid" x1="48" y1="${y(v)}" x2="878" y2="${y(v)}"/><text x="5" y="${y(v)+3}">${v*100}%</text>`);
   [0,15,30,45,60,75,90].forEach(v=>svg+=`<text x="${x(v)}" y="320" text-anchor="middle">${v}’</text>`);
+  events.forEach((e,i)=>{
+    const t=e.minute+((e.extra_minute||0)/10);
+    svg+=`<line class="event-marker ${i===selected?"active":""}" x1="${x(t)}" y1="24" x2="${x(t)}" y2="294" stroke-dasharray="3,4"/>`;
+  });
   colors.forEach((c,i)=>svg+=`<path class="curve ${series===seriesKeys[i]?"focus":""}" stroke="${c}" d="${path(i)}"/>`);
   document.querySelector("#chart").innerHTML=svg;
   document.querySelector("#chart").classList.toggle("dim",series!=="all");
   document.querySelector("#chartEvents").innerHTML=events.map((e,i)=>{
     const t=e.minute+((e.extra_minute||0)/10);
-    return `<button class="chart-event ${i===selected?"active":""}" data-i="${i}" style="--x:${5.3+t/95*92.2}%;--y:${12+(i%3)*10}%" title="${fmtMinute(e)} · ${e.player_name||""}">${icon(e.type.code)}</button>`;
+    return `<button class="chart-event ${i===selected?"active":""}" data-i="${i}" style="--x:${5.3+t/95*92.2}%;--y:${i%2===0?8:20}%" title="${fmtMinute(e)} · ${e.player_name||""}">${icon(e.type.code)}</button>`;
   }).join("");
   document.querySelectorAll(".chart-event").forEach(b=>b.onclick=()=>select(+b.dataset.i));
 }
@@ -173,7 +191,7 @@ function renderFeed(){
   const second=all.filter(e=>e.period && e.period.description==="2nd-half");
   const row=e=>{
     const majorIndex=events.indexOf(e);
-    const detail = e.type.code==="substitution" ? `${e.player_name||""}${e.related_player_name?` ↔ ${e.related_player_name}`:""}` : (e.info||e.addition||"");
+    const detail = e.type.code==="substitution" ? `${e.player_name||""}${e.related_player_name?` ↔ ${e.related_player_name}`:""}` : (infoLabel(e.info)||e.addition||"");
     return `<button class="feed-event ${majorIndex===selected?"active":""}" data-major="${majorIndex}"><time>${fmtMinute(e)}</time><span class="symbol">${icon(e.type.code)}</span><b>${e.player_name||eventLabel(e.type)}<small> · ${detail}</small></b>${e.result?`<strong>${e.result.replace("-","–")}</strong>`:""}</button>`;
   };
   document.querySelector("#feed").innerHTML=
@@ -232,6 +250,32 @@ function avatarImg(l){
   const initialsTxt=initials(l.player_name);
   return photo?`<img class="p-avatar" src="${photo}" alt="${l.player_name}" loading="lazy" onerror="this.outerHTML='&lt;i class=&quot;p-avatar&quot;&gt;${initialsTxt}&lt;/i&gt;'">`:`<i class="p-avatar">${initialsTxt}</i>`;
 }
+function lastName(s){
+  if(s.player && s.player.lastname) return s.player.lastname;
+  const parts=(s.player_name||"").split(" ");
+  return parts[parts.length-1]||s.player_name||"";
+}
+function buildStatTypeMap(){
+  const map={};
+  (RAW.statistics||[]).forEach(s=>{ if(s.type) map[s.type.id]={name:statLabel(s.type)}; });
+  const extras={120:"Touches de balle",122:"Ballons longs tentés",123:"Ballons longs réussis",94:"Ballons perdus"};
+  Object.entries(extras).forEach(([id,name])=>{ if(!map[id]) map[id]={name}; });
+  return map;
+}
+function statDetailBlock(s,statTypeMap){
+  const skip=new Set([118,119,40]);
+  const items=(s.details||[]).filter(d=>!skip.has(d.type_id) && statTypeMap[d.type_id]).map(d=>({label:statTypeMap[d.type_id].name, value:d.data.value}));
+  const xg=(s.xGlineup||[]).find(d=>d.type_id===5304);
+  if(xg) items.unshift({label:"xG", value:Number(xg.data.value).toFixed(2)});
+  if(!items.length) return "";
+  return `<div class="player-detail" hidden>${items.map(it=>`<div class="pd-item"><b>${it.value}</b><span>${it.label}</span></div>`).join("")}</div>`;
+}
+function toggleStatDetail(btn){
+  const wrap=btn.closest(".squad-entry");
+  const detail=wrap && wrap.querySelector(".player-detail");
+  if(detail){ detail.hidden=!detail.hidden; btn.classList.toggle("open",!detail.hidden); }
+}
+window.toggleStatDetail=toggleStatDetail;
 function renderSquads(){
   const lineups=RAW.lineups||[];
   const teams=[{id:HOME_ID,name:HOME_NAME,cls:"ars-pitch"},{id:AWAY_ID,name:AWAY_NAME,cls:"city-pitch"}];
@@ -249,16 +293,22 @@ function renderSquads(){
       const colsInRow=rowsByRow[r].length;
       const xPct=colsInRow===1?50:((c-0.5)/colsInRow*100);
       const yPct=maxRow<=1?90:(90-(r-1)/(maxRow-1)*77);
-      return `<i style="--x:${xPct}%;--y:${yPct}%">${s.jersey_number||""}<small>${s.player_name}${isCaptain(s)?" (C)":""}</small></i>`;
+      const photo=s.player && s.player.image_path;
+      const jersey=s.jersey_number||"";
+      const photoHtml = photo
+        ? `<img src="${photo}" alt="" loading="lazy" onerror="this.outerHTML='${jersey}'">`
+        : jersey;
+      return `<i style="--x:${xPct}%;--y:${yPct}%" class="${photo?"has-photo":""}">${photoHtml}<small>${lastName(s)}${isCaptain(s)?" (C)":""}</small></i>`;
     }).join("");
-    const listRow=s=>`<div class="squad-row">${avatarImg(s)}<em>${s.jersey_number||"—"}</em><span>${flagImg(s.player)}${s.player_name}${isCaptain(s)?'<b class="captain-tag">C</b>':""}</span>${ratingBadge(s)}</div>`;
-    const subInRow=s=>{const mins=(s.details||[]).find(d=>d.type_id===119);return `<div class="squad-row sub-in">${avatarImg(s)}<em>↗</em><span>${flagImg(s.player)}${s.player_name}<small>entré${mins?` ${mins.data.value}’`:""}</small></span>${ratingBadge(s)}</div>`};
+    const statTypeMap=buildStatTypeMap();
+    const listRow=s=>`<div class="squad-entry"><div class="squad-row">${avatarImg(s)}<em>${s.jersey_number||"—"}</em><span>${flagImg(s.player)}${s.player_name}${isCaptain(s)?'<b class="captain-tag">C</b>':""}</span>${ratingBadge(s)}<button class="stat-toggle" onclick="toggleStatDetail(this)">▾</button></div>${statDetailBlock(s,statTypeMap)}</div>`;
+    const subInRow=s=>{const mins=(s.details||[]).find(d=>d.type_id===119);return `<div class="squad-entry"><div class="squad-row sub-in">${avatarImg(s)}<em>↗</em><span>${flagImg(s.player)}${s.player_name}<small>entré${mins?` ${mins.data.value}’`:""}</small></span>${ratingBadge(s)}<button class="stat-toggle" onclick="toggleStatDetail(this)">▾</button></div>${statDetailBlock(s,statTypeMap)}</div>`};
     const subOutRow=s=>`<div class="squad-row sub-unused">${avatarImg(s)}<em>—</em><span>${flagImg(s.player)}${s.player_name}</span></div>`;
     return `<article><div class="squad-title"><b>${team.name}</b></div>
       <div class="pitch ${team.cls}">${pitchIcons}</div>
       <div class="squad-zone"><h4>Titulaires</h4><div class="squad-list">${starters.map(listRow).join("")}</div></div>
       <div class="squad-zone subs"><h4>Remplaçants</h4><div class="squad-list">${subsUsed.map(subInRow).join("")}${subsUnused.map(subOutRow).join("")}</div></div>
-      <div class="squad-zone coach"><h4>Entraîneur</h4><div class="squad-list"><div class="squad-row">${flagImg(coach)}<span>${coach?(coach.display_name||coach.name):"Non communiqué"}</span></div></div></div>
+      <div class="squad-zone coach"><h4>Entraîneur</h4><div class="squad-list"><div class="squad-row">${coach&&coach.image_path?`<img class="p-avatar" src="${coach.image_path}" alt="${coach.display_name||coach.name}" loading="lazy" onerror="this.remove()">`:""}${flagImg(coach)}<span>${coach?(coach.display_name||coach.name):"Non communiqué"}</span></div></div></div>
     </article>`;
   }).join("");
 }
@@ -284,7 +334,7 @@ function renderStudio(){
 
   const goals=events.filter(e=>e.type.code==="goal"||e.type.code==="owngoal");
   document.querySelector("#phases").innerHTML = goals.length
-    ? goals.map((g,i)=>`<article><span>BUT ${i+1} · ${fmtMinute(g)}</span><b>${g.player_name||eventLabel(g.type)}</b><p>${g.info||""}${g.related_player_name?` (passe de ${g.related_player_name})`:""}</p><footer><strong>${g.result?g.result.replace("-","–"):""}</strong></footer></article>`).join("")
+    ? goals.map((g,i)=>`<article><span>BUT ${i+1} · ${fmtMinute(g)}</span><b>${g.player_name||eventLabel(g.type)}</b><p>${infoLabel(g.info)||""}${g.related_player_name?` (passe de ${g.related_player_name})`:""}</p><footer><strong>${g.result?g.result.replace("-","–"):""}</strong></footer></article>`).join("")
     : `<p style="font-size:9px;color:var(--muted)">Aucun but marqué dans ce match.</p>`;
   document.querySelector("#thread-copy").innerHTML = goals.map((g,i)=>`<p><b>${i+1}/${goals.length}</b> ${g.player_name||eventLabel(g.type)} marque à la ${fmtMinute(g)}${g.related_player_name?` (passe de ${g.related_player_name})`:""}. Score : ${g.result?g.result.replace("-","–"):""}.</p>`).join("");
 
