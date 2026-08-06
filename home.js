@@ -37,6 +37,8 @@ function tagFeatured(dataset){
 
 REAL_DATA = tagFeatured(JSON.parse(JSON.stringify(FALLBACK_DATA)));
 
+let COMPETITION_LOGOS = {};
+
 async function loadLiveData(){
   try{
     const res = await fetch("data/matches.json", {cache:"no-store"});
@@ -47,6 +49,7 @@ async function loadLiveData(){
     payload.competitions.forEach(entry=>{
       const name = entry.competition && entry.competition.name;
       if(name && Array.isArray(entry.matches)) live[name] = entry.matches;
+      if(name && entry.competition.logo_url) COMPETITION_LOGOS[name] = entry.competition.logo_url;
     });
     if(Object.keys(live).length){
       REAL_DATA = tagFeatured(live);
@@ -198,6 +201,11 @@ function updateCompetitionCounts(){
     const count=(REAL_DATA[league]||[]).length;
     const em=btn.querySelector("em");
     if(em) em.textContent = `${count} match${count>1?"s":""}`;
+    const logoUrl=COMPETITION_LOGOS[league];
+    const iconEl=btn.querySelector("i[data-comp-logo]");
+    if(logoUrl && iconEl && !iconEl.querySelector("img")){
+      iconEl.innerHTML=`<img src="${logoUrl}" alt="" loading="lazy" onerror="this.remove()">`;
+    }
   });
 }
 

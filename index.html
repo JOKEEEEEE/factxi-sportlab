@@ -3,14 +3,14 @@
 <main><section class="welcome"><div><h1>Quel match voulez-vous <em>faire parler ?</em></h1></div><div class="pipeline"><i>1</i><b>Collecte API</b><i>2</i><b>Calculs</b><i>3</i><b>Rédaction LLM</b><i>4</i><b>Exports</b></div></section>
 <div class="search" hidden>⌕ <input id="matchSearch" type="search" placeholder="Rechercher une équipe, un match ou une compétition…"></div>
 <section class="browser"><div class="section-title"><h2>Choisir une compétition</h2><span>8 compétitions</span></div><div class="competitions" id="competitions">
- <button class="competition" data-league="Premier League"><i class="pl"><img src="https://media.api-sports.io/football/leagues/39.png" alt="" loading="lazy"></i><span><b>Premier League</b><small>Angleterre</small></span><em>1 match</em></button>
- <button class="competition" data-league="LaLiga"><i class="laliga"><img src="https://media.api-sports.io/football/leagues/140.png" alt="" loading="lazy"></i><span><b>LaLiga</b><small>Espagne</small></span><em>0 match</em></button>
- <button class="competition" data-league="Serie A"><i class="seriea"><img src="https://media.api-sports.io/football/leagues/135.png" alt="" loading="lazy"></i><span><b>Serie A</b><small>Italie</small></span><em>0 match</em></button>
- <button class="competition" data-league="Bundesliga"><i class="bundes"><img src="https://media.api-sports.io/football/leagues/78.png" alt="" loading="lazy"></i><span><b>Bundesliga</b><small>Allemagne</small></span><em>0 match</em></button>
- <button class="competition" data-league="Ligue 1"><i class="ligue1"><img src="https://media.api-sports.io/football/leagues/61.png" alt="" loading="lazy"></i><span><b>Ligue 1</b><small>France</small></span><em>0 match</em></button>
- <button class="competition" data-league="Champions League"><i class="c1"><img src="https://media.api-sports.io/football/leagues/2.png" alt="" loading="lazy"></i><span><b>Champions League</b><small>UEFA</small></span><em>0 match</em></button>
- <button class="competition" data-league="Europa League"><i class="c3"><img src="https://media.api-sports.io/football/leagues/3.png" alt="" loading="lazy"></i><span><b>Europa League</b><small>UEFA</small></span><em>0 match</em></button>
- <button class="competition" data-league="Conference League"><i class="c4"><img src="https://media.api-sports.io/football/leagues/848.png" alt="" loading="lazy"></i><span><b>Conference League</b><small>UEFA</small></span><em>0 match</em></button>
+ <button class="competition" data-league="Premier League"><i class="pl" data-comp-logo="Premier League">PL</i><span><b>Premier League</b><small>Angleterre</small></span><em>1 match</em></button>
+ <button class="competition" data-league="LaLiga"><i class="laliga" data-comp-logo="LaLiga">LL</i><span><b>LaLiga</b><small>Espagne</small></span><em>0 match</em></button>
+ <button class="competition" data-league="Serie A"><i class="seriea" data-comp-logo="Serie A">SA</i><span><b>Serie A</b><small>Italie</small></span><em>0 match</em></button>
+ <button class="competition" data-league="Bundesliga"><i class="bundes" data-comp-logo="Bundesliga">BL</i><span><b>Bundesliga</b><small>Allemagne</small></span><em>0 match</em></button>
+ <button class="competition" data-league="Ligue 1"><i class="ligue1" data-comp-logo="Ligue 1">L1</i><span><b>Ligue 1</b><small>France</small></span><em>0 match</em></button>
+ <button class="competition" data-league="Champions League"><i class="c1" data-comp-logo="Champions League">C1</i><span><b>Champions League</b><small>UEFA</small></span><em>0 match</em></button>
+ <button class="competition" data-league="Europa League"><i class="c3" data-comp-logo="Europa League">C3</i><span><b>Europa League</b><small>UEFA</small></span><em>0 match</em></button>
+ <button class="competition" data-league="Conference League"><i class="c4" data-comp-logo="Conference League">C4</i><span><b>Conference League</b><small>UEFA</small></span><em>0 match</em></button>
  </div></section>
 <section class="drilldown" id="seasonBlock" hidden><div><p>Saison</p><div class="season-tabs" id="seasonTabs"></div></div></section>
 <section class="drilldown" id="clubBlock" hidden><div><p>Journée</p><div class="matchday-grid" id="matchdayGrid"><button class="active" data-matchday="all">Toutes</button></div></div><div><p>Club</p><div class="clubs" id="clubs"><button class="active" data-club="all"><i>20</i><span>Tous</span></button></div></div></section>
