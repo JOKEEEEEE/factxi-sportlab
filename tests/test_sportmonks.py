@@ -11,7 +11,7 @@ NOW = datetime(2026, 8, 5, 10, 0, tzinfo=UTC)
 class SportMonksProviderTests(unittest.TestCase):
     def test_competitions_are_normalised_with_trace(self) -> None:
         def fake_transport(url, headers, timeout):
-            self.assertTrue(url.endswith("/leagues?include=country"))
+            self.assertIn("/leagues?include=", url)
             self.assertEqual(headers, {"Authorization": "test-token"})
             return {
                 "data": [

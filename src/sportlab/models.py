@@ -35,6 +35,7 @@ class Competition:
     competition_type: str | None
     logo_url: str | None
     trace: SourceTrace
+    current_season_id: int | None = None
 
 
 @dataclass(frozen=True, slots=True)

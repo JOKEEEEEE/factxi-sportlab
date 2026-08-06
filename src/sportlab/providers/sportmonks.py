@@ -96,7 +96,7 @@ class SportMonksProvider(FootballDataProvider):
         # Le endpoint /leagues ne prend pas de filtre pays simple et documenté :
         # on récupère la liste (limitée à ce que couvre l'abonnement) et on
         # filtre côté client si un pays est demandé.
-        rows, collected_at = self._get("leagues", {"include": "country"})
+        rows, collected_at = self._get("leagues", {"include": "country;currentSeason"})
         result: list[Competition] = []
         for row in rows:
             league_id = row.get("id")
@@ -105,6 +105,7 @@ class SportMonksProvider(FootballDataProvider):
             country_name = (row.get("country") or {}).get("name")
             if country and (country_name or "").lower() != country.lower():
                 continue
+            current_season = row.get("currentSeason") or {}
             result.append(
                 Competition(
                     id=f"sportmonks:league:{league_id}",
@@ -112,6 +113,7 @@ class SportMonksProvider(FootballDataProvider):
                     country=country_name,
                     competition_type=row.get("sub_type") or row.get("type"),
                     logo_url=row.get("image_path"),
+                    current_season_id=current_season.get("id"),
                     trace=SourceTrace(
                         provider=self.name,
                         endpoint="/leagues",
@@ -122,6 +124,18 @@ class SportMonksProvider(FootballDataProvider):
                 )
             )
         return result
+
+    def get_raw_standings(self, season_id: int, *, include: str = "participant;details.type") -> list[JsonObject]:
+        """Classement complet d'une saison, réponse brute (non normalisée)."""
+        rows, _ = self._get(f"standings/seasons/{season_id}", {"include": include})
+        return rows
+
+    def get_raw_topscorers(
+        self, season_id: int, *, include: str = "player;participant;type"
+    ) -> list[JsonObject]:
+        """Meilleurs buteurs/passeurs/cartons d'une saison, réponse brute (non normalisée)."""
+        rows, _ = self._get(f"topscorers/seasons/{season_id}", {"include": include})
+        return rows
 
     def get_raw_fixture(self, fixture_id: str, *, include: str) -> JsonObject:
         """Retourne la réponse brute (non normalisée) d'un match précis.
