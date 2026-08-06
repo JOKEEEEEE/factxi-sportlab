@@ -1,7 +1,7 @@
 {
-  "fetched_at": "2026-08-06T00:51:14.205609+00:00",
+  "fetched_at": "2026-08-06T11:13:48.713304+00:00",
   "fixture_id": "19134564",
-  "includes_requested": "participants;scores;state;venue;round;coaches.country;events.type;events.period;events.player;lineups.player.country;lineups.details;lineups.xGlineup;statistics.type;xGFixture;pressure",
+  "includes_requested": "participants;scores;state;venue;round;coaches.country;events.type;events.period;events.player;lineups.player.country;lineups.details;lineups.xGlineup;statistics.type;xGFixture;pressure;weatherReport",
   "note": "Réponse brute SportMonks, non simplifiée. À relire avant tout usage éditorial. Si certains champs demandés (lineups, events, statistics, xGFixture) sont absents, c'est probablement une question de couverture d'abonnement pour cette compétition.",
   "raw": {
     "id": 19134564,
@@ -14756,6 +14756,44 @@
         "minute": 92,
         "pressure": 0
       }
-    ]
+    ],
+    "weatherreport": {
+      "id": 540942,
+      "fixture_id": 19134564,
+      "venue_id": 204,
+      "temperature": {
+        "day": 6.81,
+        "morning": 1.89,
+        "evening": 6.56,
+        "night": 3.05
+      },
+      "feels_like": {
+        "day": 4.85,
+        "morning": -0.72,
+        "evening": 5.65,
+        "night": 0.76
+      },
+      "wind": {
+        "speed": 3.1,
+        "direction": 179
+      },
+      "humidity": "70%",
+      "pressure": 1022,
+      "clouds": "3%",
+      "description": "clear sky",
+      "icon": "https://cdn.sportmonks.com/images/weather/01d.png",
+      "type": "actual",
+      "metric": "celcius",
+      "current": {
+        "temp": 7.77,
+        "wind": 3.09,
+        "clouds": "3%",
+        "humidity": "70%",
+        "pressure": 1022,
+        "direction": 130,
+        "feels_like": 5.78,
+        "description": "clear sky"
+      }
+    }
   }
 }
