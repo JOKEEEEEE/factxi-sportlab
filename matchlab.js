@@ -287,10 +287,15 @@ function renderFeed(){
 
 function select(i){selected=i;renderChart();renderCompare();renderFeed()}
 
+const TEAM_STAT_WHITELIST = new Set([
+  "ball-possession","shots-total","shots-on-target","big-chances-created","corners",
+  "fouls","yellowcards","successful-passes-percentage","duels-won","saves","offsides","xg"
+]);
 function renderStats(){
   const byType={};
   (RAW.statistics||[]).forEach(s=>{
     const key=s.type.id;
+    if(!TEAM_STAT_WHITELIST.has(s.type.code)) return;
     if(!byType[key]) byType[key]={name:s.type.name, code:s.type.code, group:s.type.stat_group||"overall", home:null, away:null};
     if(s.location==="home") byType[key].home=s.data.value; else byType[key].away=s.data.value;
   });
@@ -386,10 +391,7 @@ const PLAYER_STAT_CATALOG = {
   general: [
     {id:120, label:"Touches"},
     {id:80, label:"Passes"},
-    {id:117, label:"Passes clés"},
-    {id:122, label:"Ballons longs tentés"},
-    {id:123, label:"Ballons longs réussis"},
-    {id:94, label:"Ballons perdus"}
+    {id:117, label:"Passes clés"}
   ],
   offensive: [
     {id:52, label:"Buts"},
@@ -397,20 +399,14 @@ const PLAYER_STAT_CATALOG = {
     {id:"xg", label:"xG"},
     {id:42, label:"Tirs"},
     {id:86, label:"Tirs cadrés"},
-    {id:41, label:"Tirs non cadrés"},
-    {id:58, label:"Tirs contrés"},
-    {id:580, label:"Occasions créées"},
-    {id:581, label:"Occasions manquées"},
-    {id:109, label:"Dribbles réussis"},
-    {id:99, label:"Centres réussis"}
+    {id:109, label:"Dribbles réussis"}
   ],
   defensive: [
     {id:106, label:"Duels gagnés"},
     {id:78, label:"Tacles"},
     {id:100, label:"Interceptions"},
     {id:56, label:"Fautes"},
-    {id:84, label:"Cartons jaunes"},
-    {id:57, label:"Arrêts"}
+    {id:84, label:"Cartons jaunes"}
   ]
 };
 let statCategory="general";
