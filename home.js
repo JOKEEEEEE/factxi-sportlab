@@ -88,7 +88,7 @@ function resetSelection(){
 }
 function buildSeasonTabs(){
   const seasons=new Set(matchesForLeague(league).map(m=>m.season));
-  const sorted=[...seasons].sort((a,b)=>b-a);
+  const sorted=[...seasons].sort((a,b)=>a-b);
   const tabs=document.querySelector("#seasonTabs");
   if(!sorted.length){tabs.innerHTML=`<span style="font-size:9px;color:var(--muted)">Aucune saison disponible pour cette compétition.</span>`;return}
   tabs.innerHTML=sorted.map(y=>`<button data-season="${y}">${seasonLabel(y)}</button>`).join("");

@@ -15,7 +15,7 @@
   <section class="card panel sofa-stats"><div class="panel-head"><div><span class="tag fact">Faits observés</span><h2>Statistiques du match</h2></div></div><div class="team-labels" id="teamLabels"></div><div class="stat-body" id="statBody"></div></section>
 
   <div class="layout">
-   <section class="panel card"><div class="panel-head"><div><span class="tag estimate">Estimation · modèle calculé v0.2</span><h2>Comment le match a basculé</h2></div><div class="legend"><button data-series="all" class="active">Toutes</button><button data-series="ars"><i class="ars-c"></i><span id="legHome">DOM</span></button><button data-series="draw"><i class="draw-c"></i>Nul</button><button data-series="mci"><i class="mci-c"></i><span id="legAway">EXT</span></button></div></div>
+   <section class="panel card"><div class="panel-head"><div><span class="tag estimate">Estimation · modèle calculé v0.3 (pression SportMonks)</span><h2>Comment le match a basculé</h2></div><div class="legend"><button data-series="all" class="active">Toutes</button><button data-series="ars"><i class="ars-c"></i><span id="legHome">DOM</span></button><button data-series="draw"><i class="draw-c"></i>Nul</button><button data-series="mci"><i class="mci-c"></i><span id="legAway">EXT</span></button></div></div>
     <div class="chartbox"><svg id="chart" viewBox="0 0 900 330" aria-label="Probabilités de victoire estimées au fil du match"></svg><div id="chartEvents"></div></div>
     <div class="event-key"><span>⚽ But</span><span class="red-key"></span><span>Carton rouge</span></div>
     <div class="compare"><article id="before" class="state"></article><i>→</i><article id="after" class="state active"></article></div>
@@ -26,6 +26,8 @@
   </div>
 
   <section class="card panel"><div class="panel-head"><div><span class="tag fact">Compositions officielles</span><h2>Onze de départ</h2></div></div><div class="squads" id="squads"></div><p class="players-note">Note de match : SportMonks. Cartes de chaleur : non disponibles en formule standard, nécessitent un fournisseur de tracking dédié.</p></section>
+
+  <section class="card panel individual-stats"><div class="panel-head"><div><span class="tag fact">Faits observés</span><h2>Statistiques individuelles</h2></div><div class="istats-tabs" id="statCatTabs"><button data-cat="general" class="active">Générale</button><button data-cat="offensive">Offensive</button><button data-cat="defensive">Défensive</button></div></div><div class="istats-tables" id="istatsTables"></div></section>
 
  </div>
 

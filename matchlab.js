@@ -72,6 +72,7 @@ function init(){
   renderChart();
   select(events.length?0:-1);
   renderSquads();
+  renderIndividualStats();
   renderStudio();
 
   document.querySelector("#loadingState").hidden=true;
@@ -95,24 +96,54 @@ function renderScoreCard(home,away){
   document.querySelector("#legAway").textContent=names[2];
 }
 
+function buildPressureIndex(){
+  const idx={};
+  (RAW.pressure||[]).forEach(p=>{
+    if(p.participant_id!==HOME_ID && p.participant_id!==AWAY_ID) return;
+    const m=p.minute;
+    if(!idx[m]) idx[m]={home:0,away:0};
+    if(p.participant_id===HOME_ID) idx[m].home=p.pressure; else idx[m].away=p.pressure;
+  });
+  return idx;
+}
+function momentumAt(pressureIdx,minute){
+  const w=8;
+  let sum=0,n=0;
+  for(let m=Math.max(0,Math.round(minute)-w+1); m<=Math.round(minute); m++){
+    const e=pressureIdx[m];
+    if(e){ sum+=(e.home-e.away); n++; }
+  }
+  return n?sum/n:0;
+}
 function buildProbabilityModel(){
   const major=(RAW.events||[]).filter(e=>e.type && ["goal","owngoal","redcard"].includes(e.type.code))
     .sort((a,b)=>(a.minute+((a.extra_minute||0)/10))-(b.minute+((b.extra_minute||0)/10)));
   events=major;
-  let diff=0, red=0;
-  points=[{t:0,diff:0,red:0}];
-  major.forEach(e=>{
-    const t=e.minute+((e.extra_minute||0)/10);
-    if(e.type.code==="goal") diff += e.participant_id===HOME_ID?1:-1;
-    if(e.type.code==="owngoal") diff += e.participant_id===HOME_ID?-1:1;
-    if(e.type.code==="redcard") red += e.participant_id===HOME_ID?-1:1;
-    points.push({t,diff,red});
+  const pressureIdx=buildPressureIndex();
+  const hasPressure=Object.keys(pressureIdx).length>0;
+  const lastEventT=major.length?major[major.length-1].minute+((major[major.length-1].extra_minute||0)/10):0;
+  const maxMinute=Math.max(95,lastEventT+1);
+  const sampleTimes=new Set();
+  for(let t=0;t<=maxMinute;t+=2) sampleTimes.add(t);
+  major.forEach(e=>sampleTimes.add(e.minute+((e.extra_minute||0)/10)));
+  sampleTimes.add(maxMinute);
+  const sortedTimes=[...sampleTimes].sort((a,b)=>a-b);
+  let diff=0, red=0, evIdx=0;
+  points=[];
+  sortedTimes.forEach(t=>{
+    while(evIdx<major.length && (major[evIdx].minute+((major[evIdx].extra_minute||0)/10))<=t+1e-9){
+      const e=major[evIdx];
+      if(e.type.code==="goal") diff += e.participant_id===HOME_ID?1:-1;
+      if(e.type.code==="owngoal") diff += e.participant_id===HOME_ID?-1:1;
+      if(e.type.code==="redcard") red += e.participant_id===HOME_ID?-1:1;
+      evIdx++;
+    }
+    const momentum=hasPressure?momentumAt(pressureIdx,t):0;
+    points.push({t,diff,red,momentum});
   });
-  const lastT = major.length ? Math.max(95,points[points.length-1].t+1) : 95;
-  points.push({t:lastT,diff,red});
 }
-function probsAtState(diff,red,minute){
-  const strength=(diff+red*0.4)*(1+(minute/95)*1.3);
+function probsAtState(diff,red,minute,momentum){
+  const strength=(diff+red*0.4)*(1+(minute/95)*1.3)+(momentum||0)*0.035;
   const eh=Math.exp(strength), ea=Math.exp(-strength), ed=Math.exp(0.25-Math.abs(strength)*0.35);
   const tot=eh+ea+ed;
   return [eh/tot, ed/tot, ea/tot];
@@ -120,12 +151,12 @@ function probsAtState(diff,red,minute){
 function probsAt(t){
   let cur=points[0];
   for(const p of points) if(p.t<=t) cur=p;
-  return probsAtState(cur.diff,cur.red,t);
+  return probsAtState(cur.diff,cur.red,t,cur.momentum);
 }
 
 const x=t=>48+t/95*830, y=p=>24+(1-p)*270;
 function curvePoints(){
-  return points.map(p=>({t:p.t, p:probsAtState(p.diff,p.red,p.t)}));
+  return points.map(p=>({t:p.t, p:probsAtState(p.diff,p.red,p.t,p.momentum)}));
 }
 function path(idx){
   const pts=curvePoints().map(d=>[x(d.t),y(d.p[idx])]);
@@ -255,27 +286,6 @@ function lastName(s){
   const parts=(s.player_name||"").split(" ");
   return parts[parts.length-1]||s.player_name||"";
 }
-function buildStatTypeMap(){
-  const map={};
-  (RAW.statistics||[]).forEach(s=>{ if(s.type) map[s.type.id]={name:statLabel(s.type)}; });
-  const extras={120:"Touches de balle",122:"Ballons longs tentés",123:"Ballons longs réussis",94:"Ballons perdus"};
-  Object.entries(extras).forEach(([id,name])=>{ if(!map[id]) map[id]={name}; });
-  return map;
-}
-function statDetailBlock(s,statTypeMap){
-  const skip=new Set([118,119,40]);
-  const items=(s.details||[]).filter(d=>!skip.has(d.type_id) && statTypeMap[d.type_id]).map(d=>({label:statTypeMap[d.type_id].name, value:d.data.value}));
-  const xg=(s.xGlineup||[]).find(d=>d.type_id===5304);
-  if(xg) items.unshift({label:"xG", value:Number(xg.data.value).toFixed(2)});
-  if(!items.length) return "";
-  return `<div class="player-detail" hidden>${items.map(it=>`<div class="pd-item"><b>${it.value}</b><span>${it.label}</span></div>`).join("")}</div>`;
-}
-function toggleStatDetail(btn){
-  const wrap=btn.closest(".squad-entry");
-  const detail=wrap && wrap.querySelector(".player-detail");
-  if(detail){ detail.hidden=!detail.hidden; btn.classList.toggle("open",!detail.hidden); }
-}
-window.toggleStatDetail=toggleStatDetail;
 function renderSquads(){
   const lineups=RAW.lineups||[];
   const teams=[{id:HOME_ID,name:HOME_NAME,cls:"ars-pitch"},{id:AWAY_ID,name:AWAY_NAME,cls:"city-pitch"}];
@@ -300,9 +310,8 @@ function renderSquads(){
         : jersey;
       return `<i style="--x:${xPct}%;--y:${yPct}%" class="${photo?"has-photo":""}">${photoHtml}<small>${lastName(s)}${isCaptain(s)?" (C)":""}</small></i>`;
     }).join("");
-    const statTypeMap=buildStatTypeMap();
-    const listRow=s=>`<div class="squad-entry"><div class="squad-row">${avatarImg(s)}<em>${s.jersey_number||"—"}</em><span>${flagImg(s.player)}${s.player_name}${isCaptain(s)?'<b class="captain-tag">C</b>':""}</span>${ratingBadge(s)}<button class="stat-toggle" onclick="toggleStatDetail(this)">▾</button></div>${statDetailBlock(s,statTypeMap)}</div>`;
-    const subInRow=s=>{const mins=(s.details||[]).find(d=>d.type_id===119);return `<div class="squad-entry"><div class="squad-row sub-in">${avatarImg(s)}<em>↗</em><span>${flagImg(s.player)}${s.player_name}<small>entré${mins?` ${mins.data.value}’`:""}</small></span>${ratingBadge(s)}<button class="stat-toggle" onclick="toggleStatDetail(this)">▾</button></div>${statDetailBlock(s,statTypeMap)}</div>`};
+    const listRow=s=>`<div class="squad-row">${avatarImg(s)}<em>${s.jersey_number||"—"}</em><span>${flagImg(s.player)}${s.player_name}${isCaptain(s)?'<b class="captain-tag">C</b>':""}</span>${ratingBadge(s)}</div>`;
+    const subInRow=s=>{const mins=(s.details||[]).find(d=>d.type_id===119);return `<div class="squad-row sub-in">${avatarImg(s)}<em>↗</em><span>${flagImg(s.player)}${s.player_name}<small>entré${mins?` ${mins.data.value}’`:""}</small></span>${ratingBadge(s)}</div>`};
     const subOutRow=s=>`<div class="squad-row sub-unused">${avatarImg(s)}<em>—</em><span>${flagImg(s.player)}${s.player_name}</span></div>`;
     return `<article><div class="squad-title"><b>${team.name}</b></div>
       <div class="pitch ${team.cls}">${pitchIcons}</div>
@@ -311,6 +320,96 @@ function renderSquads(){
       <div class="squad-zone coach"><h4>Entraîneur</h4><div class="squad-list"><div class="squad-row">${coach&&coach.image_path?`<img class="p-avatar" src="${coach.image_path}" alt="${coach.display_name||coach.name}" loading="lazy" onerror="this.remove()">`:""}${flagImg(coach)}<span>${coach?(coach.display_name||coach.name):"Non communiqué"}</span></div></div></div>
     </article>`;
   }).join("");
+}
+
+const PLAYER_STAT_CATALOG = {
+  general: [
+    {id:120, label:"Touches"},
+    {id:80, label:"Passes"},
+    {id:117, label:"Passes clés"},
+    {id:122, label:"Ballons longs tentés"},
+    {id:123, label:"Ballons longs réussis"},
+    {id:94, label:"Ballons perdus"}
+  ],
+  offensive: [
+    {id:52, label:"Buts"},
+    {id:79, label:"Passes déc."},
+    {id:"xg", label:"xG"},
+    {id:42, label:"Tirs"},
+    {id:86, label:"Tirs cadrés"},
+    {id:41, label:"Tirs non cadrés"},
+    {id:58, label:"Tirs contrés"},
+    {id:580, label:"Occasions créées"},
+    {id:581, label:"Occasions manquées"},
+    {id:109, label:"Dribbles réussis"},
+    {id:99, label:"Centres réussis"}
+  ],
+  defensive: [
+    {id:106, label:"Duels gagnés"},
+    {id:78, label:"Tacles"},
+    {id:100, label:"Interceptions"},
+    {id:56, label:"Fautes"},
+    {id:84, label:"Cartons jaunes"},
+    {id:57, label:"Arrêts"}
+  ]
+};
+let statCategory="general";
+const istatsSort={home:{col:"rating",dir:"desc"},away:{col:"rating",dir:"desc"}};
+
+function playerStatValue(l,statId){
+  if(statId==="xg"){ const x=(l.xGlineup||[]).find(d=>d.type_id===5304); return x?Number(x.data.value):null; }
+  const d=(l.details||[]).find(d=>d.type_id===statId);
+  return d?Number(d.data.value):null;
+}
+function playerMinutes(l){const d=(l.details||[]).find(d=>d.type_id===119);return d?Number(d.data.value):null}
+function playerRating(l){const d=(l.details||[]).find(d=>d.type_id===118);return d?Number(d.data.value):null}
+function fmtStatCell(v,statId){
+  if(v==null) return "—";
+  return statId==="xg" ? v.toFixed(2) : String(v);
+}
+function sortIstats(team,col){
+  const s=istatsSort[team];
+  if(s.col===col){ s.dir = s.dir==="desc"?"asc":"desc"; }
+  else { s.col=col; s.dir = col==="name"?"asc":"desc"; }
+  renderIndividualStats();
+}
+window.sortIstats=sortIstats;
+function renderIndividualStatsTable(team,teamKey,cls){
+  const lineups=(RAW.lineups||[]).filter(l=>l.team_id===team.id && ((l.type_id===11 && l.formation_field)||(l.type_id===12 && (l.details||[]).length>0)));
+  const cat=PLAYER_STAT_CATALOG[statCategory];
+  const sort=istatsSort[teamKey];
+  const rows=lineups.map(l=>({
+    l,
+    name:lastName(l),
+    minutes:playerMinutes(l),
+    rating:playerRating(l),
+    values:Object.fromEntries(cat.map(c=>[c.id,playerStatValue(l,c.id)]))
+  }));
+  rows.sort((a,b)=>{
+    let av,bv;
+    if(sort.col==="name"){av=a.name.toLowerCase();bv=b.name.toLowerCase();}
+    else if(sort.col==="minutes"){av=a.minutes;bv=b.minutes;}
+    else if(sort.col==="rating"){av=a.rating;bv=b.rating;}
+    else {av=a.values[sort.col];bv=b.values[sort.col];}
+    if(av==null && bv==null) return 0;
+    if(av==null) return 1;
+    if(bv==null) return -1;
+    if(av<bv) return sort.dir==="asc"?-1:1;
+    if(av>bv) return sort.dir==="asc"?1:-1;
+    return 0;
+  });
+  const arrow=col=>sort.col===col?`<span class="sort-arrow">${sort.dir==="asc"?"▲":"▼"}</span>`:"";
+  const th=(col,label,alignNum)=>`<th class="${sort.col===col?"sorted":""}${alignNum?" num":""}" onclick="sortIstats('${teamKey}','${col}')">${label}${arrow(col)}</th>`;
+  const head=`<tr>${th("name","Joueur")}${th("minutes","Min",true)}${th("rating","Note",true)}${cat.map(c=>th(c.id,c.label,true)).join("")}</tr>`;
+  const body=rows.map(r=>`<tr><td class="p-name">${avatarImg(r.l)}${r.name}${isCaptain(r.l)?'<b class="captain-tag">C</b>':""}</td><td class="num">${r.minutes!=null?r.minutes+"’":"—"}</td><td class="num">${r.rating!=null?r.rating.toFixed(1):"—"}</td>${cat.map(c=>`<td class="num">${fmtStatCell(r.values[c.id],c.id)}</td>`).join("")}</tr>`).join("");
+  return `<div class="istats-table-block"><h5 class="${cls}">${team.name}</h5><div class="istable-wrap"><table class="istable"><thead>${head}</thead><tbody>${body||`<tr><td colspan="${3+cat.length}">Aucune donnée disponible.</td></tr>`}</tbody></table></div></div>`;
+}
+function renderIndividualStats(){
+  const root=document.querySelector("#istatsTables");
+  if(!root) return;
+  root.innerHTML =
+    renderIndividualStatsTable({id:HOME_ID,name:HOME_NAME},"home","ars-label") +
+    renderIndividualStatsTable({id:AWAY_ID,name:AWAY_NAME},"away","mci-label");
 }
 
 async function copyText(text,button){try{await navigator.clipboard.writeText(text);let old=button.textContent;button.textContent="Copié ✓";setTimeout(()=>button.textContent=old,1500)}catch{button.textContent="Sélectionnez le texte"}}
@@ -407,6 +506,7 @@ async function generateCarousel(){
 document.querySelectorAll(".page-tabs button").forEach(button=>button.onclick=()=>{document.querySelectorAll(".page-tabs button").forEach(b=>b.classList.toggle("active",b===button));document.querySelectorAll(".page-tab-panel").forEach(panel=>panel.classList.toggle("active",panel.id===`tab-${button.dataset.tab}`))});
 document.querySelectorAll(".studio-tabs button").forEach(button=>button.onclick=()=>{document.querySelectorAll(".studio-tabs button").forEach(b=>b.classList.toggle("active",b===button));document.querySelectorAll(".output").forEach(panel=>panel.classList.toggle("active",panel.id===button.dataset.output))});
 document.querySelectorAll(".legend button").forEach(b=>b.onclick=()=>{series=b.dataset.series;document.querySelectorAll(".legend button").forEach(x=>x.classList.toggle("active",x===b));renderChart()});
+document.querySelectorAll("#statCatTabs button").forEach(b=>b.onclick=()=>{statCategory=b.dataset.cat;document.querySelectorAll("#statCatTabs button").forEach(x=>x.classList.toggle("active",x===b));renderIndividualStats()});
 document.addEventListener("click",e=>{const btn=e.target.closest(".copy-button[data-copy]");if(btn){const el=document.querySelector(`#${btn.dataset.copy}`);if(el)copyText(el.innerText,btn)}});
 document.addEventListener("click",e=>{if(e.target.id==="generateCarousel")generateCarousel()});
 
