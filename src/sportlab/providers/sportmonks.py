@@ -96,7 +96,7 @@ class SportMonksProvider(FootballDataProvider):
         # Le endpoint /leagues ne prend pas de filtre pays simple et documenté :
         # on récupère la liste (limitée à ce que couvre l'abonnement) et on
         # filtre côté client si un pays est demandé.
-        rows, collected_at = self._get("leagues", {"include": "country;currentSeason"})
+        rows, collected_at = self._get("leagues", {"include": "country"})
         result: list[Competition] = []
         for row in rows:
             league_id = row.get("id")
@@ -105,7 +105,6 @@ class SportMonksProvider(FootballDataProvider):
             country_name = (row.get("country") or {}).get("name")
             if country and (country_name or "").lower() != country.lower():
                 continue
-            current_season = row.get("currentSeason") or {}
             result.append(
                 Competition(
                     id=f"sportmonks:league:{league_id}",
@@ -113,7 +112,7 @@ class SportMonksProvider(FootballDataProvider):
                     country=country_name,
                     competition_type=row.get("sub_type") or row.get("type"),
                     logo_url=row.get("image_path"),
-                    current_season_id=current_season.get("id"),
+                    current_season_id=self._current_season_id(league_id),
                     trace=SourceTrace(
                         provider=self.name,
                         endpoint="/leagues",
@@ -124,6 +123,23 @@ class SportMonksProvider(FootballDataProvider):
                 )
             )
         return result
+
+    def _current_season_id(self, league_id: int) -> int | None:
+        """Récupère l'id de saison en cours pour une ligue.
+
+        Le endpoint /leagues (liste complète) ignore silencieusement l'include
+        imbriqué currentSeason ; on doit interroger chaque ligue individuellement
+        (/leagues/{id}?include=currentSeason), seul pattern confirmé par la doc
+        officielle SportMonks. Un appel de plus par compétition, négligeable.
+        """
+        try:
+            rows, _ = self._get(f"leagues/{league_id}", {"include": "currentSeason"})
+        except ProviderError:
+            return None
+        if not rows:
+            return None
+        current_season = rows[0].get("currentSeason") or {}
+        return current_season.get("id")
 
     def get_raw_standings(self, season_id: int, *, include: str = "participant;details.type") -> list[JsonObject]:
         """Classement complet d'une saison, réponse brute (non normalisée)."""
