@@ -35,7 +35,7 @@ INCLUDES = (
     "events.type;events.period;events.player;"
     "lineups.player.country;lineups.details;lineups.xGlineup;"
     "statistics.type;"
-    "xGFixture;pressure"
+    "xGFixture;pressure;weatherReport"
 )
 
 
