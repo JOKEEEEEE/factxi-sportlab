@@ -115,6 +115,9 @@ function renderScoreCard(home,away){
   document.title=`SportLab — ${home.name} vs ${away.name}`;
   document.querySelector("#legHome").textContent=names[0];
   document.querySelector("#legAway").textContent=names[2];
+  const legHomeLogo=document.querySelector("#legHomeLogo"), legAwayLogo=document.querySelector("#legAwayLogo");
+  if(home.image_path){ legHomeLogo.src=home.image_path; } else { legHomeLogo.remove(); }
+  if(away.image_path){ legAwayLogo.src=away.image_path; } else { legAwayLogo.remove(); }
 }
 
 function buildPressureIndex(){
@@ -138,7 +141,7 @@ function momentumAt(pressureIdx,minute){
 }
 let PRESSURE_IDX={}, HAS_PRESSURE=false, MAX_MINUTE=95;
 function buildProbabilityModel(){
-  const major=(RAW.events||[]).filter(e=>e.type && ["goal","owngoal","redcard"].includes(e.type.code))
+  const major=(RAW.events||[]).filter(e=>e.type && ["goal","owngoal","redcard","yellowcard"].includes(e.type.code))
     .sort((a,b)=>(a.minute+((a.extra_minute||0)/10))-(b.minute+((b.extra_minute||0)/10)));
   events=major;
   const pressureIdx=buildPressureIndex();
@@ -313,7 +316,7 @@ function renderStats(){
   });
   document.querySelector("#teamLabels").innerHTML=`<b class="ars-label">${HOME_NAME}</b><b class="mci-label">${AWAY_NAME}</b>`;
   const root=document.querySelector("#statBody");
-  const order=["Attaque","Ensemble","Discipline et défense","Autres"];
+  const order=["Ensemble","Attaque","Discipline et défense","Autres"];
   const keys=Object.keys(groups).sort((a,b)=>order.indexOf(a)-order.indexOf(b));
   if(!keys.length){
     root.innerHTML = currentStatPeriod==="all"
