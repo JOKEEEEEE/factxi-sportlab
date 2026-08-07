@@ -96,8 +96,8 @@ async function generate(){
   // précharge les écussons
   const logos = {};
   for(const g of groups) for(const m of g.items){
-    if(m.home.image_path && !logos[m.home.image_path]) logos[m.home.image_path] = await loadImage(m.home.image_path);
-    if(m.away.image_path && !logos[m.away.image_path]) logos[m.away.image_path] = await loadImage(m.away.image_path);
+    if(m.home.logo_url && !logos[m.home.logo_url]) logos[m.home.logo_url] = await loadImage(m.home.logo_url);
+    if(m.away.logo_url && !logos[m.away.logo_url]) logos[m.away.logo_url] = await loadImage(m.away.logo_url);
   }
 
   // en-tête
@@ -119,8 +119,8 @@ async function generate(){
       const col = i % 2, x = col===0 ? leftX : rightX;
       let cy = colY[col];
       const hPos = positions[m.home.name], aPos = positions[m.away.name];
-      const hImg = m.home.image_path && logos[m.home.image_path];
-      const aImg = m.away.image_path && logos[m.away.image_path];
+      const hImg = m.home.logo_url && logos[m.home.logo_url];
+      const aImg = m.away.logo_url && logos[m.away.logo_url];
 
       // Heure : petit badge distinct au-dessus du match, pas une ligne orpheline.
       const t = new Date(m.kickoff).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});

@@ -8,16 +8,16 @@ const matchdayGrid=document.querySelector("#matchdayGrid"),clubsGrid=document.qu
 // double-clic (sans hébergement) ou si data/matches.json est indisponible.
 const FALLBACK_DATA = {
   "Premier League": [
-    {id:"sportmonks:fixture:19134571", home:{name:"Nottingham Forest",image_path:"https://cdn.sportmonks.com/images/soccer/teams/31/63.png"}, away:{name:"Brighton & Hove Albion",image_path:"https://cdn.sportmonks.com/images/soccer/teams/14/78.png"}, home_score:7, away_score:0, kickoff:"2025-02-01T12:30:00+00:00", status:"finished", season:2024, round:"24"},
-    {id:"sportmonks:fixture:19134563", home:{name:"AFC Bournemouth",image_path:"https://cdn.sportmonks.com/images/soccer/teams/20/52.png"}, away:{name:"Liverpool",image_path:"https://cdn.sportmonks.com/images/soccer/teams/8/8.png"}, home_score:0, away_score:2, kickoff:"2025-02-01T15:00:00+00:00", status:"finished", season:2024, round:"24"},
-    {id:"sportmonks:fixture:19134567", home:{name:"Everton",image_path:"https://cdn.sportmonks.com/images/soccer/teams/13/13.png"}, away:{name:"Leicester City",image_path:"https://cdn.sportmonks.com/images/soccer/teams/10/42.png"}, home_score:4, away_score:0, kickoff:"2025-02-01T15:00:00+00:00", status:"finished", season:2024, round:"24"},
-    {id:"sportmonks:fixture:19134568", home:{name:"Ipswich Town",image_path:"https://cdn.sportmonks.com/images/soccer/teams/20/116.png"}, away:{name:"Southampton",image_path:"https://cdn.sportmonks.com/images/soccer/teams/1/65.png"}, home_score:1, away_score:2, kickoff:"2025-02-01T15:00:00+00:00", status:"finished", season:2024, round:"24"},
-    {id:"sportmonks:fixture:19134570", home:{name:"Newcastle United",image_path:"https://cdn.sportmonks.com/images/soccer/teams/20/20.png"}, away:{name:"Fulham",image_path:"https://cdn.sportmonks.com/images/soccer/teams/11/11.png"}, home_score:1, away_score:2, kickoff:"2025-02-01T15:00:00+00:00", status:"finished", season:2024, round:"24"},
-    {id:"sportmonks:fixture:19134572", home:{name:"Wolverhampton Wanderers",image_path:"https://cdn.sportmonks.com/images/soccer/teams/29/29.png"}, away:{name:"Aston Villa",image_path:"https://cdn.sportmonks.com/images/soccer/teams/15/15.png"}, home_score:2, away_score:0, kickoff:"2025-02-01T17:30:00+00:00", status:"finished", season:2024, round:"24"},
-    {id:"sportmonks:fixture:19134565", home:{name:"Brentford",image_path:"https://cdn.sportmonks.com/images/soccer/teams/12/236.png"}, away:{name:"Tottenham Hotspur",image_path:"https://cdn.sportmonks.com/images/soccer/teams/6/6.png"}, home_score:0, away_score:2, kickoff:"2025-02-02T14:00:00+00:00", status:"finished", season:2024, round:"24"},
-    {id:"sportmonks:fixture:19134569", home:{name:"Manchester United",image_path:"https://cdn.sportmonks.com/images/soccer/teams/14/14.png"}, away:{name:"Crystal Palace",image_path:"https://cdn.sportmonks.com/images/soccer/teams/19/51.png"}, home_score:0, away_score:2, kickoff:"2025-02-02T14:00:00+00:00", status:"finished", season:2024, round:"24"},
-    {id:"sportmonks:fixture:19134564", home:{name:"Arsenal",image_path:"https://cdn.sportmonks.com/images/soccer/teams/19/19.png"}, away:{name:"Manchester City",image_path:"https://cdn.sportmonks.com/images/soccer/teams/9/9.png"}, home_score:5, away_score:1, kickoff:"2025-02-02T16:30:00+00:00", status:"finished", season:2024, round:"24"},
-    {id:"sportmonks:fixture:19134566", home:{name:"Chelsea",image_path:"https://cdn.sportmonks.com/images/soccer/teams/18/18.png"}, away:{name:"West Ham United",image_path:"https://cdn.sportmonks.com/images/soccer/teams/1/1.png"}, home_score:2, away_score:1, kickoff:"2025-02-03T20:00:00+00:00", status:"finished", season:2024, round:"24"}
+    {id:"sportmonks:fixture:19134571", home:{name:"Nottingham Forest",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/31/63.png"}, away:{name:"Brighton & Hove Albion",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/14/78.png"}, home_score:7, away_score:0, kickoff:"2025-02-01T12:30:00+00:00", status:"finished", season:2024, round:"24"},
+    {id:"sportmonks:fixture:19134563", home:{name:"AFC Bournemouth",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/20/52.png"}, away:{name:"Liverpool",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/8/8.png"}, home_score:0, away_score:2, kickoff:"2025-02-01T15:00:00+00:00", status:"finished", season:2024, round:"24"},
+    {id:"sportmonks:fixture:19134567", home:{name:"Everton",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/13/13.png"}, away:{name:"Leicester City",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/10/42.png"}, home_score:4, away_score:0, kickoff:"2025-02-01T15:00:00+00:00", status:"finished", season:2024, round:"24"},
+    {id:"sportmonks:fixture:19134568", home:{name:"Ipswich Town",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/20/116.png"}, away:{name:"Southampton",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/1/65.png"}, home_score:1, away_score:2, kickoff:"2025-02-01T15:00:00+00:00", status:"finished", season:2024, round:"24"},
+    {id:"sportmonks:fixture:19134570", home:{name:"Newcastle United",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/20/20.png"}, away:{name:"Fulham",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/11/11.png"}, home_score:1, away_score:2, kickoff:"2025-02-01T15:00:00+00:00", status:"finished", season:2024, round:"24"},
+    {id:"sportmonks:fixture:19134572", home:{name:"Wolverhampton Wanderers",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/29/29.png"}, away:{name:"Aston Villa",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/15/15.png"}, home_score:2, away_score:0, kickoff:"2025-02-01T17:30:00+00:00", status:"finished", season:2024, round:"24"},
+    {id:"sportmonks:fixture:19134565", home:{name:"Brentford",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/12/236.png"}, away:{name:"Tottenham Hotspur",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/6/6.png"}, home_score:0, away_score:2, kickoff:"2025-02-02T14:00:00+00:00", status:"finished", season:2024, round:"24"},
+    {id:"sportmonks:fixture:19134569", home:{name:"Manchester United",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/14/14.png"}, away:{name:"Crystal Palace",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/19/51.png"}, home_score:0, away_score:2, kickoff:"2025-02-02T14:00:00+00:00", status:"finished", season:2024, round:"24"},
+    {id:"sportmonks:fixture:19134564", home:{name:"Arsenal",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/19/19.png"}, away:{name:"Manchester City",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/9/9.png"}, home_score:5, away_score:1, kickoff:"2025-02-02T16:30:00+00:00", status:"finished", season:2024, round:"24"},
+    {id:"sportmonks:fixture:19134566", home:{name:"Chelsea",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/18/18.png"}, away:{name:"West Ham United",logo_url:"https://cdn.sportmonks.com/images/soccer/teams/1/1.png"}, home_score:2, away_score:1, kickoff:"2025-02-03T20:00:00+00:00", status:"finished", season:2024, round:"24"}
   ]
 };
 
@@ -68,8 +68,8 @@ function matchesForLeague(name){
 function teamLogo(name){
   for(const list of Object.values(REAL_DATA)){
     for(const m of list){
-      if(m.home.name===name && m.home.image_path) return m.home.image_path;
-      if(m.away.name===name && m.away.image_path) return m.away.image_path;
+      if(m.home.name===name && m.home.logo_url) return m.home.logo_url;
+      if(m.away.name===name && m.away.logo_url) return m.away.logo_url;
     }
   }
   return null;
@@ -131,7 +131,7 @@ function formatDate(iso){
 }
 
 function renderCard(m){
-  const homeLogo=crestHtml(m.home.name,m.home.image_path), awayLogo=crestHtml(m.away.name,m.away.image_path);
+  const homeLogo=crestHtml(m.home.name,m.home.logo_url), awayLogo=crestHtml(m.away.name,m.away.logo_url);
   const score = (m.home_score!=null && m.away_score!=null) ? `${m.home_score}–${m.away_score}` : "—";
   const dateTxt = formatDate(m.kickoff);
   const badge = dataSource==="live" ? "Donnée réelle · mise à jour auto" : "Donnée réelle · SportMonks (05/08)";
