@@ -142,11 +142,12 @@ async function generate(){
   const brandLogo = await loadImage("logo-factxi.png");
 
   const colW = 520, gap = 30, leftX = 50, rightX = leftX + colW + gap;
-  const cardH = 78, cardGap = 14, dayGap = 40;
-  const headerH = 170, footerH = 70;
-  const LOGICAL_W = 1200, LOGICAL_H = 1200;
-  const maxContentH = LOGICAL_H - headerH - footerH;
+  const cardH = 78, cardGap = 14, dayGap = 46, blockGap = 16;
+  const bannerH = 130, headerH = bannerH + 46, footerH = 70;
+  const LOGICAL_W = 1200, MAX_LOGICAL_H = 1200;
+  const maxContentH = MAX_LOGICAL_H - headerH - footerH;
   const rowH = cardH+cardGap;
+  const dayBadgeH = 36;
 
   // Pagination au niveau de la LIGNE (paire de matchs), pas de la journée
   // entière : une journée de phase de poule peut avoir 15-20 matchs le même
@@ -157,6 +158,7 @@ async function generate(){
     for(let i=0;i<group.items.length;i+=2) rows.push(group.items.slice(i,i+2));
     return {day:group.day, rows};
   });
+  const blockHeight = (nRows)=> dayBadgeH + dayGap-dayBadgeH + nRows*rowH - cardGap + blockGap;
 
   const pages = [];
   let current=[], currentH=0;
@@ -164,15 +166,15 @@ async function generate(){
     let remaining = block.rows, firstChunk = true;
     while(remaining.length){
       let avail = maxContentH - currentH;
-      let capacity = Math.floor((avail - dayGap) / rowH);
+      let capacity = Math.floor((avail - dayGap - blockGap) / rowH);
       if(capacity <= 0 && current.length){
         pages.push(current); current=[]; currentH=0;
-        avail = maxContentH; capacity = Math.floor((avail - dayGap) / rowH);
+        avail = maxContentH; capacity = Math.floor((avail - dayGap - blockGap) / rowH);
       }
       const take = Math.max(1, Math.min(capacity, remaining.length));
       const chunkRows = remaining.slice(0, take);
       current.push({day:block.day, continued:!firstChunk, rows:chunkRows});
-      currentH += dayGap + chunkRows.length*rowH;
+      currentH += blockHeight(chunkRows.length);
       remaining = remaining.slice(take);
       firstChunk = false;
     }
@@ -182,21 +184,33 @@ async function generate(){
   document.querySelector("#genNote").textContent = `Journée ${roundSel} · ${matches.length} match(s)${pages.length>1?` · réparti sur ${pages.length} images`:""}`;
 
   pages.forEach((pageChunks,pageIndex)=>{
+    // Hauteur réelle nécessaire pour CETTE page, plafonnée à MAX_LOGICAL_H :
+    // évite le grand vide en bas sur une journée qui tient largement dans le cadre.
+    const contentH = pageChunks.reduce((s,c)=>s+blockHeight(c.rows.length),0);
+    const LOGICAL_H = Math.min(MAX_LOGICAL_H, Math.max(500, headerH+contentH+footerH));
+
     const wrap = document.createElement("div"); wrap.className="st-page";
     const canvas = document.createElement("canvas");
     const ctx = setupCanvas(canvas, LOGICAL_W, LOGICAL_H);
     ctx.fillStyle = WHITE; ctx.fillRect(0,0,LOGICAL_W,LOGICAL_H);
 
-    ctx.fillStyle=CORAL; ctx.font="900 15px Arial"; ctx.fillText(comp.name.toUpperCase(), 50, 58);
-    ctx.fillStyle=INK; ctx.font="400 42px Georgia";
-    ctx.fillText(`Journée ${roundSel}${pages.length>1?` (${pageIndex+1}/${pages.length})`:""}`, 50, 102);
-    if(compLogo){ ctx.fillStyle=WHITE; roundRect(ctx,1030,36,72,72,20); ctx.fill(); ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,1030,36,72,72,20); ctx.stroke(); ctx.drawImage(compLogo,1042,48,48,48); }
+    // Bandeau d'en-tête plein, rectangulaire à bords arrondis, sur presque
+    // toute la largeur — comp + journée + logo à l'intérieur.
+    ctx.fillStyle=GREIGE; roundRect(ctx,leftX,30,LOGICAL_W-leftX*2,bannerH,28); ctx.fill();
+    ctx.fillStyle=CORAL; ctx.font="900 16px Arial"; ctx.fillText(comp.name.toUpperCase(), 84, 84);
+    ctx.fillStyle=INK; ctx.font="400 46px Georgia";
+    ctx.fillText(`Journée ${roundSel}${pages.length>1?` (${pageIndex+1}/${pages.length})`:""}`, 84, 132);
+    if(compLogo){
+      ctx.fillStyle=WHITE; roundRect(ctx,LOGICAL_W-leftX-116,52,96,96,22); ctx.fill();
+      ctx.strokeStyle="#ffffff"; ctx.lineWidth=0;
+      ctx.drawImage(compLogo,LOGICAL_W-leftX-104,64,72,72);
+    }
 
     let y = headerH;
-    pageChunks.forEach(chunk=>{
+    pageChunks.forEach((chunk,idx)=>{
       const label = chunk.day.toUpperCase() + (chunk.continued ? " (SUITE)" : "");
-      ctx.fillStyle=CORAL; roundRect(ctx,leftX,y-22,Math.min(400,160+label.length*7),32,10); ctx.fill();
-      ctx.fillStyle=WHITE; ctx.font="900 13px Arial"; ctx.fillText(label, leftX+16, y);
+      ctx.fillStyle=CORAL; roundRect(ctx,leftX,y,Math.min(440,180+label.length*7.5),dayBadgeH,10); ctx.fill();
+      ctx.fillStyle=WHITE; ctx.font="900 14px Arial"; ctx.fillText(label, leftX+18, y+24);
       y += dayGap;
       chunk.rows.forEach(pair=>{
         pair.forEach((m,col)=>{
@@ -213,25 +227,29 @@ async function generate(){
           ctx.fillStyle=CORAL; roundRect(ctx,x+colW-88,cy+12,72,28,14); ctx.fill();
           ctx.fillStyle=WHITE; ctx.font="900 14px Arial"; ctx.textAlign="center"; ctx.fillText(t, x+colW-52, cy+31); ctx.textAlign="left";
 
-          const iy = cy+12;
-          if(hImg) ctx.drawImage(hImg, x+20, iy, 28, 28); else {ctx.fillStyle=GREIGE; roundRect(ctx,x+20,iy,28,28,8); ctx.fill();}
-          ctx.fillStyle=INK; ctx.font="800 18px Arial";
-          ctx.fillText(hPos? `${m.home.name} (${hPos})` : m.home.name, x+58, iy+21);
-
-          const iy2 = cy+44;
-          if(aImg) ctx.drawImage(aImg, x+20, iy2, 28, 28); else {ctx.fillStyle=GREIGE; roundRect(ctx,x+20,iy2,28,28,8); ctx.fill();}
-          ctx.fillStyle=INK; ctx.font="800 18px Arial";
-          ctx.fillText(aPos? `${m.away.name} (${aPos})` : m.away.name, x+58, iy2+21);
+          const drawTeam=(iy,name,pos,img)=>{
+            if(img) ctx.drawImage(img, x+20, iy, 28, 28); else {ctx.fillStyle=GREIGE; roundRect(ctx,x+20,iy,28,28,8); ctx.fill();}
+            ctx.fillStyle=INK; ctx.font="800 18px Arial";
+            ctx.fillText(name, x+58, iy+21);
+            if(pos!=null){
+              const w=ctx.measureText(name).width;
+              ctx.fillStyle=MUTED; ctx.font="700 12px Arial";
+              ctx.fillText(`(${pos})`, x+58+w+7, iy+21);
+            }
+          };
+          drawTeam(cy+12, m.home.name, hPos, hImg);
+          drawTeam(cy+44, m.away.name, aPos, aImg);
         });
         y += rowH;
       });
+      y += blockGap;
     });
 
     const footerY = LOGICAL_H - 40;
     ctx.fillStyle=MUTED; ctx.font="700 13px Arial";
     ctx.fillText("Positions au classement avant la journée.", leftX, footerY);
-    if(brandLogo){ ctx.drawImage(brandLogo, 1094, footerY-24, 54, 54); }
-    else { ctx.fillStyle=INK; roundRect(ctx,1094,footerY-9,44,44,10); ctx.fill(); ctx.fillStyle=WHITE; ctx.font="900 17px Arial"; ctx.textAlign="center"; ctx.fillText("S", 1116, footerY+20); ctx.textAlign="left"; }
+    if(brandLogo){ ctx.drawImage(brandLogo, LOGICAL_W-leftX-64, footerY-32, 64, 64); }
+    else { ctx.fillStyle=INK; roundRect(ctx,LOGICAL_W-leftX-54,footerY-18,54,54,12); ctx.fill(); ctx.fillStyle=WHITE; ctx.font="900 19px Arial"; ctx.textAlign="center"; ctx.fillText("S", LOGICAL_W-leftX-27, footerY+15); ctx.textAlign="left"; }
 
     const dlBtn = document.createElement("button");
     dlBtn.textContent = pages.length>1 ? `Télécharger ${pageIndex+1}/${pages.length}` : "Télécharger le PNG";
@@ -248,9 +266,6 @@ async function generate(){
 }
 
 document.querySelector("#genBtn").onclick = generate;
-
-init();
-
 // ===================== Buteurs & passeurs =====================
 
 function scorerValue(entry){

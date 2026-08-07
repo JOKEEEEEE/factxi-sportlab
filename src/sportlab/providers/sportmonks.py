@@ -82,15 +82,30 @@ class SportMonksProvider(FootballDataProvider):
         if query:
             url = f"{url}?{query}"
         collected_at = self._clock()
-        # Authentification par en-tête plutôt que par paramètre d'URL,
-        # pour ne jamais faire transiter le jeton dans une URL journalisable.
-        payload = self._transport(url, {"Authorization": token}, self._settings.timeout_seconds)
-        if "data" not in payload:
-            message = payload.get("message", "réponse sans champ 'data'")
-            raise ProviderError(f"Erreur SportMonks: {message}")
-        data = payload["data"]
-        rows = data if isinstance(data, list) else [data]
-        return rows, collected_at
+        all_rows: list[JsonObject] = []
+        page_guard = 0
+        while url:
+            page_guard += 1
+            if page_guard > 200:
+                # Garde-fou : une compétition ne devrait jamais dépasser ~5000
+                # résultats sur un seul appel. Si on en est là, quelque chose
+                # boucle anormalement (URL de page suivante malformée) — on
+                # s'arrête plutôt que de consommer le quota indéfiniment.
+                raise ProviderError(
+                    f"Pagination anormalement longue sur {endpoint} (>200 pages), arrêt de sécurité."
+                )
+            # Authentification par en-tête plutôt que par paramètre d'URL,
+            # pour ne jamais faire transiter le jeton dans une URL journalisable.
+            payload = self._transport(url, {"Authorization": token}, self._settings.timeout_seconds)
+            if "data" not in payload:
+                message = payload.get("message", "réponse sans champ 'data'")
+                raise ProviderError(f"Erreur SportMonks: {message}")
+            data = payload["data"]
+            rows = data if isinstance(data, list) else [data]
+            all_rows.extend(rows)
+            pagination = payload.get("pagination") or {}
+            url = pagination.get("next_page") if pagination.get("has_more") else None
+        return all_rows, collected_at
 
     def competitions(self, *, country: str | None = None) -> list[Competition]:
         # Le endpoint /leagues ne prend pas de filtre pays simple et documenté :
