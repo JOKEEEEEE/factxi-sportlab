@@ -6,16 +6,13 @@
 
   <section class="st-card">
     <div class="st-card-head">
-      <div><span class="st-tag">Calendrier de journée</span><h2>Générateur — format carré 800×800</h2></div>
+      <div><span class="st-tag">Calendrier de journée</span><h2>Générateur — 1200×1200, pagination automatique</h2></div>
       <div class="st-selects"><select id="compSelect"></select><select id="roundSelect"></select></div>
     </div>
     <p class="st-note" id="genNote">Sélectionne une compétition puis génère.</p>
+    <div class="st-actions"><button id="genBtn">Générer l'aperçu</button></div>
     <div class="st-preview">
-      <canvas id="c" width="800" height="800"></canvas>
-      <div class="st-actions">
-        <button id="genBtn">Générer l'aperçu</button>
-        <button id="dlBtn" disabled>Télécharger le PNG</button>
-      </div>
+      <div id="calendarPages" class="st-pages"></div>
     </div>
   </section>
 

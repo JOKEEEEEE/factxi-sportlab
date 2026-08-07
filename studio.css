@@ -10,7 +10,12 @@
 .st-selects{display:flex;gap:8px}
 .st-selects select{border:1px solid var(--line);border-radius:9px;padding:8px 10px;font:700 11px "Plus Jakarta Sans",sans-serif;color:var(--ink);background:white}
 .st-preview{margin-top:16px;display:flex;flex-direction:column;align-items:center;gap:14px}
-#c,#cScorers,#cStreaks{width:420px;height:auto;max-height:600px;border-radius:8px;box-shadow:0 14px 40px rgba(32,48,74,.15);background:white}
+#c,#cScorers,#cStreaks,#cRated{width:420px;height:auto;max-height:600px;border-radius:8px;box-shadow:0 14px 40px rgba(32,48,74,.15);background:white}
+.st-pages{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.st-page{display:flex;flex-direction:column;align-items:center;gap:8px}
+.st-page canvas{width:280px;height:auto;border-radius:8px;box-shadow:0 14px 40px rgba(32,48,74,.15);background:white}
+.st-page button{border:0;background:var(--ink);color:white;font:800 10px "Plus Jakarta Sans",sans-serif;padding:8px 14px;border-radius:8px;cursor:pointer}
+.st-page button:hover{background:var(--coral)}
 .st-actions{display:flex;gap:8px}
 .st-actions button{border:0;background:var(--ink);color:white;font:800 11px "Plus Jakarta Sans",sans-serif;padding:11px 20px;border-radius:9px;cursor:pointer}
 .st-actions button:disabled{opacity:.4;cursor:not-allowed}

@@ -2,6 +2,19 @@ let COMPETITIONS = [];
 let MATCHES_BY_COMP = {};
 let STANDINGS_CACHE = {};
 
+// Toutes les images sont dessinées dans un système de coordonnées "logique"
+// (ex. 800×800) puis la résolution réelle du canevas est multipliée par ce
+// facteur avant export — X recommande un minimum de 1200px de large, et un
+// canevas nativement plus grand évite le flou/pixelisation à l'affichage.
+const RENDER_SCALE = 2;
+function setupCanvas(canvas, logicalW, logicalH){
+  canvas.width = logicalW*RENDER_SCALE;
+  canvas.height = logicalH*RENDER_SCALE;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(RENDER_SCALE, RENDER_SCALE);
+  return ctx;
+}
+
 async function fetchJson(url){
   try{
     const res = await fetch(url, {cache:"no-store"});
@@ -109,14 +122,13 @@ async function generate(){
   const comp = COMPETITIONS.find(c=>c.id===compId);
   const allMatches = MATCHES_BY_COMP[compId] || [];
   const matches = allMatches.filter(m=>m.round===roundSel);
-  const canvas = document.querySelector("#c");
+  const pagesRoot = document.querySelector("#calendarPages");
+  pagesRoot.innerHTML = "";
 
   if(!comp || !matches.length){
     document.querySelector("#genNote").textContent = "Aucun match pour cette sélection.";
-    document.querySelector("#dlBtn").disabled = true;
     return;
   }
-  document.querySelector("#genNote").textContent = `Journée ${roundSel} · ${matches.length} match(s)`;
 
   const positions = await getStandingsMap(compId);
   const groups = groupByDay(matches);
@@ -129,81 +141,113 @@ async function generate(){
   const compLogo = comp.logo_url ? await loadImage(comp.logo_url) : null;
   const brandLogo = await loadImage("logo-factxi.png");
 
-  const colW = 340, gap = 24, leftX = 40, rightX = leftX + colW + gap;
-  const cardH = 58, cardGap = 10, dayGap = 30;
-  const headerH = 130;
+  const colW = 520, gap = 30, leftX = 50, rightX = leftX + colW + gap;
+  const cardH = 78, cardGap = 14, dayGap = 40;
+  const headerH = 170, footerH = 70;
+  const LOGICAL_W = 1200, LOGICAL_H = 1200;
+  const maxContentH = LOGICAL_H - headerH - footerH;
+  const rowH = cardH+cardGap;
 
-  // Hauteur calculée à l'avance : plus de coupure en bas selon le nombre de matchs/jours.
-  let totalH = headerH;
-  groups.forEach(group=>{
-    totalH += dayGap;
-    const rows = Math.ceil(group.items.length/2);
-    totalH += rows*(cardH+cardGap);
+  // Pagination au niveau de la LIGNE (paire de matchs), pas de la journée
+  // entière : une journée de phase de poule peut avoir 15-20 matchs le même
+  // jour, qui ne tiendraient jamais sur une seule image sinon. Un jour peut
+  // donc être réparti sur plusieurs images, avec un rappel "(suite)".
+  const blocks = groups.map(group=>{
+    const rows=[];
+    for(let i=0;i<group.items.length;i+=2) rows.push(group.items.slice(i,i+2));
+    return {day:group.day, rows};
   });
-  totalH += 60; // pied de page
-  canvas.width = 800; canvas.height = Math.max(500, totalH);
-  const ctx = canvas.getContext("2d");
-  ctx.fillStyle = WHITE; ctx.fillRect(0,0,800,canvas.height);
 
-  ctx.fillStyle=CORAL; ctx.font="900 11px Arial"; ctx.fillText(comp.name.toUpperCase(), 40, 44);
-  ctx.fillStyle=INK; ctx.font="400 30px Georgia"; ctx.fillText(`Journée ${roundSel}`, 40, 76);
-  if(compLogo){ ctx.fillStyle=WHITE; roundRect(ctx,700,26,54,54,16); ctx.fill(); ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,700,26,54,54,16); ctx.stroke(); ctx.drawImage(compLogo,708,34,38,38); }
+  const pages = [];
+  let current=[], currentH=0;
+  blocks.forEach(block=>{
+    let remaining = block.rows, firstChunk = true;
+    while(remaining.length){
+      let avail = maxContentH - currentH;
+      let capacity = Math.floor((avail - dayGap) / rowH);
+      if(capacity <= 0 && current.length){
+        pages.push(current); current=[]; currentH=0;
+        avail = maxContentH; capacity = Math.floor((avail - dayGap) / rowH);
+      }
+      const take = Math.max(1, Math.min(capacity, remaining.length));
+      const chunkRows = remaining.slice(0, take);
+      current.push({day:block.day, continued:!firstChunk, rows:chunkRows});
+      currentH += dayGap + chunkRows.length*rowH;
+      remaining = remaining.slice(take);
+      firstChunk = false;
+    }
+  });
+  if(current.length) pages.push(current);
 
-  let y = headerH;
-  const short=n=>n; // les noms restent complets, cf. retour précédent sur la lisibilité
+  document.querySelector("#genNote").textContent = `Journée ${roundSel} · ${matches.length} match(s)${pages.length>1?` · réparti sur ${pages.length} images`:""}`;
 
-  groups.forEach(group=>{
-    ctx.fillStyle=CORAL; roundRect(ctx,leftX,y-16,190,24,8); ctx.fill();
-    ctx.fillStyle=WHITE; ctx.font="900 10px Arial"; ctx.fillText(group.day.toUpperCase(), leftX+12, y);
-    y += dayGap;
-    let colY = [y, y];
-    group.items.forEach((m,i)=>{
-      const col = i % 2, x = col===0 ? leftX : rightX;
-      let cy = colY[col];
-      const hPos = positions[m.home.name], aPos = positions[m.away.name];
-      const hImg = m.home.logo_url && logos[m.home.logo_url];
-      const aImg = m.away.logo_url && logos[m.away.logo_url];
+  pages.forEach((pageChunks,pageIndex)=>{
+    const wrap = document.createElement("div"); wrap.className="st-page";
+    const canvas = document.createElement("canvas");
+    const ctx = setupCanvas(canvas, LOGICAL_W, LOGICAL_H);
+    ctx.fillStyle = WHITE; ctx.fillRect(0,0,LOGICAL_W,LOGICAL_H);
 
-      ctx.fillStyle=WHITE; roundRect(ctx,x,cy,colW,cardH,14); ctx.fill();
-      ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,cy,colW,cardH,14); ctx.stroke();
+    ctx.fillStyle=CORAL; ctx.font="900 15px Arial"; ctx.fillText(comp.name.toUpperCase(), 50, 58);
+    ctx.fillStyle=INK; ctx.font="400 42px Georgia";
+    ctx.fillText(`Journée ${roundSel}${pages.length>1?` (${pageIndex+1}/${pages.length})`:""}`, 50, 102);
+    if(compLogo){ ctx.fillStyle=WHITE; roundRect(ctx,1030,36,72,72,20); ctx.fill(); ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,1030,36,72,72,20); ctx.stroke(); ctx.drawImage(compLogo,1042,48,48,48); }
 
-      const t = new Date(m.kickoff).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
-      ctx.fillStyle=CORAL; roundRect(ctx,x+colW-62,cy+8,50,20,10); ctx.fill();
-      ctx.fillStyle=WHITE; ctx.font="900 10px Arial"; ctx.textAlign="center"; ctx.fillText(t, x+colW-37, cy+21); ctx.textAlign="left";
+    let y = headerH;
+    pageChunks.forEach(chunk=>{
+      const label = chunk.day.toUpperCase() + (chunk.continued ? " (SUITE)" : "");
+      ctx.fillStyle=CORAL; roundRect(ctx,leftX,y-22,Math.min(400,160+label.length*7),32,10); ctx.fill();
+      ctx.fillStyle=WHITE; ctx.font="900 13px Arial"; ctx.fillText(label, leftX+16, y);
+      y += dayGap;
+      chunk.rows.forEach(pair=>{
+        pair.forEach((m,col)=>{
+          const x = col===0 ? leftX : rightX;
+          const cy = y;
+          const hPos = positions[m.home.name], aPos = positions[m.away.name];
+          const hImg = m.home.logo_url && logos[m.home.logo_url];
+          const aImg = m.away.logo_url && logos[m.away.logo_url];
 
-      const iy = cy+8;
-      if(hImg) ctx.drawImage(hImg, x+14, iy, 20, 20); else {ctx.fillStyle=GREIGE; roundRect(ctx,x+14,iy,20,20,6); ctx.fill();}
-      ctx.fillStyle=INK; ctx.font="800 13px Arial";
-      const hLabel = hPos? `${short(m.home.name)} (${hPos})` : short(m.home.name);
-      ctx.fillText(hLabel, x+42, iy+15);
+          ctx.fillStyle=WHITE; roundRect(ctx,x,cy,colW,cardH,18); ctx.fill();
+          ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,cy,colW,cardH,18); ctx.stroke();
 
-      const iy2 = cy+32;
-      if(aImg) ctx.drawImage(aImg, x+14, iy2, 20, 20); else {ctx.fillStyle=GREIGE; roundRect(ctx,x+14,iy2,20,20,6); ctx.fill();}
-      ctx.fillStyle=INK; ctx.font="800 13px Arial";
-      const aLabel = aPos? `${short(m.away.name)} (${aPos})` : short(m.away.name);
-      ctx.fillText(aLabel, x+42, iy2+15);
+          const t = new Date(m.kickoff).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+          ctx.fillStyle=CORAL; roundRect(ctx,x+colW-88,cy+12,72,28,14); ctx.fill();
+          ctx.fillStyle=WHITE; ctx.font="900 14px Arial"; ctx.textAlign="center"; ctx.fillText(t, x+colW-52, cy+31); ctx.textAlign="left";
 
-      colY[col] = cy + cardH + cardGap;
+          const iy = cy+12;
+          if(hImg) ctx.drawImage(hImg, x+20, iy, 28, 28); else {ctx.fillStyle=GREIGE; roundRect(ctx,x+20,iy,28,28,8); ctx.fill();}
+          ctx.fillStyle=INK; ctx.font="800 18px Arial";
+          ctx.fillText(hPos? `${m.home.name} (${hPos})` : m.home.name, x+58, iy+21);
+
+          const iy2 = cy+44;
+          if(aImg) ctx.drawImage(aImg, x+20, iy2, 28, 28); else {ctx.fillStyle=GREIGE; roundRect(ctx,x+20,iy2,28,28,8); ctx.fill();}
+          ctx.fillStyle=INK; ctx.font="800 18px Arial";
+          ctx.fillText(aPos? `${m.away.name} (${aPos})` : m.away.name, x+58, iy2+21);
+        });
+        y += rowH;
+      });
     });
-    y = Math.max(colY[0], colY[1]) + 14;
+
+    const footerY = LOGICAL_H - 40;
+    ctx.fillStyle=MUTED; ctx.font="700 13px Arial";
+    ctx.fillText("Positions au classement avant la journée.", leftX, footerY);
+    if(brandLogo){ ctx.drawImage(brandLogo, 1094, footerY-24, 54, 54); }
+    else { ctx.fillStyle=INK; roundRect(ctx,1094,footerY-9,44,44,10); ctx.fill(); ctx.fillStyle=WHITE; ctx.font="900 17px Arial"; ctx.textAlign="center"; ctx.fillText("S", 1116, footerY+20); ctx.textAlign="left"; }
+
+    const dlBtn = document.createElement("button");
+    dlBtn.textContent = pages.length>1 ? `Télécharger ${pageIndex+1}/${pages.length}` : "Télécharger le PNG";
+    dlBtn.onclick = ()=>{
+      const a=document.createElement("a");
+      a.download = pages.length>1 ? `FACT-XI_calendrier_${pageIndex+1}-${pages.length}.png` : "FACT-XI_calendrier.png";
+      a.href = canvas.toDataURL("image/png");
+      a.click();
+    };
+    const label = document.createElement("span"); label.textContent = pages.length>1 ? `Page ${pageIndex+1}/${pages.length}` : "";
+    wrap.append(canvas, label, dlBtn);
+    pagesRoot.append(wrap);
   });
-
-  const footerY = canvas.height - 30;
-  ctx.fillStyle=MUTED; ctx.font="700 9px Arial";
-  ctx.fillText("Positions au classement avant la journée.", leftX, footerY);
-  if(brandLogo){ ctx.drawImage(brandLogo, 724, footerY-16, 36, 36); }
-  else { ctx.fillStyle=INK; roundRect(ctx,724,footerY-6,30,30,7); ctx.fill(); ctx.fillStyle=WHITE; ctx.font="900 12px Arial"; ctx.textAlign="center"; ctx.fillText("S", 739, footerY+13); ctx.textAlign="left"; }
-
-  document.querySelector("#dlBtn").disabled = false;
 }
 
 document.querySelector("#genBtn").onclick = generate;
-document.querySelector("#dlBtn").onclick = ()=>{
-  const a=document.createElement("a");
-  a.download="FACT-XI_calendrier.png";
-  a.href=document.querySelector("#c").toDataURL("image/png");
-  a.click();
-};
 
 init();
 
@@ -253,7 +297,8 @@ function drawScorerRow(ctx,x,y,rank,entry,expectedVal,expectedLabel,logos){
 async function generateScorers(){
   const compId = document.querySelector("#scorersCompSelect").value;
   const comp = COMPETITIONS.find(c=>c.id===compId);
-  const canvas = document.querySelector("#cScorers"), ctx = canvas.getContext("2d");
+  const canvas = document.querySelector("#cScorers"), ctx = setupCanvas(canvas,1200,1200);
+  ctx.scale(1.5,1.5); // le contenu ci-dessous est dessiné pour un cadre logique de 800 ; on l'agrandit proportionnellement au nouveau format 1200×1200
   ctx.fillStyle=WHITE; ctx.fillRect(0,0,800,800);
   if(!comp){ document.querySelector("#scorersGenNote").textContent="Compétition introuvable."; return; }
   const numId = leagueNumericId(compId);
@@ -340,7 +385,8 @@ function bestStreak(compId, key){
 async function generateStreaks(){
   const compId = document.querySelector("#streaksCompSelect").value;
   const comp = COMPETITIONS.find(c=>c.id===compId);
-  const canvas = document.querySelector("#cStreaks"), ctx = canvas.getContext("2d");
+  const canvas = document.querySelector("#cStreaks"), ctx = setupCanvas(canvas,1200,1200);
+  ctx.scale(1.5,1.5);
   ctx.fillStyle=WHITE; ctx.fillRect(0,0,800,800);
   if(!comp){ document.querySelector("#streaksGenNote").textContent="Compétition introuvable."; return; }
 
@@ -480,7 +526,7 @@ function drawRatedCard(ctx,x,y,rank,p,seasonAvg,last5Avg,logos){
 async function generateRated(){
   const compId = document.querySelector("#ratedCompSelect").value;
   const comp = COMPETITIONS.find(c=>c.id===compId);
-  const canvas = document.querySelector("#cRated"), ctx = canvas.getContext("2d");
+  const canvas = document.querySelector("#cRated");
   if(!comp){ document.querySelector("#ratedGenNote").textContent="Compétition introuvable."; return; }
 
   document.querySelector("#ratedGenNote").textContent="Agrégation des matchs en cours…";
@@ -498,7 +544,8 @@ async function generateRated(){
     .sort((a,b)=>b.seasonAvg-a.seasonAvg)
     .slice(0,5);
 
-  canvas.width=800; canvas.height=780;
+  const ctx = setupCanvas(canvas,1200,1170);
+  ctx.scale(1.5,1.5);
   ctx.fillStyle=WHITE; ctx.fillRect(0,0,800,780);
 
   if(!ranked.length){
