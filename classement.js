@@ -132,33 +132,55 @@ function scorerValue(entry){
 }
 function isGoalEntry(entry){
   const code = (entry.type && (entry.type.code||entry.type.name||"")).toLowerCase();
-  return code.includes("goal") && !code.includes("assist") && !code.includes("card");
+  return code.includes("goal") && !code.includes("assist") && !code.includes("card") && !code.includes("expected") && !code.includes("xg");
 }
 function isAssistEntry(entry){
   const code = (entry.type && (entry.type.code||entry.type.name||"")).toLowerCase();
-  return code.includes("assist");
+  return code.includes("assist") && !code.includes("expected") && !code.includes("xa");
 }
-function renderPlayerList(rootId, noteId, entries, emptyMsg){
+// xG/xA par joueur : pas encore confirmé sur un vrai exemple (0 but marqué à
+// ce jour). La doc SportMonks indique que l'endpoint buteurs peut être trié
+// par "n'importe quelle statistique", donc on tente une détection par mot-clé
+// dans le même flux ; si rien ne matche, on affiche juste sans xG/xA plutôt
+// que d'inventer une valeur.
+function isXgEntry(entry){
+  const code = (entry.type && (entry.type.code||entry.type.name||"")).toLowerCase();
+  return code.includes("expected") && code.includes("goal") && !code.includes("assist");
+}
+function isXaEntry(entry){
+  const code = (entry.type && (entry.type.code||entry.type.name||"")).toLowerCase();
+  return (code.includes("expected") && code.includes("assist")) || code.includes("xa");
+}
+function playerKey(entry){
+  return entry.player_id || (entry.player && entry.player.id) || (entry.player && entry.player.name);
+}
+function renderPlayerList(rootId, noteId, entries, expectedEntries, expectedLabel, emptyMsg){
   const root = document.querySelector(rootId);
   if(!entries.length){
     document.querySelector(noteId).textContent = emptyMsg;
     root.innerHTML = "";
     return;
   }
-  document.querySelector(noteId).textContent = "";
-  root.innerHTML = entries.slice(0,5).map((e,i)=>{
+  document.querySelector(noteId).textContent = `${entries.length} joueur${entries.length>1?"s":""}`;
+  const expectedByPlayer = {};
+  (expectedEntries||[]).forEach(e=>{ expectedByPlayer[playerKey(e)] = scorerValue(e); });
+  root.innerHTML = entries.map((e,i)=>{
     const player = e.player || {};
     const team = e.participant || {};
     const photo = player.image_path ? `<img class="avatar" src="${player.image_path}" alt="" onerror="this.outerHTML='<i class=&quot;avatar&quot;></i>'">` : `<i class="avatar"></i>`;
-    return `<div class="cl-prow"><span class="rank">${i+1}</span>${photo}<span class="pname">${player.display_name||player.name||"—"}<small>${team.name||""}</small></span><span class="pval">${scorerValue(e)??"—"}</span></div>`;
+    const xVal = expectedByPlayer[playerKey(e)];
+    const xTxt = xVal!=null ? `<small>${expectedLabel} ${Number(xVal).toFixed(2)}</small>` : "";
+    return `<div class="cl-prow"><span class="rank">${i+1}</span>${photo}<span class="pname">${player.display_name||player.name||"—"}<small>${team.name||""}</small></span><span class="pval">${scorerValue(e)??"—"}${xTxt}</span></div>`;
   }).join("");
 }
 
 function renderTopscorers(entries){
   const goals = entries.filter(isGoalEntry).sort((a,b)=>(scorerValue(b)||0)-(scorerValue(a)||0));
   const assists = entries.filter(isAssistEntry).sort((a,b)=>(scorerValue(b)||0)-(scorerValue(a)||0));
-  renderPlayerList("#scorersList", "#scorersNote", goals, "Aucun but marqué pour l'instant cette saison.");
-  renderPlayerList("#assistsList", "#assistsNote", assists, "Aucune passe décisive pour l'instant cette saison.");
+  const xg = entries.filter(isXgEntry);
+  const xa = entries.filter(isXaEntry);
+  renderPlayerList("#scorersList", "#scorersNote", goals, xg, "xG", "Aucun but marqué pour l'instant cette saison.");
+  renderPlayerList("#assistsList", "#assistsNote", assists, xa, "xA", "Aucune passe décisive pour l'instant cette saison.");
 }
 
 init();
