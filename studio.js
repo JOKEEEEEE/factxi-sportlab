@@ -106,9 +106,6 @@ async function generate(){
   else { ctx.fillStyle=GREIGE; roundRect(ctx,40,38,52,52,12); ctx.fill(); ctx.fillStyle=INK; ctx.font="900 15px Arial"; ctx.textAlign="center"; ctx.fillText(comp.name.slice(0,2).toUpperCase(),66,70); ctx.textAlign="left"; }
   ctx.fillStyle=CORAL; ctx.font="900 13px Arial"; ctx.fillText(comp.name.toUpperCase(), 106, 56);
   ctx.fillStyle=INK; ctx.font="400 26px Georgia"; ctx.fillText(`Journée ${picked.round}`, 106, 80);
-  ctx.fillStyle=MUTED; ctx.font="700 12px Arial"; ctx.textAlign="right";
-  ctx.fillText(`${picked.matches.length} match${picked.matches.length>1?"s":""}`, 760, 52);
-  ctx.textAlign="left";
 
   let y = 122;
   const colW = 340, gap = 24, leftX = 40, rightX = leftX + colW + gap;
@@ -125,6 +122,12 @@ async function generate(){
       const hImg = m.home.image_path && logos[m.home.image_path];
       const aImg = m.away.image_path && logos[m.away.image_path];
 
+      // Heure : petit badge distinct au-dessus du match, pas une ligne orpheline.
+      const t = new Date(m.kickoff).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+      ctx.fillStyle=GREIGE; roundRect(ctx,x,cy,38,14,4); ctx.fill();
+      ctx.fillStyle=INK; ctx.font="800 8.5px Arial"; ctx.textAlign="center"; ctx.fillText(t, x+19, cy+10); ctx.textAlign="left";
+      cy += 20;
+
       if(hImg) ctx.drawImage(hImg, x, cy, 17, 17); else {ctx.fillStyle=GREIGE; ctx.fillRect(x,cy,17,17);}
       ctx.fillStyle=INK; ctx.font="700 13px Arial"; ctx.fillText(m.home.name, x+24, cy+13);
       ctx.fillStyle=MUTED; ctx.font="800 9px Arial"; ctx.textAlign="right"; ctx.fillText(hPos?`${hPos}e`:"—", x+colW-4, cy+13); ctx.textAlign="left";
@@ -135,18 +138,16 @@ async function generate(){
       ctx.fillStyle=MUTED; ctx.font="800 9px Arial"; ctx.textAlign="right"; ctx.fillText(aPos?`${aPos}e`:"—", x+colW-4, cy+13); ctx.textAlign="left";
       cy += 24;
 
-      const t = new Date(m.kickoff).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
-      ctx.fillStyle=MUTED; ctx.font="800 9px Arial"; ctx.fillText(t, x, cy);
-
-      colY[col] = cy + 14;
+      colY[col] = cy + 10;
     });
     y = Math.max(colY[0], colY[1]) + 18;
   }
 
   ctx.fillStyle=MUTED; ctx.font="700 9px Arial";
   ctx.fillText("Positions au classement avant la journée.", leftX, 770);
-  ctx.fillStyle=INK; roundRect(ctx,724,764,30,30,7); ctx.fill();
-  ctx.fillStyle=WHITE; ctx.font="900 12px Arial"; ctx.textAlign="center"; ctx.fillText("S", 739, 783); ctx.textAlign="left";
+  const brandLogo = await loadImage("logo-factxi.png");
+  if(brandLogo){ ctx.drawImage(brandLogo, 724, 754, 36, 36); }
+  else { ctx.fillStyle=INK; roundRect(ctx,724,764,30,30,7); ctx.fill(); ctx.fillStyle=WHITE; ctx.font="900 12px Arial"; ctx.textAlign="center"; ctx.fillText("S", 739, 783); ctx.textAlign="left"; }
 
   document.querySelector("#dlBtn").disabled = false;
 }

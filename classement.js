@@ -1,5 +1,20 @@
 let COMPETITIONS = []; // [{id:"sportmonks:league:8", name, logo_url}]
 let currentLeagueId = null;
+let MATCHES_BY_COMP = {};
+
+// Zones qualification/relégation : règle simplifiée, pas une donnée API.
+// Approximation raisonnable pour les 5 grands championnats (top 4 = Ligue des
+// Champions, 2 suivants = Europa/Conférence, 3 derniers = relégation) mais les
+// règles exactes varient par saison (vainqueurs de coupe, place coefficient
+// supplémentaire, nombre de relégués selon le championnat). À ajuster à la
+// main si un cas précis ne correspond pas.
+const ZONE_RULES = { ucl: 4, uel: 2, relegationFromBottom: 3 };
+function zoneFor(position, total){
+  if(position<=ZONE_RULES.ucl) return "zone-ucl";
+  if(position<=ZONE_RULES.ucl+ZONE_RULES.uel) return "zone-uel";
+  if(total && position>total-ZONE_RULES.relegationFromBottom) return "zone-relegation";
+  return "";
+}
 
 async function fetchJson(url){
   try{
@@ -16,6 +31,9 @@ async function init(){
       .map(e => e.competition)
       .filter(Boolean)
       .map(c => ({id:c.id, name:c.name, logo_url:c.logo_url}));
+    matches.competitions.forEach(e=>{
+      if(e.competition) MATCHES_BY_COMP[e.competition.id] = e.matches || [];
+    });
   }
   if(!COMPETITIONS.length){
     document.querySelector("#loadingState").textContent = "Aucune compétition disponible pour l'instant. Le robot n'a peut-être pas encore tourné.";
@@ -61,21 +79,45 @@ function detailValue(row, typeId){
   return d ? d.value : null;
 }
 
+function last5Form(teamName, leagueId){
+  const matches = (MATCHES_BY_COMP[leagueId]||[])
+    .filter(m => m.status==="finished" && (m.home.name===teamName || m.away.name===teamName))
+    .sort((a,b)=>new Date(b.kickoff)-new Date(a.kickoff))
+    .slice(0,5)
+    .reverse(); // plus ancien à gauche, plus récent à droite
+  return matches.map(m=>{
+    const isHome = m.home.name===teamName;
+    const gf = isHome ? m.home_score : m.away_score;
+    const ga = isHome ? m.away_score : m.home_score;
+    if(gf==null || ga==null) return null;
+    if(gf>ga) return "w";
+    if(gf<ga) return "l";
+    return "d";
+  }).filter(Boolean);
+}
+function formDots(results){
+  if(!results.length) return "—";
+  const labels={w:"V",d:"N",l:"D"};
+  return `<div class="form-dots">${results.map(r=>`<span class="${r}">${labels[r]}</span>`).join("")}</div>`;
+}
+
 function renderStandings(rows){
   const sorted = [...rows].sort((a,b)=>(a.position??999)-(b.position??999));
   const anyPlayed = sorted.some(r => (detailValue(r,129)||0) > 0);
   document.querySelector("#standingsNote").textContent = anyPlayed
-    ? "Classement à jour après la dernière journée jouée."
+    ? "Classement à jour après la dernière journée jouée. Zones qualification/relégation approximatives (règle générique, à vérifier selon la compétition)."
     : "La saison n'a pas encore commencé : tous les compteurs sont à zéro, c'est normal.";
 
-  const head = `<tr><th class="team">Équipe</th><th>MJ</th><th>V</th><th>N</th><th>D</th><th>BP</th><th>BC</th><th>Diff</th><th>Pts</th></tr>`;
+  const head = `<tr><th class="team">Équipe</th><th>MJ</th><th>V</th><th>N</th><th>D</th><th>BP</th><th>BC</th><th>Diff</th><th>Pts</th><th class="form">5 derniers</th></tr>`;
   const body = sorted.map(r=>{
     const p = r.participant || {};
     const crest = p.image_path ? `<img src="${p.image_path}" alt="" onerror="this.remove()">` : "";
     const mj = detailValue(r,129), v=detailValue(r,130), n=detailValue(r,131), d=detailValue(r,132);
     const bp = detailValue(r,133), bc = detailValue(r,134), diff = detailValue(r,179);
     const diffTxt = diff==null ? "—" : (diff>0?`+${diff}`:diff);
-    return `<tr><td class="team"><span class="pos">${r.position??"—"}</span>${crest}${p.name||"—"}</td><td>${mj??"—"}</td><td>${v??"—"}</td><td>${n??"—"}</td><td>${d??"—"}</td><td>${bp??"—"}</td><td>${bc??"—"}</td><td>${diffTxt}</td><td class="pts">${r.points??"—"}</td></tr>`;
+    const zone = zoneFor(r.position, sorted.length);
+    const form = p.name ? formDots(last5Form(p.name, currentLeagueId)) : "—";
+    return `<tr class="${zone}"><td class="team"><span class="pos">${r.position??"—"}</span>${crest}${p.name||"—"}</td><td>${mj??"—"}</td><td>${v??"—"}</td><td>${n??"—"}</td><td>${d??"—"}</td><td>${bp??"—"}</td><td>${bc??"—"}</td><td>${diffTxt}</td><td class="pts">${r.points??"—"}</td><td>${form}</td></tr>`;
   }).join("");
   document.querySelector("#standingsTable").innerHTML = head + body;
 }

@@ -158,6 +158,19 @@ class SportMonksProvider(FootballDataProvider):
         rows, _ = self._get(f"topscorers/seasons/{season_id}", {"include": include})
         return rows
 
+    def get_raw_seasons(self, league_id: int) -> list[JsonObject]:
+        """Liste toutes les saisons connues d'une ligue (id, nom, année), réponse brute.
+
+        Prépare la sélection de saison/journée dans l'interface. Nécessite
+        l'accès aux données historiques SportMonks pour être vraiment utile
+        au-delà de la saison en cours. Pas encore branché nulle part : à
+        utiliser une fois qu'on a confirmé la forme réelle de la réponse.
+        """
+        rows, _ = self._get(f"leagues/{league_id}", {"include": "seasons"})
+        if not rows:
+            return []
+        return rows[0].get("seasons") or []
+
     def get_raw_fixture(self, fixture_id: str, *, include: str) -> JsonObject:
         """Retourne la réponse brute (non normalisée) d'un match précis.
 

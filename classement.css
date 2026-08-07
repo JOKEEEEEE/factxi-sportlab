@@ -9,14 +9,23 @@
 .cl-note{font-size:10px;color:var(--muted);margin:0 0 14px}
 .cl-two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .cl-table-wrap{overflow-x:auto}
-.cl-table{width:100%;border-collapse:collapse;font-size:11px}
-.cl-table th{text-align:center;font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:8px 6px;border-bottom:1px solid var(--line)}
-.cl-table th.team{text-align:left}
-.cl-table td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:center;font-weight:700;color:var(--ink)}
-.cl-table td.team{text-align:left;display:flex;align-items:center;gap:8px;font-weight:800}
-.cl-table td.team img{width:20px;height:20px;object-fit:contain}
+.cl-table{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
+.cl-table th{text-align:center;font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:8px 4px;border-bottom:1px solid var(--line);width:6.5%}
+.cl-table th.team{text-align:left;width:34%}
+.cl-table th.form{width:14%}
+.cl-table td{padding:8px 4px;border-bottom:1px solid var(--line);text-align:center;font-weight:700;color:var(--ink)}
+.cl-table td.team{text-align:left;display:flex;align-items:center;gap:8px;font-weight:800;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.cl-table td.team img{width:20px;height:20px;object-fit:contain;flex:0 0 auto}
 .cl-table td.pos{color:var(--muted);font-weight:800;width:24px}
 .cl-table td.pts{font-weight:900}
+.cl-table tr.zone-ucl td.team{border-left:3px solid #4d8069;padding-left:5px}
+.cl-table tr.zone-uel td.team{border-left:3px solid #6fa5c2;padding-left:5px}
+.cl-table tr.zone-relegation td.team{border-left:3px solid #b95845;padding-left:5px}
+.form-dots{display:flex;gap:2px;justify-content:center}
+.form-dots span{width:15px;height:15px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;color:white}
+.form-dots span.w{background:#4d8069}
+.form-dots span.d{background:#c98a3c}
+.form-dots span.l{background:#b95845}
 .cl-table tr:last-child td{border-bottom:0}
 .cl-plist{display:flex;flex-direction:column;gap:2px}
 .cl-prow{display:grid;grid-template-columns:20px 30px 1fr auto;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--line);font-size:11px}
