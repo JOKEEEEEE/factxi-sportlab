@@ -146,8 +146,14 @@ class SportMonksProvider(FootballDataProvider):
             print(f"    [diagnostic] ligue {league_id}: réponse reçue mais sans currentseason exploitable. Clés présentes : {list(rows[0].keys())}")
         return current_season.get("id")
 
-    def get_raw_standings(self, season_id: int, *, include: str = "participant;details.type") -> list[JsonObject]:
-        """Classement complet d'une saison, réponse brute (non normalisée)."""
+    def get_raw_standings(self, season_id: int, *, include: str = "participant;details.type;rule") -> list[JsonObject]:
+        """Classement complet d'une saison, réponse brute (non normalisée).
+
+        L'include "rule" ramène la vraie règle de zone (qualification Ligue
+        des Champions, Europa, relégation...) fournie par SportMonks pour
+        cette compétition et cette saison précises — pas une règle qu'on
+        devine ou code en dur nous-mêmes.
+        """
         rows, _ = self._get(f"standings/seasons/{season_id}", {"include": include})
         return rows
 

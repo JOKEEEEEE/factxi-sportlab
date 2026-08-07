@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SportLab — MatchLab</title><link rel="stylesheet" href="matchlab.css"><link rel="stylesheet" href="editorial.css"><link rel="stylesheet" href="product.css"><link rel="stylesheet" href="revision.css"><link rel="stylesheet" href="logos.css"></head><body>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SportLab — MatchLab</title><link rel="stylesheet" href="matchlab.css"><link rel="stylesheet" href="logos.css"></head><body>
 <header><div class="nav"><a class="brand" href="index.html"><span>S</span>Sport<em>Lab</em></a><nav class="site-tabs"><a class="site-tab" href="index.html">Accueil</a><a class="site-tab" href="classement.html">Classement</a><a class="site-tab" href="studio.html">Studio</a></nav><span class="crumb" id="crumb"></span><div class="nav-right" id="navRight"></div></div></header>
 <main>
  <div id="loadingState" class="card" style="padding:40px;text-align:center;color:var(--muted);font-size:11px">Chargement du match…</div>
@@ -6,44 +6,43 @@
 
  <div id="matchContent" hidden>
 
- <section class="score-card card"><p class="eyebrow" id="eyebrow">Replay historique interactif</p><div class="match" id="matchScore"></div><div class="meta" id="matchMeta"></div></section>
+  <section class="score-card card"><p class="eyebrow" id="eyebrow">Replay historique interactif</p><div class="match" id="matchScore"></div><div class="meta" id="matchMeta"></div></section>
 
- <div class="page-tabs" role="tablist"><button class="active" data-tab="analyse">Analyse</button><button data-tab="studio">Studio éditorial</button></div>
-
- <div class="page-tab-panel active" id="tab-analyse">
-
-  <section class="card panel sofa-stats"><div class="panel-head"><div><span class="tag fact">Faits observés</span><h2>Statistiques du match</h2></div></div><div class="team-labels" id="teamLabels"></div><div class="stat-body" id="statBody"></div></section>
-
-  <div class="layout">
-   <section class="panel card"><div class="panel-head"><div><span class="tag estimate">Estimation · modèle calculé v0.3 (pression SportMonks)</span><h2>Comment le match a basculé</h2></div><div class="legend"><button data-series="all" class="active">Toutes</button><button data-series="ars"><i class="ars-c"></i><span id="legHome">DOM</span></button><button data-series="draw"><i class="draw-c"></i>Nul</button><button data-series="mci"><i class="mci-c"></i><span id="legAway">EXT</span></button></div></div>
-    <div class="chartbox"><svg id="chart" viewBox="0 0 900 330" aria-label="Probabilités de victoire estimées au fil du match"></svg><div id="chartEvents"></div></div>
-    <div class="event-key"><span>⚽ But</span><span class="red-key"></span><span>Carton rouge</span></div>
-    <div class="compare"><article id="before" class="state"></article><i>→</i><article id="after" class="state active"></article></div>
-   </section>
-   <aside class="side">
-    <section class="card feed"><div class="feed-head"><span class="tag fact">Faits sourcés</span><h2>Fil du match</h2></div><div id="feed"></div></section>
-   </aside>
-  </div>
-
-  <section class="card panel"><div class="panel-head"><div><span class="tag fact">Compositions officielles</span><h2>Onze de départ</h2></div></div><div class="squads" id="squads"></div><p class="players-note">Note de match : SportMonks. Cartes de chaleur : non disponibles en formule standard, nécessitent un fournisseur de tracking dédié.</p></section>
-
-  <section class="card panel individual-stats"><div class="panel-head"><div><span class="tag fact">Faits observés</span><h2>Statistiques individuelles</h2></div><div class="istats-tabs" id="statCatTabs"><button data-cat="general" class="active">Générale</button><button data-cat="offensive">Offensive</button><button data-cat="defensive">Défensive</button></div></div><div class="rating-legend"><span class="rating great">≥7.5</span><span class="rating good">6.5–7.4</span><span class="rating mid">5.5–6.4</span><span class="rating low">&lt;5.5</span><i>Note du match</i></div><div class="istats-tables" id="istatsTables"></div></section>
-
- </div>
-
- <div class="page-tab-panel" id="tab-studio">
-  <section class="editorial card">
-   <div class="editorial-head"><div><span class="tag calc">Généré depuis les données · à valider</span><h2>Studio éditorial · FACT XI</h2></div><button class="secondary" id="copySource">Copier la fiche source</button></div>
-   <div class="phases" id="phases"></div>
-   <div class="story-angle" id="storyAngle"></div>
-   <div class="studio">
-    <div class="studio-tabs" role="tablist"><button class="active" data-output="xpost">Post X</button><button data-output="thread">Thread X</button><button data-output="carousel">Carrousel</button></div>
-    <div class="output active" id="xpost"><div class="output-head"><div><span>POST X</span><b>Le chiffre raconte</b></div><button class="copy-button" data-copy="xpost-copy">Copier</button></div><div class="copy-text" id="xpost-copy"></div></div>
-    <div class="output" id="thread"><div class="output-head"><div><span>THREAD X</span><b>Le match en phases</b></div><button class="copy-button" data-copy="thread-copy">Copier</button></div><div class="copy-text thread-copy" id="thread-copy"></div></div>
-    <div class="output" id="carousel"><div class="output-head"><div><span>CARROUSEL · 6 IMAGES · 800 × 800 PX</span><b>Exports FACT XI prêts pour X</b></div><div><button class="copy-button primary-export" id="generateCarousel">Générer les 6 images</button></div></div><div id="carouselExports" class="carousel-exports"><p>Génération automatique des six images carrées avec le logo FACT XI.</p></div></div>
+  <section class="card panel momentum-panel"><div class="panel-head"><div><span class="tag estimate">Estimation · modèle calculé (pression SportMonks)</span><h2>Comment le match a basculé</h2></div><div class="legend"><button data-series="all" class="active">Toutes</button><button data-series="ars"><i class="ars-c"></i><span id="legHome">DOM</span></button><button data-series="draw"><i class="draw-c"></i>Nul</button><button data-series="mci"><i class="mci-c"></i><span id="legAway">EXT</span></button></div></div>
+   <div class="momentum-layout">
+    <div class="chartbox"><svg id="chart" viewBox="0 0 900 330" aria-label="Momentum du match"></svg><div id="chartEvents"></div></div>
+    <aside class="momentum-events" id="momentumEvents"></aside>
    </div>
   </section>
- </div>
+
+  <section class="card panel match-panel">
+   <div class="match-tabs" role="tablist"><button class="active" data-mtab="stats">Statistiques</button><button data-mtab="compo">Compositions</button><button data-mtab="istats">Statistiques individuelles</button></div>
+
+   <div class="match-tab-panel active" id="mtab-stats">
+    <div class="stats-feed-layout">
+     <div class="stats-col">
+      <div class="stats-head"><h3>Statistiques</h3><div class="period-tabs" id="periodTabs"><button data-period="all" class="active">Match complet</button><button data-period="1st-half">1re mi-temps</button><button data-period="2nd-half">2e mi-temps</button></div></div>
+      <div class="team-labels" id="teamLabels"></div>
+      <div class="stat-body" id="statBody"></div>
+     </div>
+     <div class="feed-col">
+      <h3>Fil du match</h3>
+      <div id="feed"></div>
+     </div>
+    </div>
+   </div>
+
+   <div class="match-tab-panel" id="mtab-compo">
+    <div class="squads" id="squads"></div>
+    <p class="players-note">Note de match : SportMonks. Cartes de chaleur : non disponibles en formule standard, nécessitent un fournisseur de tracking dédié.</p>
+   </div>
+
+   <div class="match-tab-panel" id="mtab-istats">
+    <div class="istats-tabs" id="statCatTabs"><button data-cat="general" class="active">Générale</button><button data-cat="offensive">Offensive</button><button data-cat="defensive">Défensive</button></div>
+    <div class="rating-legend"><span class="rating great">≥7.5</span><span class="rating good">6.5–7.4</span><span class="rating mid">5.5–6.4</span><span class="rating low">&lt;5.5</span><i>Note du match</i></div>
+    <div class="istats-tables" id="istatsTables"></div>
+   </div>
+  </section>
 
  </div>
 </main><div id="toast"></div><script src="matchlab.js"></script></body></html>

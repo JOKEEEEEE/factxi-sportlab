@@ -73,7 +73,6 @@ function init(){
   select(events.length?0:-1);
   renderSquads();
   renderIndividualStats();
-  renderStudio();
 
   document.querySelector("#loadingState").hidden=true;
   document.querySelector("#matchContent").hidden=false;
@@ -255,29 +254,14 @@ function renderMomentumChart(root){
   document.querySelectorAll(".chart-event").forEach(b=>b.onclick=()=>select(+b.dataset.i));
 }
 
-function boxes(p,old){return `<div class="probs">${p.map((v,i)=>`<div class="prob"><b>${Math.round(v*100)} %</b><span>${names[i]}</span>${old?`<em>${Math.round((v-old[i])*100)>0?"+":""}${Math.round((v-old[i])*100)} pts</em>`:""}</div>`).join("")}</div>`}
-function scoreAtOrBefore(t,inclusive){
-  const goals=events.filter(e=>e.result);
-  let sc="0–0";
-  for(const g of goals){
-    const gt=g.minute+((g.extra_minute||0)/10);
-    if(inclusive ? gt<=t : gt<t) sc=g.result.replace("-","–");
-  }
-  return sc;
-}
-function renderCompare(){
-  if(selected<0 || !events.length){
-    document.querySelector("#before").innerHTML="";
-    document.querySelector("#after").innerHTML="";
-    return;
-  }
-  const e=events[selected];
-  const t=e.minute+((e.extra_minute||0)/10);
-  const beforeScore=scoreAtOrBefore(t,false);
-  const afterScore=e.result?e.result.replace("-","–"):beforeScore;
-  const bp=probsAt(Math.max(0,t-0.15)), ap=probsAt(t);
-  document.querySelector("#before").innerHTML=`<small>Juste avant · ${fmtMinute(e)}</small><h3>État avant l’événement</h3><div class="state-score">${beforeScore}</div>${boxes(bp)}`;
-  document.querySelector("#after").innerHTML=`<small>Juste après · ${fmtMinute(e)}</small><h3>${icon(e.type.code)} ${e.player_name||eventLabel(e.type)}</h3><div class="state-score">${afterScore}</div>${boxes(ap,bp)}`;
+function renderMomentumEvents(){
+  const root=document.querySelector("#momentumEvents");
+  if(!events.length){ root.innerHTML=`<p class="momentum-empty">Aucun but ni carton rouge dans ce match.</p>`; return; }
+  root.innerHTML=events.map((e,i)=>{
+    const isHome=e.participant_id===HOME_ID;
+    return `<button class="momentum-event-row ${i===selected?"active":""} ${isHome?"home":"away"}" data-i="${i}"><span class="me-time">${fmtMinute(e)}</span><span class="me-icon">${icon(e.type.code)}</span><span class="me-name">${e.player_name||eventLabel(e.type)}</span></button>`;
+  }).join("");
+  document.querySelectorAll(".momentum-event-row").forEach(b=>b.onclick=()=>select(+b.dataset.i));
 }
 
 function renderFeed(){
@@ -286,32 +270,41 @@ function renderFeed(){
   const second=all.filter(e=>e.period && e.period.description==="2nd-half");
   const row=e=>{
     const majorIndex=events.indexOf(e);
+    const isHome=e.participant_id===HOME_ID;
     const detail = e.type.code==="substitution" ? `${e.player_name||""}${e.related_player_name?` ↔ ${e.related_player_name}`:""}` : (infoLabel(e.info)||e.addition||"");
-    return `<button class="feed-event ${majorIndex===selected?"active":""}" data-major="${majorIndex}"><time>${fmtMinute(e)}</time><span class="symbol">${icon(e.type.code)}</span><b>${e.player_name||eventLabel(e.type)}<small> · ${detail}</small></b>${e.result?`<strong>${e.result.replace("-","–")}</strong>`:""}</button>`;
+    const content=`<span class="symbol">${icon(e.type.code)}</span><b>${e.player_name||eventLabel(e.type)}<small> · ${detail}</small></b>${e.result?`<strong>${e.result.replace("-","–")}</strong>`:""}`;
+    return `<div class="feed-row ${majorIndex===selected?"active":""}" data-major="${majorIndex}"><div class="feed-side home">${isHome?content:""}</div><time class="feed-time">${fmtMinute(e)}</time><div class="feed-side away">${!isHome?content:""}</div></div>`;
   };
   document.querySelector("#feed").innerHTML=
     `<div class="period"><span>1re mi-temps</span></div>${first.map(row).join("")}<div class="period"><span>2e mi-temps</span></div>${second.map(row).join("")}`;
-  document.querySelectorAll(".feed-event").forEach(b=>{if(+b.dataset.major>-1) b.onclick=()=>select(+b.dataset.major)});
+  document.querySelectorAll(".feed-row").forEach(b=>{if(+b.dataset.major>-1) b.onclick=()=>select(+b.dataset.major)});
 }
 
-function select(i){selected=i;renderChart();renderCompare();renderFeed()}
+function select(i){selected=i;renderChart();renderMomentumEvents();renderFeed()}
 
 const TEAM_STAT_WHITELIST = new Set([
   "ball-possession","shots-total","shots-on-target","big-chances-created","corners",
   "fouls","yellowcards","successful-passes-percentage","duels-won","saves","offsides","xg"
 ]);
+let currentStatPeriod="all";
 function renderStats(){
   const byType={};
   (RAW.statistics||[]).forEach(s=>{
     const key=s.type.id;
     if(!TEAM_STAT_WHITELIST.has(s.type.code)) return;
+    if(currentStatPeriod!=="all"){
+      const periodDesc = s.period && s.period.description;
+      if(periodDesc!==currentStatPeriod) return;
+    }
     if(!byType[key]) byType[key]={name:s.type.name, code:s.type.code, group:s.type.stat_group||"overall", home:null, away:null};
     if(s.location==="home") byType[key].home=s.data.value; else byType[key].away=s.data.value;
   });
-  const xg=(RAW.xgfixture||[]).filter(x=>x.type_id===5304);
-  if(xg.length){
-    const h=xg.find(x=>x.location==="home"), a=xg.find(x=>x.location==="away");
-    byType["xg"]={name:"xG", code:"xg", group:"offensive", home:h?Number(h.data.value).toFixed(2):null, away:a?Number(a.data.value).toFixed(2):null};
+  if(currentStatPeriod==="all"){
+    const xg=(RAW.xgfixture||[]).filter(x=>x.type_id===5304);
+    if(xg.length){
+      const h=xg.find(x=>x.location==="home"), a=xg.find(x=>x.location==="away");
+      byType["xg"]={name:"xG", code:"xg", group:"offensive", home:h?Number(h.data.value).toFixed(2):null, away:a?Number(a.data.value).toFixed(2):null};
+    }
   }
   const groups={};
   Object.values(byType).forEach(t=>{
@@ -322,9 +315,13 @@ function renderStats(){
   const root=document.querySelector("#statBody");
   const order=["Attaque","Ensemble","Discipline et défense","Autres"];
   const keys=Object.keys(groups).sort((a,b)=>order.indexOf(a)-order.indexOf(b));
-  root.innerHTML = keys.length
-    ? keys.map(g=>`<div class="stat-group"><h4>${g}</h4>${groups[g].map(statRow).join("")}</div>`).join("")
-    : `<div class="stats-empty"><strong>En attente de l’API</strong><span>Aucune statistique disponible pour ce match.</span></div>`;
+  if(!keys.length){
+    root.innerHTML = currentStatPeriod==="all"
+      ? `<div class="stats-empty"><strong>En attente de l’API</strong><span>Aucune statistique disponible pour ce match.</span></div>`
+      : `<div class="stats-empty"><strong>Non disponible</strong><span>Les statistiques par mi-temps ne sont pas confirmées disponibles pour ce match — seul le match complet l'est.</span></div>`;
+    return;
+  }
+  root.innerHTML = keys.map(g=>`<div class="stat-group"><h4>${g}</h4>${groups[g].map(statRow).join("")}</div>`).join("");
 }
 function statRow(t){
   if(t.home==null || t.away==null) return `<div class="stat-row pending-row"><span>${statLabel(t)}</span><em>Non disponible</em></div>`;
@@ -385,7 +382,7 @@ function renderSquads(){
       const photoHtml = photo
         ? `<img src="${photo}" alt="" loading="lazy" onerror="this.outerHTML='${jersey}'">`
         : jersey;
-      return `<i style="--x:${xPct}%;--y:${yPct}%" class="${photo?"has-photo":""}">${photoHtml}<small>${lastName(s)}${isCaptain(s)?" (C)":""}</small></i>`;
+      return `<i style="--x:${xPct}%;--y:${yPct}%" class="${photo?"has-photo":""}">${photoHtml}${isCaptain(s)?'<b class="pitch-captain">C</b>':""}<small>${lastName(s)}</small></i>`;
     }).join("");
     const listRow=s=>`<div class="squad-row">${avatarImg(s)}<em>${s.jersey_number||"—"}</em><span>${flagImg(s.player)}${s.player_name}${isCaptain(s)?'<b class="captain-tag">C</b>':""}</span>${ratingBadge(s)}</div>`;
     const subInRow=s=>{const em=entryMinute(s);return `<div class="squad-row sub-in">${avatarImg(s)}<em>↗</em><span>${flagImg(s.player)}${s.player_name}<small>entré${em?` ${em}’`:""}</small></span>${ratingBadge(s)}</div>`};
@@ -481,102 +478,16 @@ function renderIndividualStats(){
     renderIndividualStatsTable({id:AWAY_ID,name:AWAY_NAME},"away","mci-label");
 }
 
-async function copyText(text,button){try{await navigator.clipboard.writeText(text);let old=button.textContent;button.textContent="Copié ✓";setTimeout(()=>button.textContent=old,1500)}catch{button.textContent="Sélectionnez le texte"}}
-
-function renderStudio(){
-  const hs=currentScore(HOME_ID), as=currentScore(AWAY_ID);
-  const winner = hs>as?HOME_NAME:as>hs?AWAY_NAME:null;
-  const xg=(RAW.xgfixture||[]).filter(x=>x.type_id===5304);
-  const hxg=xg.find(x=>x.location==="home"), axg=xg.find(x=>x.location==="away");
-  const possession=(RAW.statistics||[]).find(s=>s.type.code==="ball-possession" && s.location==="home");
-  const shotsHome=(RAW.statistics||[]).find(s=>s.type.code==="shots-total" && s.location==="home");
-  const shotsAway=(RAW.statistics||[]).find(s=>s.type.code==="shots-total" && s.location==="away");
-
-  document.querySelector("#storyAngle").innerHTML=`<div><span>L’ANGLE FACT XI</span><h3>${HOME_NAME} ${hs}–${as} ${AWAY_NAME}${winner?` : victoire ${winner}.`:" : match nul."}</h3></div><dl>${possession?`<div><dt>Possession</dt><dd>${possession.data.value} % – ${100-possession.data.value} %</dd></div>`:""}${hxg&&axg?`<div><dt>xG</dt><dd>${Number(hxg.data.value).toFixed(2)}–${Number(axg.data.value).toFixed(2)}</dd></div>`:""}</dl>`;
-
-  const xpostLines=[`${HOME_NAME} ${hs}–${as} ${AWAY_NAME}.`,""];
-  if(shotsHome && shotsAway) xpostLines.push(`${shotsHome.data.value} tirs contre ${shotsAway.data.value}.`);
-  if(hxg && axg) xpostLines.push(`xG : ${Number(hxg.data.value).toFixed(2)}–${Number(axg.data.value).toFixed(2)}.`);
-  xpostLines.push("","Source : SportMonks");
-  document.querySelector("#xpost-copy").textContent=xpostLines.join("\n");
-
-  const goals=events.filter(e=>e.type.code==="goal"||e.type.code==="owngoal");
-  document.querySelector("#phases").innerHTML = goals.length
-    ? goals.map((g,i)=>`<article><span>BUT ${i+1} · ${fmtMinute(g)}</span><b>${g.player_name||eventLabel(g.type)}</b><p>${infoLabel(g.info)||""}${g.related_player_name?` (passe de ${g.related_player_name})`:""}</p><footer><strong>${g.result?g.result.replace("-","–"):""}</strong></footer></article>`).join("")
-    : `<p style="font-size:9px;color:var(--muted)">Aucun but marqué dans ce match.</p>`;
-  document.querySelector("#thread-copy").innerHTML = goals.map((g,i)=>`<p><b>${i+1}/${goals.length}</b> ${g.player_name||eventLabel(g.type)} marque à la ${fmtMinute(g)}${g.related_player_name?` (passe de ${g.related_player_name})`:""}. Score : ${g.result?g.result.replace("-","–"):""}.</p>`).join("");
-
-  document.querySelector("#copySource").onclick=()=>copyText(`${HOME_NAME} ${hs}–${as} ${AWAY_NAME} · Source : SportMonks (fixture ${fixtureId})`,document.querySelector("#copySource"));
-}
-
-function rounded(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
-function wrap(ctx,text,x,y,max,line){const words=(text||"").split(" ");let row="",cy=y;for(const word of words){const test=row+word+" ";if(ctx.measureText(test).width>max&&row){ctx.fillText(row.trim(),x,cy);row=word+" ";cy+=line}else row=test}ctx.fillText(row.trim(),x,cy)}
-function loadImage(src,crossOrigin=false){return new Promise(resolve=>{const img=new Image();if(crossOrigin)img.crossOrigin="anonymous";img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src=src})}
-
-function buildCarouselSlides(){
-  const hs=currentScore(HOME_ID), as=currentScore(AWAY_ID);
-  let dateTxt="";
-  if(RAW.starting_at) dateTxt=new Date(RAW.starting_at.replace(" ","T")+"Z").toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
-  const possession=(RAW.statistics||[]).find(s=>s.type.code==="ball-possession" && s.location==="home");
-  const xg=(RAW.xgfixture||[]).filter(x=>x.type_id===5304);
-  const hxg=xg.find(x=>x.location==="home"), axg=xg.find(x=>x.location==="away");
-  const shotsHome=(RAW.statistics||[]).find(s=>s.type.code==="shots-total" && s.location==="home");
-  const shotsAway=(RAW.statistics||[]).find(s=>s.type.code==="shots-total" && s.location==="away");
-  const firstGoal=events.find(e=>e.type.code==="goal");
-  return [
-    {k:(RAW.round?`J${RAW.round.name}`:"MATCH"),title:`${HOME_NAME}\n${hs}–${as} ${AWAY_NAME}`,body:`${dateTxt}${RAW.venue?" · "+RAW.venue.name:""}`,cover:true},
-    {k:"LA POSSESSION",title:possession?`${possession.data.value} %`:"—",body:`Possession de ${HOME_NAME}.`},
-    {k:"LE PREMIER BUT",title:firstGoal?fmtMinute(firstGoal):"—",body:firstGoal?`${firstGoal.player_name} ouvre le score.`:"Aucun but marqué."},
-    {k:"LE SCORE FINAL",title:`${hs}–${as}`,body:`${HOME_NAME} — ${AWAY_NAME}.`,accent:true},
-    {k:"LES TIRS",title:shotsHome&&shotsAway?`${shotsHome.data.value}–${shotsAway.data.value}`:"—",body:"Tirs tentés par équipe."},
-    {k:"LA LECTURE",title:hxg&&axg?`xG ${Number(hxg.data.value).toFixed(2)}–${Number(axg.data.value).toFixed(2)}`:"Lecture FACT XI",body:"Données SportMonks."}
-  ];
-}
-function drawSlide(canvas,slide,index,assets,total){
-  const c=canvas.getContext("2d"),ink="#20304A",ivory="#FAF7F0",coral="#D9705C",greige="#E6DED2",white="#FFFDF9";
-  c.fillStyle=slide.accent?coral:ivory;c.fillRect(0,0,800,800);
-  c.fillStyle=slide.accent?"rgba(255,255,255,.13)":greige;rounded(c,30,30,740,740,28);
-  c.fillStyle=slide.accent?"rgba(32,48,74,.2)":ink;rounded(c,46,46,708,190,23);
-  if(slide.cover){
-    c.globalAlpha=.12;c.fillStyle=white;for(let x=45;x<755;x+=55)c.fillRect(x,46,26,190);c.globalAlpha=1;
-    if(assets.home&&assets.home.complete)c.drawImage(assets.home,85,78,110,110);else{c.fillStyle=coral;rounded(c,85,78,110,110,22);c.fillStyle=white;c.font="800 45px Arial";c.fillText(initials(HOME_NAME),100,148)}
-    if(assets.away&&assets.away.complete)c.drawImage(assets.away,605,78,110,110);else{c.fillStyle="#78abc2";rounded(c,605,78,110,110,22);c.fillStyle=white;c.font="800 45px Arial";c.fillText(initials(AWAY_NAME),620,148)}
-    c.fillStyle=white;c.textAlign="center";c.font="800 60px Arial";c.fillText(slide.title.split("\n")[1]||"",400,150);c.textAlign="left";
-  }
-  c.fillStyle=slide.accent?white:coral;c.font="800 18px Arial";c.fillText(slide.k,70,285);c.fillRect(70,307,82,5);
-  c.fillStyle=slide.accent?white:ink;c.font=slide.cover?"700 44px Georgia":"700 76px Georgia";
-  (slide.cover?[slide.title.split("\n")[0]]:slide.title.split("\n")).forEach((t,i)=>c.fillText(t,70,400+i*88));
-  c.font="500 28px Arial";wrap(c,slide.body,70,590,600,38);
-  c.fillStyle=slide.accent?"rgba(255,255,255,.75)":"#6f7887";c.font="700 15px Arial";
-  c.fillText(`${initials(HOME_NAME)} — ${initials(AWAY_NAME)} · ${String(index+1).padStart(2,"0")}/${String(total).padStart(2,"0")}`,70,713);
-  if(assets.logo&&assets.logo.complete){c.globalAlpha=.96;c.drawImage(assets.logo,675,665,72,72);c.globalAlpha=1}else{c.fillStyle=slide.accent?white:ink;c.font="900 17px Arial";c.fillText("FACT XI",680,710)}
-}
-async function generateCarousel(){
-  const root=document.querySelector("#carouselExports");
-  root.innerHTML="<p>Génération des images…</p>";
-  const home=RAW.participants.find(p=>p.id===HOME_ID), away=RAW.participants.find(p=>p.id===AWAY_ID);
-  const [logo,homeImg,awayImg]=await Promise.all([
-    loadImage("Logo%20Transparent.png"),
-    loadImage(home.image_path,true),
-    loadImage(away.image_path,true)
-  ]);
-  const slides=buildCarouselSlides();
-  root.innerHTML="";
-  slides.forEach((slide,i)=>{
-    const item=document.createElement("article"),canvas=document.createElement("canvas"),download=document.createElement("button");
-    canvas.width=800;canvas.height=800;
-    drawSlide(canvas,slide,i,{logo,home:homeImg,away:awayImg},slides.length);
-    download.textContent=`Télécharger ${i+1}/${slides.length} · PNG`;
-    download.onclick=()=>{const a=document.createElement("a");a.download=`FACT-XI_${initials(HOME_NAME)}-${initials(AWAY_NAME)}_${i+1}-${slides.length}_800x800.png`;try{a.href=canvas.toDataURL("image/png");a.click()}catch{alert("Export bloqué par le chargement distant des écussons. Rechargez puis réessayez.")}};
-    item.append(canvas,download);root.append(item);
-  });
-}
-
-document.querySelectorAll(".page-tabs button").forEach(button=>button.onclick=()=>{document.querySelectorAll(".page-tabs button").forEach(b=>b.classList.toggle("active",b===button));document.querySelectorAll(".page-tab-panel").forEach(panel=>panel.classList.toggle("active",panel.id===`tab-${button.dataset.tab}`))});
-document.querySelectorAll(".studio-tabs button").forEach(button=>button.onclick=()=>{document.querySelectorAll(".studio-tabs button").forEach(b=>b.classList.toggle("active",b===button));document.querySelectorAll(".output").forEach(panel=>panel.classList.toggle("active",panel.id===button.dataset.output))});
+document.querySelectorAll(".match-tabs button").forEach(button=>button.onclick=()=>{
+  document.querySelectorAll(".match-tabs button").forEach(b=>b.classList.toggle("active",b===button));
+  document.querySelectorAll(".match-tab-panel").forEach(panel=>panel.classList.toggle("active",panel.id===`mtab-${button.dataset.mtab}`));
+});
+document.querySelectorAll("#periodTabs button").forEach(button=>button.onclick=()=>{
+  currentStatPeriod=button.dataset.period;
+  document.querySelectorAll("#periodTabs button").forEach(b=>b.classList.toggle("active",b===button));
+  renderStats();
+});
 document.querySelectorAll(".legend button").forEach(b=>b.onclick=()=>{series=b.dataset.series;document.querySelectorAll(".legend button").forEach(x=>x.classList.toggle("active",x===b));renderChart()});
 document.querySelectorAll("#statCatTabs button").forEach(b=>b.onclick=()=>{statCategory=b.dataset.cat;document.querySelectorAll("#statCatTabs button").forEach(x=>x.classList.toggle("active",x===b));renderIndividualStats()});
-document.addEventListener("click",e=>{const btn=e.target.closest(".copy-button[data-copy]");if(btn){const el=document.querySelector(`#${btn.dataset.copy}`);if(el)copyText(el.innerText,btn)}});
-document.addEventListener("click",e=>{if(e.target.id==="generateCarousel")generateCarousel()});
 
 load();
