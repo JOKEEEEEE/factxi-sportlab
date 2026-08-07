@@ -129,8 +129,9 @@ class SportMonksProvider(FootballDataProvider):
 
         Le endpoint /leagues (liste complète) ignore silencieusement l'include
         imbriqué currentSeason ; on doit interroger chaque ligue individuellement
-        (/leagues/{id}?include=currentSeason), seul pattern confirmé par la doc
-        officielle SportMonks. Un appel de plus par compétition, négligeable.
+        (/leagues/{id}?include=currentSeason). Confirmé par un vrai appel : la
+        clé de la réponse est en minuscules ("currentseason"), pas en camelCase
+        comme le paramètre d'include lui-même ni comme le laisse penser la doc.
         """
         try:
             rows, _ = self._get(f"leagues/{league_id}", {"include": "currentSeason"})
@@ -140,9 +141,9 @@ class SportMonksProvider(FootballDataProvider):
         if not rows:
             print(f"    [diagnostic] réponse vide pour la ligue {league_id}")
             return None
-        current_season = rows[0].get("currentSeason") or {}
+        current_season = rows[0].get("currentseason") or rows[0].get("currentSeason") or {}
         if not current_season.get("id"):
-            print(f"    [diagnostic] ligue {league_id}: réponse reçue mais sans currentSeason exploitable. Clés présentes : {list(rows[0].keys())}")
+            print(f"    [diagnostic] ligue {league_id}: réponse reçue mais sans currentseason exploitable. Clés présentes : {list(rows[0].keys())}")
         return current_season.get("id")
 
     def get_raw_standings(self, season_id: int, *, include: str = "participant;details.type") -> list[JsonObject]:

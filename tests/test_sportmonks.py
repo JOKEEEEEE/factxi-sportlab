@@ -25,7 +25,9 @@ class SportMonksProviderTests(unittest.TestCase):
                     ]
                 }
             self.assertIn("/leagues/8?include=currentSeason", url)
-            return {"data": {"id": 8, "currentSeason": {"id": 23614, "name": "2024/2025"}}}
+            # Confirmé par appel réel : la clé de réponse est en minuscules,
+            # contrairement au paramètre d'include (camelCase) et à la doc.
+            return {"data": {"id": 8, "currentseason": {"id": 23614, "name": "2024/2025"}}}
 
         provider = SportMonksProvider(
             Settings(sportmonks_api_token="test-token"),
