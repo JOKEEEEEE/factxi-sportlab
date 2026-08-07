@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import asdict
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 import json
 from pathlib import Path
 import sys
@@ -55,6 +55,23 @@ def _parse_season_dates(season_row: dict) -> tuple[date, date] | None:
     if not start or not end:
         return None
     return date.fromisoformat(start[:10]), date.fromisoformat(end[:10])
+
+
+def _date_chunks(date_from: date, date_to: date, max_days: int = 90) -> list[tuple[date, date]]:
+    """Découpe une plage de dates en tranches de `max_days` jours maximum.
+
+    SportMonks limite /fixtures/between à 100 jours par appel. On utilise 90
+    plutôt que 100 pour garder une marge de sécurité, pas pour économiser des
+    requêtes (une saison de ~282 jours fait de toute façon 3-4 tranches, le
+    coût réel est négligeable face au quota journalier).
+    """
+    chunks = []
+    start = date_from
+    while start <= date_to:
+        end = min(start + timedelta(days=max_days - 1), date_to)
+        chunks.append((start, end))
+        start = end + timedelta(days=1)
+    return chunks
 
 
 def fetch_match_details(provider: SportMonksProvider, matches: list) -> int:
@@ -139,16 +156,26 @@ def main() -> int:
         season_year = date_from.year if date_from.month >= 7 else date_from.year - 1
 
         print(f"  Saison trouvée (id {target['id']}) : {date_from} -> {date_to}")
-        try:
-            matches = provider.matches(
-                competition_id=competition.id,
-                season=season_year,
-                date_from=date_from,
-                date_to=date_to,
-            )
-        except ProviderError as exc:
-            print(f"  Erreur récupération des matchs : {exc}")
-            continue
+        chunks = _date_chunks(date_from, date_to)
+        if len(chunks) > 1:
+            print(f"  Plage de {(date_to - date_from).days + 1} jours > limite SportMonks (100) : {len(chunks)} tranches.")
+        matches: list = []
+        seen_ids: set[str] = set()
+        for chunk_from, chunk_to in chunks:
+            try:
+                chunk_matches = provider.matches(
+                    competition_id=competition.id,
+                    season=season_year,
+                    date_from=chunk_from,
+                    date_to=chunk_to,
+                )
+            except ProviderError as exc:
+                print(f"  Erreur récupération des matchs ({chunk_from} -> {chunk_to}) : {exc}")
+                continue
+            for m in chunk_matches:
+                if m.id not in seen_ids:
+                    seen_ids.add(m.id)
+                    matches.append(m)
         print(f"  {len(matches)} match(s) trouvé(s) sur la saison.")
 
         # data/matches.json est réservé à la fenêtre glissante gérée par
