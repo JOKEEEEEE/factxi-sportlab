@@ -20,12 +20,40 @@
   </section>
 
   <section class="st-card">
+    <div class="st-card-head">
+      <div><span class="st-tag">Buteurs &amp; passeurs</span><h2>Générateur — top 5 chacun</h2></div>
+      <div class="st-selects"><select id="scorersCompSelect"></select></div>
+    </div>
+    <p class="st-note" id="scorersGenNote">Sélectionne une compétition puis génère.</p>
+    <div class="st-preview">
+      <canvas id="cScorers" width="800" height="800"></canvas>
+      <div class="st-actions">
+        <button id="scorersGenBtn">Générer l'aperçu</button>
+        <button id="scorersDlBtn" disabled>Télécharger le PNG</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="st-card">
+    <div class="st-card-head">
+      <div><span class="st-tag">Séries en cours</span><h2>Générateur — seuil 3 matchs</h2></div>
+      <div class="st-selects"><select id="streaksCompSelect"></select></div>
+    </div>
+    <p class="st-note" id="streaksGenNote">Sélectionne une compétition puis génère.</p>
+    <div class="st-preview">
+      <canvas id="cStreaks" width="800" height="800"></canvas>
+      <div class="st-actions">
+        <button id="streaksGenBtn">Générer l'aperçu</button>
+        <button id="streaksDlBtn" disabled>Télécharger le PNG</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="st-card">
     <span class="st-tag">À venir</span>
     <h2>Prochainement dans Studio</h2>
     <ul class="st-todo">
-      <li>Classement + buteurs/passeurs en carte (une fois la saison lancée et des buts marqués)</li>
-      <li>Joueurs les mieux notés (saison + 5 derniers matchs)</li>
-      <li>Séries en cours (seuil 3, toutes rubriques toujours affichées)</li>
+      <li>Joueurs les mieux notés (saison + 5 derniers matchs) — nécessite d'agréger plusieurs matchs, plus complexe, en cours</li>
       <li>Fiches pré-match et post-match par match, format one-page</li>
     </ul>
   </section>

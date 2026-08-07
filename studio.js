@@ -93,8 +93,7 @@ async function generate(){
   const comp = COMPETITIONS.find(c=>c.id===compId);
   const allMatches = MATCHES_BY_COMP[compId] || [];
   const matches = allMatches.filter(m=>m.round===roundSel);
-  const canvas = document.querySelector("#c"), ctx = canvas.getContext("2d");
-  ctx.fillStyle = IVORY; ctx.fillRect(0,0,800,800);
+  const canvas = document.querySelector("#c");
 
   if(!comp || !matches.length){
     document.querySelector("#genNote").textContent = "Aucun match pour cette sélection.";
@@ -114,25 +113,33 @@ async function generate(){
   const compLogo = comp.logo_url ? await loadImage(comp.logo_url) : null;
   const brandLogo = await loadImage("logo-factxi.png");
 
-  // Bandeau d'en-tête coloré : ink plein, plus de relief que du texte sur blanc.
-  ctx.fillStyle = INK; roundRect(ctx,0,0,800,168,0); ctx.fill();
-  ctx.globalAlpha=.06; ctx.fillStyle=WHITE;
-  for(let x=0;x<800;x+=46) ctx.fillRect(x,0,22,168);
-  ctx.globalAlpha=1;
-  if(compLogo){ ctx.fillStyle=WHITE; roundRect(ctx,40,32,56,56,14); ctx.fill(); ctx.drawImage(compLogo,46,38,44,44); }
-  else { ctx.fillStyle="#ffffff22"; roundRect(ctx,40,32,56,56,14); ctx.fill(); }
-  ctx.fillStyle=CORAL; ctx.font="900 12px Arial"; ctx.fillText(comp.name.toUpperCase(), 110, 52);
-  ctx.fillStyle=WHITE; ctx.font="400 32px Georgia"; ctx.fillText(`Journée ${roundSel}`, 110, 84);
-  ctx.fillStyle="#ffffffaa"; ctx.font="700 11px Arial"; ctx.fillText(`${matches.length} match${matches.length>1?"s":""}`, 110, 106);
-
-  let y = 200;
   const colW = 340, gap = 24, leftX = 40, rightX = leftX + colW + gap;
+  const cardH = 58, cardGap = 10, dayGap = 30;
+  const headerH = 130;
+
+  // Hauteur calculée à l'avance : plus de coupure en bas selon le nombre de matchs/jours.
+  let totalH = headerH;
+  groups.forEach(group=>{
+    totalH += dayGap;
+    const rows = Math.ceil(group.items.length/2);
+    totalH += rows*(cardH+cardGap);
+  });
+  totalH += 60; // pied de page
+  canvas.width = 800; canvas.height = Math.max(500, totalH);
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = WHITE; ctx.fillRect(0,0,800,canvas.height);
+
+  ctx.fillStyle=CORAL; ctx.font="900 11px Arial"; ctx.fillText(comp.name.toUpperCase(), 40, 44);
+  ctx.fillStyle=INK; ctx.font="400 30px Georgia"; ctx.fillText(`Journée ${roundSel}`, 40, 76);
+  if(compLogo){ ctx.fillStyle=WHITE; roundRect(ctx,700,26,54,54,16); ctx.fill(); ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,700,26,54,54,16); ctx.stroke(); ctx.drawImage(compLogo,708,34,38,38); }
+
+  let y = headerH;
+  const short=n=>n; // les noms restent complets, cf. retour précédent sur la lisibilité
 
   groups.forEach(group=>{
-    // bandeau de jour coloré, pas juste du texte
-    ctx.fillStyle=CORAL; roundRect(ctx,leftX,y-16,180,22,6); ctx.fill();
-    ctx.fillStyle=WHITE; ctx.font="900 10px Arial"; ctx.fillText(group.day.toUpperCase(), leftX+10, y);
-    y += 24;
+    ctx.fillStyle=CORAL; roundRect(ctx,leftX,y-16,190,24,8); ctx.fill();
+    ctx.fillStyle=WHITE; ctx.font="900 10px Arial"; ctx.fillText(group.day.toUpperCase(), leftX+12, y);
+    y += dayGap;
     let colY = [y, y];
     group.items.forEach((m,i)=>{
       const col = i % 2, x = col===0 ? leftX : rightX;
@@ -141,34 +148,35 @@ async function generate(){
       const hImg = m.home.logo_url && logos[m.home.logo_url];
       const aImg = m.away.logo_url && logos[m.away.logo_url];
 
-      // carte blanche par match, un peu de relief (ombre légère simulée par un fond gris clair décalé)
-      ctx.fillStyle="#00000008"; roundRect(ctx,x+1,cy+1,colW,68,12); ctx.fill();
-      ctx.fillStyle=WHITE; roundRect(ctx,x,cy,colW,68,12); ctx.fill();
+      ctx.fillStyle=WHITE; roundRect(ctx,x,cy,colW,cardH,14); ctx.fill();
+      ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,cy,colW,cardH,14); ctx.stroke();
 
-      // heure : pilule corail bien visible en haut à droite de la carte
       const t = new Date(m.kickoff).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
-      ctx.fillStyle=CORAL; roundRect(ctx,x+colW-58,cy+9,48,18,9); ctx.fill();
-      ctx.fillStyle=WHITE; ctx.font="900 10px Arial"; ctx.textAlign="center"; ctx.fillText(t, x+colW-34, cy+21); ctx.textAlign="left";
+      ctx.fillStyle=CORAL; roundRect(ctx,x+colW-62,cy+8,50,20,10); ctx.fill();
+      ctx.fillStyle=WHITE; ctx.font="900 10px Arial"; ctx.textAlign="center"; ctx.fillText(t, x+colW-37, cy+21); ctx.textAlign="left";
 
-      const iy = cy+10;
-      if(hImg) ctx.drawImage(hImg, x+12, iy, 22, 22); else {ctx.fillStyle=GREIGE; roundRect(ctx,x+12,iy,22,22,6); ctx.fill();}
-      ctx.fillStyle=INK; ctx.font="800 13px Arial"; ctx.fillText(m.home.name, x+42, iy+16);
-      ctx.fillStyle=MUTED; ctx.font="800 9px Arial"; ctx.fillText(hPos?`${hPos}e au classement`:"", x+42, iy+28);
+      const iy = cy+8;
+      if(hImg) ctx.drawImage(hImg, x+14, iy, 20, 20); else {ctx.fillStyle=GREIGE; roundRect(ctx,x+14,iy,20,20,6); ctx.fill();}
+      ctx.fillStyle=INK; ctx.font="800 13px Arial";
+      const hLabel = hPos? `${short(m.home.name)} (${hPos})` : short(m.home.name);
+      ctx.fillText(hLabel, x+42, iy+15);
 
-      const iy2 = cy+38;
-      if(aImg) ctx.drawImage(aImg, x+12, iy2, 22, 22); else {ctx.fillStyle=GREIGE; roundRect(ctx,x+12,iy2,22,22,6); ctx.fill();}
-      ctx.fillStyle=INK; ctx.font="800 13px Arial"; ctx.fillText(m.away.name, x+42, iy2+16);
-      ctx.fillStyle=MUTED; ctx.font="800 9px Arial"; ctx.fillText(aPos?`${aPos}e au classement`:"", x+42, iy2+28);
+      const iy2 = cy+32;
+      if(aImg) ctx.drawImage(aImg, x+14, iy2, 20, 20); else {ctx.fillStyle=GREIGE; roundRect(ctx,x+14,iy2,20,20,6); ctx.fill();}
+      ctx.fillStyle=INK; ctx.font="800 13px Arial";
+      const aLabel = aPos? `${short(m.away.name)} (${aPos})` : short(m.away.name);
+      ctx.fillText(aLabel, x+42, iy2+15);
 
-      colY[col] = cy + 78;
+      colY[col] = cy + cardH + cardGap;
     });
     y = Math.max(colY[0], colY[1]) + 14;
   });
 
+  const footerY = canvas.height - 30;
   ctx.fillStyle=MUTED; ctx.font="700 9px Arial";
-  ctx.fillText("Positions au classement avant la journée.", leftX, 770);
-  if(brandLogo){ ctx.drawImage(brandLogo, 724, 754, 36, 36); }
-  else { ctx.fillStyle=INK; roundRect(ctx,724,764,30,30,7); ctx.fill(); ctx.fillStyle=WHITE; ctx.font="900 12px Arial"; ctx.textAlign="center"; ctx.fillText("S", 739, 783); ctx.textAlign="left"; }
+  ctx.fillText("Positions au classement avant la journée.", leftX, footerY);
+  if(brandLogo){ ctx.drawImage(brandLogo, 724, footerY-16, 36, 36); }
+  else { ctx.fillStyle=INK; roundRect(ctx,724,footerY-6,30,30,7); ctx.fill(); ctx.fillStyle=WHITE; ctx.font="900 12px Arial"; ctx.textAlign="center"; ctx.fillText("S", 739, footerY+13); ctx.textAlign="left"; }
 
   document.querySelector("#dlBtn").disabled = false;
 }
@@ -181,4 +189,203 @@ document.querySelector("#dlBtn").onclick = ()=>{
   a.click();
 };
 
+init();
+
+// ===================== Buteurs & passeurs =====================
+
+function scorerValue(entry){
+  return entry.total ?? entry.value ?? (entry.data && entry.data.value) ?? null;
+}
+function isGoalEntry(entry){
+  const code = (entry.type && (entry.type.code||entry.type.name||"")).toLowerCase();
+  return code.includes("goal") && !code.includes("assist") && !code.includes("card") && !code.includes("expected") && !code.includes("xg");
+}
+function isAssistEntry(entry){
+  const code = (entry.type && (entry.type.code||entry.type.name||"")).toLowerCase();
+  return code.includes("assist") && !code.includes("expected") && !code.includes("xa");
+}
+function isXgEntry(entry){
+  const code = (entry.type && (entry.type.code||entry.type.name||"")).toLowerCase();
+  return code.includes("expected") && code.includes("goal") && !code.includes("assist");
+}
+function isXaEntry(entry){
+  const code = (entry.type && (entry.type.code||entry.type.name||"")).toLowerCase();
+  return (code.includes("expected") && code.includes("assist")) || code.includes("xa");
+}
+function playerKeyOf(entry){ return entry.player_id || (entry.player && entry.player.id) || (entry.player && entry.player.name); }
+
+async function initScorersSelect(){
+  const sel = document.querySelector("#scorersCompSelect");
+  sel.innerHTML = COMPETITIONS.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
+}
+function drawScorerRow(ctx,x,y,rank,entry,expectedVal,expectedLabel,logos){
+  ctx.fillStyle=WHITE; roundRect(ctx,x,y,720,60,10); ctx.fill();
+  ctx.fillStyle=MUTED; ctx.font="900 12px Arial"; ctx.fillText(String(rank), x+14, y+36);
+  const player=entry.player||{}, team=entry.participant||{};
+  const img = player.image_path && logos[player.image_path];
+  if(img) ctx.drawImage(img, x+38, y+9, 42, 42);
+  else { ctx.fillStyle=GREIGE; ctx.beginPath(); ctx.arc(x+59,y+30,21,0,7); ctx.fill(); }
+  ctx.fillStyle=INK; ctx.font="800 14px Arial"; ctx.fillText(player.display_name||player.name||"—", x+92, y+27);
+  ctx.fillStyle=MUTED; ctx.font="700 10px Arial"; ctx.fillText(team.name||"", x+92, y+44);
+  const val = scorerValue(entry);
+  ctx.fillStyle=CORAL; ctx.font="900 22px Arial"; ctx.textAlign="right"; ctx.fillText(String(val??"—"), x+700, y+34); ctx.textAlign="left";
+  if(expectedVal!=null){
+    ctx.fillStyle=MUTED; ctx.font="700 9px Arial"; ctx.textAlign="right";
+    ctx.fillText(`${expectedLabel} ${Number(expectedVal).toFixed(2)}`, x+700, y+48); ctx.textAlign="left";
+  }
+}
+async function generateScorers(){
+  const compId = document.querySelector("#scorersCompSelect").value;
+  const comp = COMPETITIONS.find(c=>c.id===compId);
+  const canvas = document.querySelector("#cScorers"), ctx = canvas.getContext("2d");
+  ctx.fillStyle=WHITE; ctx.fillRect(0,0,800,800);
+  if(!comp){ document.querySelector("#scorersGenNote").textContent="Compétition introuvable."; return; }
+  const numId = leagueNumericId(compId);
+  const payload = await fetchJson(`data/topscorers-${numId}.json`);
+  const entries = payload && Array.isArray(payload.topscorers) ? payload.topscorers : [];
+  const goals = entries.filter(isGoalEntry).sort((a,b)=>(scorerValue(b)||0)-(scorerValue(a)||0)).slice(0,5);
+  const assists = entries.filter(isAssistEntry).sort((a,b)=>(scorerValue(b)||0)-(scorerValue(a)||0)).slice(0,5);
+  const xgByPlayer={}, xaByPlayer={};
+  entries.filter(isXgEntry).forEach(e=>xgByPlayer[playerKeyOf(e)]=scorerValue(e));
+  entries.filter(isXaEntry).forEach(e=>xaByPlayer[playerKeyOf(e)]=scorerValue(e));
+
+  if(!goals.length && !assists.length){
+    document.querySelector("#scorersGenNote").textContent="Aucun but ni passe décisive enregistrés pour l'instant cette saison.";
+  } else {
+    document.querySelector("#scorersGenNote").textContent=`${goals.length} buteur(s) · ${assists.length} passeur(s)`;
+  }
+
+  const logos={};
+  for(const e of [...goals,...assists]){
+    const p=(e.player&&e.player.image_path);
+    if(p && !logos[p]) logos[p]=await loadImage(p);
+  }
+  const brandLogo = await loadImage("logo-factxi.png");
+
+  ctx.fillStyle=CORAL; ctx.font="900 11px Arial"; ctx.fillText(comp.name.toUpperCase(), 40, 44);
+  ctx.fillStyle=INK; ctx.font="400 30px Georgia"; ctx.fillText("Buteurs & passeurs", 40, 76);
+  if(comp.logo_url){ const cl=await loadImage(comp.logo_url); if(cl){ ctx.fillStyle=WHITE; roundRect(ctx,700,20,54,54,16); ctx.fill(); ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,700,20,54,54,16); ctx.stroke(); ctx.drawImage(cl,708,28,38,38);} }
+
+  let y=134;
+  ctx.fillStyle=CORAL; ctx.font="900 11px Arial"; ctx.fillText("MEILLEURS BUTEURS", 40, y); y+=14;
+  if(!goals.length){ ctx.fillStyle=MUTED; ctx.font="700 11px Arial"; ctx.fillText("Aucun but marqué pour l'instant.", 40, y+20); y+=50; }
+  else { goals.forEach((e,i)=>{ drawScorerRow(ctx,40,y,i+1,e,xgByPlayer[playerKeyOf(e)],"xG",logos); y+=68; }); }
+
+  y+=16;
+  ctx.fillStyle=CORAL; ctx.font="900 11px Arial"; ctx.fillText("MEILLEURS PASSEURS", 40, y); y+=14;
+  if(!assists.length){ ctx.fillStyle=MUTED; ctx.font="700 11px Arial"; ctx.fillText("Aucune passe décisive pour l'instant.", 40, y+20); }
+  else { assists.forEach((e,i)=>{ drawScorerRow(ctx,40,y,i+1,e,xaByPlayer[playerKeyOf(e)],"xA",logos); y+=68; }); }
+
+  if(brandLogo) ctx.drawImage(brandLogo, 724, 754, 36, 36);
+  document.querySelector("#scorersDlBtn").disabled=false;
+}
+document.querySelector("#scorersGenBtn").onclick=generateScorers;
+document.querySelector("#scorersDlBtn").onclick=()=>{
+  const a=document.createElement("a"); a.download="FACT-XI_buteurs-passeurs.png";
+  a.href=document.querySelector("#cScorers").toDataURL("image/png"); a.click();
+};
+
+// ===================== Séries en cours =====================
+
+const STREAK_THRESHOLD = 3;
+
+function teamStreaks(teamName, compId){
+  const matches = (MATCHES_BY_COMP[compId]||[])
+    .filter(m=>m.status==="finished" && (m.home.name===teamName || m.away.name===teamName))
+    .sort((a,b)=>new Date(b.kickoff)-new Date(a.kickoff));
+  let win=0, unbeaten=0, loss=0, cleanSheet=0;
+  let stopWin=false, stopUnbeaten=false, stopLoss=false, stopClean=false;
+  for(const m of matches){
+    const isHome = m.home.name===teamName;
+    const gf = isHome?m.home_score:m.away_score, ga = isHome?m.away_score:m.home_score;
+    if(gf==null||ga==null) continue;
+    const result = gf>ga?"w":gf<ga?"l":"d";
+    if(!stopWin){ if(result==="w") win++; else stopWin=true; }
+    if(!stopUnbeaten){ if(result!=="l") unbeaten++; else stopUnbeaten=true; }
+    if(!stopLoss){ if(result==="l") loss++; else stopLoss=true; }
+    if(!stopClean){ if(ga===0) cleanSheet++; else stopClean=true; }
+  }
+  return {win,unbeaten,loss,cleanSheet};
+}
+
+async function initStreaksSelect(){
+  document.querySelector("#streaksCompSelect").innerHTML = COMPETITIONS.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
+}
+function bestStreak(compId, key){
+  const matches = MATCHES_BY_COMP[compId]||[];
+  const teams = [...new Set(matches.flatMap(m=>[m.home.name, m.away.name]))];
+  let best=null;
+  teams.forEach(t=>{
+    const s = teamStreaks(t, compId);
+    if(s[key] >= STREAK_THRESHOLD && (!best || s[key] > best.value)) best = {team:t, value:s[key]};
+  });
+  return best;
+}
+async function generateStreaks(){
+  const compId = document.querySelector("#streaksCompSelect").value;
+  const comp = COMPETITIONS.find(c=>c.id===compId);
+  const canvas = document.querySelector("#cStreaks"), ctx = canvas.getContext("2d");
+  ctx.fillStyle=WHITE; ctx.fillRect(0,0,800,800);
+  if(!comp){ document.querySelector("#streaksGenNote").textContent="Compétition introuvable."; return; }
+
+  const categories = [
+    {key:"win", label:"Série de victoires", suffix:"victoires consécutives"},
+    {key:"unbeaten", label:"Série d'invincibilité", suffix:"matchs sans défaite"},
+    {key:"loss", label:"Série de défaites", suffix:"défaites consécutives"},
+    {key:"cleanSheet", label:"Clean sheets", suffix:"matchs sans encaisser"}
+  ];
+  const results = categories.map(c=>({...c, best:bestStreak(compId,c.key)}));
+
+  const anyFound = results.some(r=>r.best);
+  document.querySelector("#streaksGenNote").textContent = anyFound
+    ? "Séries calculées sur l'historique de matchs disponible."
+    : "Aucune série ne dépasse le seuil de 3 pour l'instant — normal en tout début de saison.";
+
+  const teamLogosNeeded = results.map(r=>r.best && r.best.team).filter(Boolean);
+  const logos={};
+  for(const t of teamLogosNeeded){
+    const matches = MATCHES_BY_COMP[compId]||[];
+    const m = matches.find(x=>x.home.name===t || x.away.name===t);
+    const url = m ? (m.home.name===t ? m.home.logo_url : m.away.logo_url) : null;
+    if(url) logos[t]=await loadImage(url);
+  }
+  const compLogo = comp.logo_url ? await loadImage(comp.logo_url) : null;
+  const brandLogo = await loadImage("logo-factxi.png");
+
+  ctx.fillStyle=CORAL; ctx.font="900 11px Arial"; ctx.fillText(comp.name.toUpperCase(), 40, 44);
+  ctx.fillStyle=INK; ctx.font="400 30px Georgia"; ctx.fillText("Séries en cours", 40, 76);
+  if(compLogo){ ctx.fillStyle=WHITE; roundRect(ctx,700,20,54,54,16); ctx.fill(); ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,700,20,54,54,16); ctx.stroke(); ctx.drawImage(compLogo,708,28,38,38); }
+
+  let y=134;
+  results.forEach(r=>{
+    ctx.fillStyle=WHITE; roundRect(ctx,40,y,720,120,14); ctx.fill();
+    ctx.fillStyle=CORAL; ctx.font="900 10px Arial"; ctx.fillText(r.label.toUpperCase(), 64, y+30);
+    if(r.best){
+      const logo=logos[r.best.team];
+      if(logo) ctx.drawImage(logo, 64, y+44, 46, 46);
+      else { ctx.fillStyle=GREIGE; roundRect(ctx,64,y+44,46,46,10); ctx.fill(); }
+      ctx.fillStyle=INK; ctx.font="800 18px Arial"; ctx.fillText(r.best.team, 122, y+65);
+      ctx.fillStyle=MUTED; ctx.font="700 11px Arial"; ctx.fillText(`${r.best.value} ${r.suffix}`, 122, y+85);
+      ctx.fillStyle=CORAL; ctx.font="900 34px Arial"; ctx.textAlign="right"; ctx.fillText(String(r.best.value), 730, y+80); ctx.textAlign="left";
+    } else {
+      ctx.fillStyle=MUTED; ctx.font="700 11px Arial"; ctx.fillText("Aucune équipe n'atteint le seuil de 3 pour l'instant.", 64, y+65);
+    }
+    y+=134;
+  });
+
+  if(brandLogo) ctx.drawImage(brandLogo, 724, 754, 36, 36);
+  document.querySelector("#streaksDlBtn").disabled=false;
+}
+document.querySelector("#streaksGenBtn").onclick=generateStreaks;
+document.querySelector("#streaksDlBtn").onclick=()=>{
+  const a=document.createElement("a"); a.download="FACT-XI_series.png";
+  a.href=document.querySelector("#cStreaks").toDataURL("image/png"); a.click();
+};
+
+const _origInit = init;
+init = async function(){
+  await _origInit();
+  await initScorersSelect();
+  await initStreaksSelect();
+};
 init();
