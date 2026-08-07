@@ -11,19 +11,21 @@ NOW = datetime(2026, 8, 5, 10, 0, tzinfo=UTC)
 class SportMonksProviderTests(unittest.TestCase):
     def test_competitions_are_normalised_with_trace(self) -> None:
         def fake_transport(url, headers, timeout):
-            self.assertIn("/leagues?include=", url)
             self.assertEqual(headers, {"Authorization": "test-token"})
-            return {
-                "data": [
-                    {
-                        "id": 8,
-                        "name": "Premier League",
-                        "sub_type": "domestic",
-                        "image_path": "logo.png",
-                        "country": {"name": "England"},
-                    }
-                ]
-            }
+            if "/leagues?include=" in url:
+                return {
+                    "data": [
+                        {
+                            "id": 8,
+                            "name": "Premier League",
+                            "sub_type": "domestic",
+                            "image_path": "logo.png",
+                            "country": {"name": "England"},
+                        }
+                    ]
+                }
+            self.assertIn("/leagues/8?include=currentSeason", url)
+            return {"data": {"id": 8, "currentSeason": {"id": 23614, "name": "2024/2025"}}}
 
         provider = SportMonksProvider(
             Settings(sportmonks_api_token="test-token"),
@@ -33,6 +35,7 @@ class SportMonksProviderTests(unittest.TestCase):
         competition = provider.competitions()[0]
         self.assertEqual(competition.id, "sportmonks:league:8")
         self.assertEqual(competition.country, "England")
+        self.assertEqual(competition.current_season_id, 23614)
         self.assertEqual(competition.trace.provider, "sportmonks")
         self.assertEqual(competition.trace.collected_at, NOW)
 

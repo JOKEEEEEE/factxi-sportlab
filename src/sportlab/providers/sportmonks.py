@@ -134,11 +134,15 @@ class SportMonksProvider(FootballDataProvider):
         """
         try:
             rows, _ = self._get(f"leagues/{league_id}", {"include": "currentSeason"})
-        except ProviderError:
+        except ProviderError as exc:
+            print(f"    [diagnostic] échec récupération saison pour la ligue {league_id}: {exc}")
             return None
         if not rows:
+            print(f"    [diagnostic] réponse vide pour la ligue {league_id}")
             return None
         current_season = rows[0].get("currentSeason") or {}
+        if not current_season.get("id"):
+            print(f"    [diagnostic] ligue {league_id}: réponse reçue mais sans currentSeason exploitable. Clés présentes : {list(rows[0].keys())}")
         return current_season.get("id")
 
     def get_raw_standings(self, season_id: int, *, include: str = "participant;details.type") -> list[JsonObject]:
