@@ -1,0 +1,30 @@
+.cl-main{max-width:1000px;margin:auto;padding:32px 24px 60px}
+.cl-comp-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px}
+.cl-comp-tabs button{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:white;border-radius:99px;padding:8px 14px 8px 8px;font:700 11px "Plus Jakarta Sans",sans-serif;color:var(--ink)}
+.cl-comp-tabs button img{width:20px;height:20px;object-fit:contain}
+.cl-comp-tabs button.active{background:var(--ink);color:white;border-color:var(--ink)}
+.cl-empty{text-align:center;padding:60px;color:var(--muted);font-size:12px}
+.cl-card{background:#fffdf9;border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:16px}
+.cl-card h2{font-size:15px;margin:0 0 4px;color:var(--ink)}
+.cl-note{font-size:10px;color:var(--muted);margin:0 0 14px}
+.cl-two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cl-table-wrap{overflow-x:auto}
+.cl-table{width:100%;border-collapse:collapse;font-size:11px}
+.cl-table th{text-align:center;font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:8px 6px;border-bottom:1px solid var(--line)}
+.cl-table th.team{text-align:left}
+.cl-table td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:center;font-weight:700;color:var(--ink)}
+.cl-table td.team{text-align:left;display:flex;align-items:center;gap:8px;font-weight:800}
+.cl-table td.team img{width:20px;height:20px;object-fit:contain}
+.cl-table td.pos{color:var(--muted);font-weight:800;width:24px}
+.cl-table td.pts{font-weight:900}
+.cl-table tr:last-child td{border-bottom:0}
+.cl-plist{display:flex;flex-direction:column;gap:2px}
+.cl-prow{display:grid;grid-template-columns:20px 30px 1fr auto;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--line);font-size:11px}
+.cl-prow:last-child{border-bottom:0}
+.cl-prow .rank{color:var(--muted);font-weight:800;font-size:10px}
+.cl-prow img.avatar{width:30px;height:30px;border-radius:50%;object-fit:cover;background:var(--greige)}
+.cl-prow .pname{font-weight:800;color:var(--ink)}
+.cl-prow .pname small{display:block;font-weight:600;color:var(--muted);font-size:9px}
+.cl-prow .pval{font-weight:900;color:var(--coral);text-align:right}
+.cl-prow .pval small{display:block;font-weight:700;color:var(--muted);font-size:8px}
+@media(max-width:700px){.cl-two-col{grid-template-columns:1fr}}

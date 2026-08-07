@@ -1,0 +1,27 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SportLab — Classement</title><link rel="stylesheet" href="home.css"><link rel="stylesheet" href="logos.css"><link rel="stylesheet" href="classement.css"></head><body>
+<header><div class="nav"><a class="brand" href="index.html"><span>S</span>Sport<em>Lab</em></a><nav class="site-tabs"><a class="site-tab" href="index.html">Accueil</a><a class="site-tab active" href="classement.html">Classement</a><a class="site-tab" href="studio.html">Studio</a></nav><div class="nav-actions"><span>Données SportMonks</span></div></div></header>
+<main class="cl-main">
+  <div class="cl-comp-tabs" id="compTabs"></div>
+  <div id="loadingState" class="cl-empty">Chargement…</div>
+  <div id="content" hidden>
+    <section class="cl-card">
+      <h2>Classement</h2>
+      <p class="cl-note" id="standingsNote"></p>
+      <div class="cl-table-wrap"><table class="cl-table" id="standingsTable"></table></div>
+    </section>
+    <div class="cl-two-col">
+      <section class="cl-card">
+        <h2>Meilleurs buteurs</h2>
+        <p class="cl-note" id="scorersNote"></p>
+        <div id="scorersList" class="cl-plist"></div>
+      </section>
+      <section class="cl-card">
+        <h2>Meilleurs passeurs</h2>
+        <p class="cl-note" id="assistsNote"></p>
+        <div id="assistsList" class="cl-plist"></div>
+      </section>
+    </div>
+  </div>
+</main>
+<script src="classement.js"></script>
+</body></html>
