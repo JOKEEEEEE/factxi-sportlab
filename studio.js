@@ -55,19 +55,39 @@ async function init(){
 
   const select = document.querySelector("#compSelect");
   select.innerHTML = COMPETITIONS.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
-  select.onchange = populateRounds;
+  select.onchange = ()=>{ populateSeasons(); };
+  populateSeasons();
+}
+
+// Codes pays SportMonks -> français, pour les 5 compétitions couvertes.
+// Repli sur la valeur brute si non listée (mieux qu'un texte manquant).
+const COUNTRY_FR = {"England":"Angleterre","Germany":"Allemagne","France":"France","Italy":"Italie","Spain":"Espagne"};
+function countryLabel(c){ return COUNTRY_FR[c] || c || ""; }
+function seasonLabel(year){ return `${year}–${String(Number(year)+1)}`; }
+
+function seasonsForComp(compId){
+  const matches = MATCHES_BY_COMP[compId] || [];
+  return [...new Set(matches.map(m=>m.season).filter(s=>s!=null))].sort((a,b)=>b-a);
+}
+function populateSeasons(){
+  const compId = document.querySelector("#compSelect").value;
+  const seasons = seasonsForComp(compId);
+  const sel = document.querySelector("#seasonSelect");
+  if(!seasons.length){ sel.innerHTML = `<option>Aucune saison</option>`; populateRounds(); return; }
+  sel.innerHTML = seasons.map(s=>`<option value="${s}">${seasonLabel(s)}</option>`).join("");
+  sel.onchange = populateRounds;
   populateRounds();
 }
 
-function roundsForComp(compId){
-  const matches = MATCHES_BY_COMP[compId] || [];
+function roundsForComp(compId, season){
+  const matches = (MATCHES_BY_COMP[compId] || []).filter(m=>String(m.season)===String(season));
   const rounds = [...new Set(matches.map(m=>m.round).filter(Boolean))]
     .sort((a,b)=>Number(a)-Number(b));
   return rounds;
 }
 
-function defaultRound(compId){
-  const matches = MATCHES_BY_COMP[compId] || [];
+function defaultRound(compId, season){
+  const matches = (MATCHES_BY_COMP[compId] || []).filter(m=>String(m.season)===String(season));
   const scheduled = matches.filter(m=>m.status==="scheduled");
   const pool = scheduled.length ? scheduled : matches;
   const rounds = [...new Set(pool.map(m=>m.round).filter(Boolean))].sort((a,b)=>Number(a)-Number(b));
@@ -77,11 +97,12 @@ function defaultRound(compId){
 
 function populateRounds(){
   const compId = document.querySelector("#compSelect").value;
-  const rounds = roundsForComp(compId);
+  const season = document.querySelector("#seasonSelect").value;
+  const rounds = roundsForComp(compId, season);
   const sel = document.querySelector("#roundSelect");
   if(!rounds.length){ sel.innerHTML = `<option>Aucune journée</option>`; return; }
   sel.innerHTML = rounds.map(r=>`<option value="${r}">Journée ${r}</option>`).join("");
-  const def = defaultRound(compId);
+  const def = defaultRound(compId, season);
   if(def) sel.value = def;
 }
 
@@ -119,7 +140,8 @@ function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);}
 // coin haut-gauche de la pilule (220×58).
 function drawSignature(ctx, brandLogo, sigX, sigY){
   const sigW=220, sigH=58;
-  ctx.fillStyle=CARD_TINT; roundRect(ctx,sigX,sigY,sigW,sigH,29); ctx.fill();
+  ctx.fillStyle=WHITE; roundRect(ctx,sigX,sigY,sigW,sigH,29); ctx.fill();
+  ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,sigX,sigY,sigW,sigH,29); ctx.stroke();
   const avR=23, avCx=sigX+29, avCy=sigY+sigH/2;
   if(brandLogo){
     ctx.save();
@@ -162,10 +184,11 @@ function compGradient(ctx, name, x0, y0, x1, y1){
 
 async function generate(){
   const compId = document.querySelector("#compSelect").value;
+  const seasonSel = document.querySelector("#seasonSelect").value;
   const roundSel = document.querySelector("#roundSelect").value;
   const comp = COMPETITIONS.find(c=>c.id===compId);
   const allMatches = MATCHES_BY_COMP[compId] || [];
-  const matches = allMatches.filter(m=>m.round===roundSel);
+  const matches = allMatches.filter(m=>String(m.season)===String(seasonSel) && m.round===roundSel);
   const pagesRoot = document.querySelector("#calendarPages");
   pagesRoot.innerHTML = "";
 
@@ -187,7 +210,7 @@ async function generate(){
 
   const colW = 520, gap = 30, leftX = 50, rightX = leftX + colW + gap;
   const cardH = 78, cardGap = 14, dayGap = 46, blockGap = 16;
-  const bannerH = 166, headerH = bannerH + 46, footerH = 90;
+  const bannerH = 166, headerH = bannerH + 46, footerH = 110;
   const LOGICAL_W = 1200, MAX_LOGICAL_H = 1200;
   const maxContentH = MAX_LOGICAL_H - headerH - footerH;
   const rowH = cardH+cardGap;
@@ -253,10 +276,10 @@ async function generate(){
     ctx.fillText(`Journée ${roundSel}${pages.length>1?` (${pageIndex+1}/${pages.length})`:""}`, bx+38, by+104);
 
     // Tags pays / saison, façon pilules
-    const country = comp.country || "";
+    const country = countryLabel(comp.country);
     const tagY = by+120;
     let tagX = bx+38;
-    [country, "Saison en cours"].filter(Boolean).forEach(txt=>{
+    [country, seasonLabel(seasonSel)].filter(Boolean).forEach(txt=>{
       ctx.font="800 12px Arial";
       const w = ctx.measureText(txt).width + 26;
       ctx.fillStyle="rgba(255,255,255,.16)"; roundRect(ctx,tagX,tagY,w,26,13); ctx.fill();
@@ -310,10 +333,10 @@ async function generate(){
       y += blockGap;
     });
 
-    const footerY = LOGICAL_H - footerH + 24;
+    const footerY = LOGICAL_H - footerH + 34;
     ctx.fillStyle=MUTED; ctx.font="700 13px Arial";
-    ctx.fillText("Positions au classement avant la journée.", leftX, footerY+8);
-    drawSignature(ctx, brandLogo, LOGICAL_W-leftX-220, footerY-38);
+    ctx.fillText("Positions au classement avant la journée.", leftX, footerY+3);
+    drawSignature(ctx, brandLogo, LOGICAL_W-leftX-220, footerY-26);
 
     const dlBtn = document.createElement("button");
     dlBtn.textContent = pages.length>1 ? `Télécharger ${pageIndex+1}/${pages.length}` : "Télécharger le PNG";
