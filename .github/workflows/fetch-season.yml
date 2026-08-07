@@ -1,0 +1,56 @@
+name: Récupérer une saison historique complète
+
+on:
+  workflow_dispatch:
+    inputs:
+      season_name:
+        description: "Nom de la saison SportMonks (ex: 2025/2026)"
+        required: true
+        default: "2025/2026"
+      competition:
+        description: "Nom exact d'une compétition à cibler (laisser vide = toutes les compétitions couvertes)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-season:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Récupérer la saison
+        env:
+          SPORTMONKS_API_TOKEN: ${{ secrets.SPORTMONKS_API_TOKEN }}
+        run: |
+          if [ -n "${{ github.event.inputs.competition }}" ]; then
+            python3 scripts/fetch_season.py --season-name "${{ github.event.inputs.season_name }}" --competition "${{ github.event.inputs.competition }}"
+          else
+            python3 scripts/fetch_season.py --season-name "${{ github.event.inputs.season_name }}"
+          fi
+
+      - name: Publier les données si changement
+        run: |
+          shopt -s nullglob
+          git config user.name "sportlab-bot"
+          git config user.email "actions@github.com"
+          FILES=(data/match-detail-*.json data/matches-history.json)
+          if [ ${#FILES[@]} -eq 0 ]; then
+            echo "Aucun fichier de données trouvé, rien à publier."
+            exit 0
+          fi
+          git add "${FILES[@]}"
+          if git diff --cached --quiet; then
+            echo "Aucun changement détecté."
+          else
+            git commit -m "Backfill saison ${{ github.event.inputs.season_name }}"
+            git push
+          fi

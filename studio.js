@@ -24,6 +24,22 @@ async function init(){
     COMPETITIONS.push(c);
     MATCHES_BY_COMP[c.id] = entry.matches || [];
   });
+
+  // Backfill historique optionnel (scripts/fetch_season.py) : fusionné sans
+  // doublon avec la fenêtre glissante, absent tant qu'il n'a pas été lancé —
+  // c'est normal, pas une erreur.
+  const history = await fetchJson("data/matches-history.json");
+  if(history && Array.isArray(history.competitions)){
+    history.competitions.forEach(entry=>{
+      const c = entry.competition;
+      if(!c) return;
+      if(!MATCHES_BY_COMP[c.id]) MATCHES_BY_COMP[c.id] = [];
+      const seenIds = new Set(MATCHES_BY_COMP[c.id].map(m=>m.id));
+      (entry.matches||[]).forEach(m=>{ if(!seenIds.has(m.id)) MATCHES_BY_COMP[c.id].push(m); });
+      if(!COMPETITIONS.find(x=>x.id===c.id)) COMPETITIONS.push(c);
+    });
+  }
+
   const select = document.querySelector("#compSelect");
   select.innerHTML = COMPETITIONS.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
   select.onchange = populateRounds;
@@ -387,5 +403,135 @@ init = async function(){
   await _origInit();
   await initScorersSelect();
   await initStreaksSelect();
+  await initRatedSelect();
 };
 init();
+
+// ===================== Meilleurs joueurs =====================
+
+// On plafonne le nombre de matchs agrégés pour rester réactif dans le
+// navigateur : une saison complète peut faire 380 matchs pour la Premier
+// League, inutile de tout charger pour une moyenne représentative.
+const RATED_MATCH_CAP = 60;
+const RATED_MIN_APPEARANCES = 3;
+
+async function initRatedSelect(){
+  document.querySelector("#ratedCompSelect").innerHTML = COMPETITIONS.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
+}
+
+async function aggregatePlayerRatings(compId){
+  const matches = (MATCHES_BY_COMP[compId]||[])
+    .filter(m=>m.status==="finished")
+    .sort((a,b)=>new Date(b.kickoff)-new Date(a.kickoff))
+    .slice(0, RATED_MATCH_CAP);
+
+  const players = {}; // key -> {name, photo, team, teamLogo, ratings:[{date,value}]}
+  let loaded=0;
+  for(const m of matches){
+    const fixtureId = (m.id||"").split(":").pop();
+    const payload = await fetchJson(`data/match-detail-${fixtureId}.json`);
+    if(!payload || !payload.raw) continue;
+    loaded++;
+    const raw = payload.raw;
+    const participants = raw.participants||[];
+    (raw.lineups||[]).forEach(l=>{
+      const rating = (l.details||[]).find(d=>d.type_id===118);
+      if(!rating) return;
+      const key = l.player_id || l.player_name;
+      if(!players[key]){
+        const team = participants.find(p=>p.id===l.team_id) || {};
+        players[key] = {
+          name: (l.player && l.player.display_name) || l.player_name,
+          photo: l.player && l.player.image_path,
+          team: team.name,
+          teamLogo: team.image_path,
+          ratings: []
+        };
+      }
+      players[key].ratings.push({date:m.kickoff, value:Number(rating.data.value)});
+    });
+  }
+  return {players, matchesLoaded:loaded, matchesConsidered:matches.length};
+}
+
+function drawRatedCard(ctx,x,y,rank,p,seasonAvg,last5Avg,logos){
+  ctx.fillStyle=WHITE; roundRect(ctx,x,y,720,84,14); ctx.fill();
+  ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,y,720,84,14); ctx.stroke();
+  ctx.fillStyle=MUTED; ctx.font="900 13px Arial"; ctx.fillText(String(rank), x+16, y+48);
+  const img = p.photo && logos[p.photo];
+  if(img) ctx.drawImage(img, x+40, y+14, 56, 56);
+  else { ctx.fillStyle=GREIGE; ctx.beginPath(); ctx.arc(x+68,y+42,28,0,7); ctx.fill(); }
+  const tlogo = p.teamLogo && logos[p.teamLogo];
+  if(tlogo) ctx.drawImage(tlogo, x+104, y+16, 20, 20);
+  ctx.fillStyle=INK; ctx.font="800 16px Arial"; ctx.fillText(p.name||"—", x+130, y+34);
+  ctx.fillStyle=MUTED; ctx.font="700 10px Arial"; ctx.fillText(p.team||"", x+130, y+50);
+
+  const ratingBadge=(val,label,bx)=>{
+    const cls = val>=7.5?"#dcebe3":val>=6.5?"#e3edf2":val>=5.5?"#f1e5cc":"#f3dcd5";
+    const txt = val>=7.5?"#2d6a4f":val>=6.5?"#3e6c81":val>=5.5?"#805e1f":"#b95845";
+    ctx.fillStyle=cls; roundRect(ctx,bx,y+16,84,36,10); ctx.fill();
+    ctx.fillStyle=txt; ctx.font="900 17px Arial"; ctx.textAlign="center"; ctx.fillText(val.toFixed(1),bx+42,y+40); ctx.textAlign="left";
+    ctx.fillStyle=MUTED; ctx.font="700 8px Arial"; ctx.textAlign="center"; ctx.fillText(label,bx+42,y+62); ctx.textAlign="left";
+  };
+  ratingBadge(seasonAvg,"SAISON", x+520);
+  ratingBadge(last5Avg,"5 DERNIERS", x+616);
+}
+
+async function generateRated(){
+  const compId = document.querySelector("#ratedCompSelect").value;
+  const comp = COMPETITIONS.find(c=>c.id===compId);
+  const canvas = document.querySelector("#cRated"), ctx = canvas.getContext("2d");
+  if(!comp){ document.querySelector("#ratedGenNote").textContent="Compétition introuvable."; return; }
+
+  document.querySelector("#ratedGenNote").textContent="Agrégation des matchs en cours…";
+  const {players, matchesLoaded, matchesConsidered} = await aggregatePlayerRatings(compId);
+
+  const ranked = Object.values(players)
+    .filter(p=>p.ratings.length>=RATED_MIN_APPEARANCES)
+    .map(p=>{
+      const sorted=[...p.ratings].sort((a,b)=>new Date(b.date)-new Date(a.date));
+      const seasonAvg = sorted.reduce((s,r)=>s+r.value,0)/sorted.length;
+      const last5 = sorted.slice(0,5);
+      const last5Avg = last5.reduce((s,r)=>s+r.value,0)/last5.length;
+      return {...p, seasonAvg, last5Avg};
+    })
+    .sort((a,b)=>b.seasonAvg-a.seasonAvg)
+    .slice(0,5);
+
+  canvas.width=800; canvas.height=780;
+  ctx.fillStyle=WHITE; ctx.fillRect(0,0,800,780);
+
+  if(!ranked.length){
+    document.querySelector("#ratedGenNote").textContent = matchesLoaded
+      ? `Aucun joueur avec au moins ${RATED_MIN_APPEARANCES} matchs notés sur les ${matchesLoaded} matchs disponibles.`
+      : "Aucun détail de match disponible pour cette compétition — le backfill saison n'a peut-être pas encore été lancé.";
+    document.querySelector("#ratedDlBtn").disabled=true;
+    return;
+  }
+  document.querySelector("#ratedGenNote").textContent = `Basé sur ${matchesLoaded} match(s) sur ${matchesConsidered} disponible(s), joueurs avec ≥${RATED_MIN_APPEARANCES} apparitions.`;
+
+  const logos={};
+  for(const p of ranked){
+    if(p.photo && !logos[p.photo]) logos[p.photo]=await loadImage(p.photo);
+    if(p.teamLogo && !logos[p.teamLogo]) logos[p.teamLogo]=await loadImage(p.teamLogo);
+  }
+  const compLogo = comp.logo_url ? await loadImage(comp.logo_url) : null;
+  const brandLogo = await loadImage("logo-factxi.png");
+
+  if(compLogo){ ctx.fillStyle=GREIGE; roundRect(ctx,40,30,50,50,12); ctx.fill(); ctx.drawImage(compLogo,45,35,40,40); }
+  ctx.fillStyle=CORAL; ctx.font="900 11px Arial"; ctx.fillText(comp.name.toUpperCase(), 104, 50);
+  ctx.fillStyle=INK; ctx.font="400 28px Georgia"; ctx.fillText("Meilleurs joueurs", 104, 78);
+
+  let y=110;
+  ranked.forEach((p,i)=>{ drawRatedCard(ctx,40,y,i+1,p,p.seasonAvg,p.last5Avg,logos); y+=98; });
+
+  ctx.fillStyle=MUTED; ctx.font="700 9px Arial";
+  ctx.fillText(`Note moyenne sur ${RATED_MATCH_CAP} derniers matchs maximum · minimum ${RATED_MIN_APPEARANCES} apparitions.`, 40, 750);
+  if(brandLogo) ctx.drawImage(brandLogo, 724, 730, 36, 36);
+  document.querySelector("#ratedDlBtn").disabled=false;
+}
+document.querySelector("#ratedGenBtn").onclick=generateRated;
+document.querySelector("#ratedDlBtn").onclick=()=>{
+  const a=document.createElement("a"); a.download="FACT-XI_meilleurs-joueurs.png";
+  a.href=document.querySelector("#cRated").toDataURL("image/png"); a.click();
+};

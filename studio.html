@@ -50,10 +50,24 @@
   </section>
 
   <section class="st-card">
+    <div class="st-card-head">
+      <div><span class="st-tag">Meilleurs joueurs</span><h2>Générateur — saison &amp; 5 derniers matchs</h2></div>
+      <div class="st-selects"><select id="ratedCompSelect"></select></div>
+    </div>
+    <p class="st-note" id="ratedGenNote">Sélectionne une compétition puis génère.</p>
+    <div class="st-preview">
+      <canvas id="cRated" width="800" height="800"></canvas>
+      <div class="st-actions">
+        <button id="ratedGenBtn">Générer l'aperçu</button>
+        <button id="ratedDlBtn" disabled>Télécharger le PNG</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="st-card">
     <span class="st-tag">À venir</span>
     <h2>Prochainement dans Studio</h2>
     <ul class="st-todo">
-      <li>Joueurs les mieux notés (saison + 5 derniers matchs) — nécessite d'agréger plusieurs matchs, plus complexe, en cours</li>
       <li>Fiches pré-match et post-match par match, format one-page</li>
     </ul>
   </section>

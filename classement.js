@@ -35,6 +35,20 @@ async function init(){
       if(e.competition) MATCHES_BY_COMP[e.competition.id] = e.matches || [];
     });
   }
+  // Backfill historique optionnel (scripts/fetch_season.py), fusionné sans
+  // doublon — améliore la fiabilité de "État de forme". Absent tant qu'il
+  // n'a pas été lancé, c'est normal.
+  const history = await fetchJson("data/matches-history.json");
+  if(history && Array.isArray(history.competitions)){
+    history.competitions.forEach(e=>{
+      const c = e.competition;
+      if(!c) return;
+      if(!MATCHES_BY_COMP[c.id]) MATCHES_BY_COMP[c.id] = [];
+      const seenIds = new Set(MATCHES_BY_COMP[c.id].map(m=>m.id));
+      (e.matches||[]).forEach(m=>{ if(!seenIds.has(m.id)) MATCHES_BY_COMP[c.id].push(m); });
+      if(!COMPETITIONS.find(x=>x.id===c.id)) COMPETITIONS.push({id:c.id,name:c.name,logo_url:c.logo_url});
+    });
+  }
   if(!COMPETITIONS.length){
     document.querySelector("#loadingState").textContent = "Aucune compétition disponible pour l'instant. Le robot n'a peut-être pas encore tourné.";
     return;
