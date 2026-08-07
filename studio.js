@@ -114,7 +114,26 @@ function groupByDay(matches){
 function loadImage(src){return new Promise(resolve=>{if(!src){resolve(null);return}const img=new Image();img.crossOrigin="anonymous";img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src=src})}
 function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);}
 
-const INK="#20304A", CORAL="#D9705C", GREIGE="#E6DED2", MUTED="#A3A9B2", WHITE="#FFFFFF", IVORY="#FAF7F0";
+const INK="#20304A", CORAL="#D9705C", GREIGE="#E6DED2", MUTED="#A3A9B2", WHITE="#FFFFFF", IVORY="#FAF7F0", CARD_TINT="#FBF9F5";
+
+// Couleurs de marque vérifiées par de vraies sources (pas de couleur devinée).
+// Dégradé à 2 teintes par compétition ; repli neutre (ink) si compétition
+// non couverte par cette liste.
+const COMPETITION_COLORS = {
+  "Premier League": ["#3D195B", "#6B2E8F"],
+  "Bundesliga": ["#B80912", "#D3010C"],
+  "Ligue 1": ["#0057FF", "#E91E8C"],
+  "Serie A": ["#0373FF", "#2DE2FF"],
+  "La Liga": ["#C40D1E", "#E5122A"],
+  "LaLiga": ["#C40D1E", "#E5122A"],
+};
+function compGradient(ctx, name, x0, y0, x1, y1){
+  const colors = COMPETITION_COLORS[name] || [INK, "#3a4d6b"];
+  const g = ctx.createLinearGradient(x0, y0, x1, y1);
+  g.addColorStop(0, colors[0]);
+  g.addColorStop(1, colors[1]);
+  return g;
+}
 
 async function generate(){
   const compId = document.querySelector("#compSelect").value;
@@ -143,7 +162,7 @@ async function generate(){
 
   const colW = 520, gap = 30, leftX = 50, rightX = leftX + colW + gap;
   const cardH = 78, cardGap = 14, dayGap = 46, blockGap = 16;
-  const bannerH = 130, headerH = bannerH + 46, footerH = 70;
+  const bannerH = 166, headerH = bannerH + 46, footerH = 90;
   const LOGICAL_W = 1200, MAX_LOGICAL_H = 1200;
   const maxContentH = MAX_LOGICAL_H - headerH - footerH;
   const rowH = cardH+cardGap;
@@ -194,16 +213,37 @@ async function generate(){
     const ctx = setupCanvas(canvas, LOGICAL_W, LOGICAL_H);
     ctx.fillStyle = WHITE; ctx.fillRect(0,0,LOGICAL_W,LOGICAL_H);
 
-    // Bandeau d'en-tête plein, rectangulaire à bords arrondis, sur presque
-    // toute la largeur — comp + journée + logo à l'intérieur.
-    ctx.fillStyle=GREIGE; roundRect(ctx,leftX,30,LOGICAL_W-leftX*2,bannerH,28); ctx.fill();
-    ctx.fillStyle=CORAL; ctx.font="900 16px Arial"; ctx.fillText(comp.name.toUpperCase(), 84, 84);
-    ctx.fillStyle=INK; ctx.font="400 46px Georgia";
-    ctx.fillText(`Journée ${roundSel}${pages.length>1?` (${pageIndex+1}/${pages.length})`:""}`, 84, 132);
+    // Bandeau d'en-tête plein, arrondi sur les 4 coins, coloré selon la
+    // compétition (couleurs de marque vérifiées) + voile sombre uniforme
+    // pour garantir un texte blanc lisible même sur des couleurs claires.
+    const bx=leftX, by=30, bw=LOGICAL_W-leftX*2;
+    ctx.fillStyle=compGradient(ctx, comp.name, bx, by, bx+bw, by+bannerH);
+    roundRect(ctx,bx,by,bw,bannerH,32); ctx.fill();
+    ctx.fillStyle="rgba(10,15,30,.22)";
+    roundRect(ctx,bx,by,bw,bannerH,32); ctx.fill();
+
+    ctx.fillStyle="rgba(255,255,255,.78)"; ctx.font="900 16px Arial";
+    ctx.fillText(comp.name.toUpperCase(), bx+38, by+56);
+    ctx.fillStyle=WHITE; ctx.font="900 48px Arial";
+    ctx.fillText(`Journée ${roundSel}${pages.length>1?` (${pageIndex+1}/${pages.length})`:""}`, bx+38, by+104);
+
+    // Tags pays / saison, façon pilules
+    const country = comp.country || "";
+    const tagY = by+120;
+    let tagX = bx+38;
+    [country, "Saison en cours"].filter(Boolean).forEach(txt=>{
+      ctx.font="800 12px Arial";
+      const w = ctx.measureText(txt).width + 26;
+      ctx.fillStyle="rgba(255,255,255,.16)"; roundRect(ctx,tagX,tagY,w,26,13); ctx.fill();
+      ctx.fillStyle=WHITE; ctx.fillText(txt, tagX+13, tagY+18);
+      tagX += w+8;
+    });
+
     if(compLogo){
-      ctx.fillStyle=WHITE; roundRect(ctx,LOGICAL_W-leftX-116,52,96,96,22); ctx.fill();
-      ctx.strokeStyle="#ffffff"; ctx.lineWidth=0;
-      ctx.drawImage(compLogo,LOGICAL_W-leftX-104,64,72,72);
+      const logoBox=110;
+      ctx.fillStyle=WHITE; roundRect(ctx,bx+bw-38-logoBox,by+(bannerH-logoBox)/2,logoBox,logoBox,24); ctx.fill();
+      const pad=16;
+      ctx.drawImage(compLogo,bx+bw-38-logoBox+pad,by+(bannerH-logoBox)/2+pad,logoBox-pad*2,logoBox-pad*2);
     }
 
     let y = headerH;
@@ -234,7 +274,7 @@ async function generate(){
             if(pos!=null){
               const w=ctx.measureText(name).width;
               ctx.fillStyle=MUTED; ctx.font="700 12px Arial";
-              ctx.fillText(`(${pos})`, x+58+w+7, iy+21);
+              ctx.fillText(`(${pos})`, x+58+w+3, iy+21);
             }
           };
           drawTeam(cy+12, m.home.name, hPos, hImg);
@@ -245,11 +285,31 @@ async function generate(){
       y += blockGap;
     });
 
-    const footerY = LOGICAL_H - 40;
+    const footerY = LOGICAL_H - footerH + 24;
     ctx.fillStyle=MUTED; ctx.font="700 13px Arial";
-    ctx.fillText("Positions au classement avant la journée.", leftX, footerY);
-    if(brandLogo){ ctx.drawImage(brandLogo, LOGICAL_W-leftX-64, footerY-32, 64, 64); }
-    else { ctx.fillStyle=INK; roundRect(ctx,LOGICAL_W-leftX-54,footerY-18,54,54,12); ctx.fill(); ctx.fillStyle=WHITE; ctx.font="900 19px Arial"; ctx.textAlign="center"; ctx.fillText("S", LOGICAL_W-leftX-27, footerY+15); ctx.textAlign="left"; }
+    ctx.fillText("Positions au classement avant la journée.", leftX, footerY+8);
+
+    // Signature façon carte de profil : avatar circulaire + nom + badge + handle,
+    // dans une pilule ton sur ton avec les cartes de match.
+    const sigW=220, sigH=58, sigX=LOGICAL_W-leftX-sigW, sigY=footerY-38;
+    ctx.fillStyle=CARD_TINT; roundRect(ctx,sigX,sigY,sigW,sigH,29); ctx.fill();
+    const avR=23, avCx=sigX+29, avCy=sigY+sigH/2;
+    if(brandLogo){
+      ctx.save();
+      ctx.beginPath(); ctx.arc(avCx,avCy,avR,0,Math.PI*2); ctx.clip();
+      ctx.drawImage(brandLogo, avCx-avR, avCy-avR, avR*2, avR*2);
+      ctx.restore();
+    } else {
+      ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(avCx,avCy,avR,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle=WHITE; ctx.font="900 16px Arial"; ctx.textAlign="center"; ctx.fillText("S",avCx,avCy+6); ctx.textAlign="left";
+    }
+    const txX=sigX+62;
+    ctx.fillStyle=INK; ctx.font="900 15px Arial"; ctx.fillText("Fact XI", txX, sigY+25);
+    const nameW=ctx.measureText("Fact XI").width;
+    ctx.fillStyle="#1d9bf0"; ctx.beginPath(); ctx.arc(txX+nameW+13,sigY+20,7,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle=WHITE; ctx.lineWidth=1.6; ctx.beginPath();
+    ctx.moveTo(txX+nameW+9,sigY+20); ctx.lineTo(txX+nameW+12,sigY+23); ctx.lineTo(txX+nameW+18,sigY+16); ctx.stroke();
+    ctx.fillStyle=MUTED; ctx.font="700 11px Arial"; ctx.fillText("@FactEleven", txX, sigY+41);
 
     const dlBtn = document.createElement("button");
     dlBtn.textContent = pages.length>1 ? `Télécharger ${pageIndex+1}/${pages.length}` : "Télécharger le PNG";
