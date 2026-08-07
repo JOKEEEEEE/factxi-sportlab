@@ -1,10 +1,1854 @@
 {
-  "generated_at": "2026-08-07T03:33:13.582196+00:00",
+  "generated_at": "2026-08-07T07:22:11.368650+00:00",
   "window": {
     "from": "2026-06-23",
     "to": "2026-09-21"
   },
   "competitions": [
+    {
+      "competition": {
+        "id": "sportmonks:league:2",
+        "name": "Champions League",
+        "country": "Europe",
+        "competition_type": "cup_international",
+        "logo_url": "https://cdn.sportmonks.com/images/soccer/leagues/2.png",
+        "trace": {
+          "provider": "sportmonks",
+          "endpoint": "/leagues",
+          "collected_at": "2026-08-07T07:22:07.248344+00:00",
+          "scope": {},
+          "calculation": null,
+          "provider_ids": {
+            "league": 2
+          }
+        },
+        "current_season_id": 28155
+      },
+      "matches": [
+        {
+          "id": "sportmonks:fixture:19719892",
+          "kickoff": "2026-07-07T16:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:10068",
+            "name": "Lincoln Red Imps",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/20/10068.png"
+          },
+          "away": {
+            "id": "sportmonks:team:17303",
+            "name": "Inter Club d'Escaldes",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/23/17303.png"
+          },
+          "home_score": 3,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719892,
+              "league": "2",
+              "home_team": 10068,
+              "away_team": 17303
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719898",
+          "kickoff": "2026-07-07T16:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:138649",
+            "name": "Sabah",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/25/138649.png"
+          },
+          "away": {
+            "id": "sportmonks:team:579",
+            "name": "The New Saints",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/3/579.png"
+          },
+          "home_score": 2,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719898,
+              "league": "2",
+              "home_team": 138649,
+              "away_team": 579
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719901",
+          "kickoff": "2026-07-07T16:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:928",
+            "name": "Kauno Žalgiris",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/0/928.png"
+          },
+          "away": {
+            "id": "sportmonks:team:148038",
+            "name": "Drita",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/6/148038.png"
+          },
+          "home_score": 1,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719901,
+              "league": "2",
+              "home_team": 928,
+              "away_team": 148038
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719903",
+          "kickoff": "2026-07-07T16:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:132649",
+            "name": "Ararat-Armenia",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/9/132649.png"
+          },
+          "away": {
+            "id": "sportmonks:team:3546",
+            "name": "Riga",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/26/3546.png"
+          },
+          "home_score": 2,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719903,
+              "league": "2",
+              "home_team": 132649,
+              "away_team": 3546
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719902",
+          "kickoff": "2026-07-07T17:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:5492",
+            "name": "Vardar",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/20/5492.png"
+          },
+          "away": {
+            "id": "sportmonks:team:4323",
+            "name": "KuPS",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/3/4323.png"
+          },
+          "home_score": 0,
+          "away_score": 2,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719902,
+              "league": "2",
+              "home_team": 5492,
+              "away_team": 4323
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719895",
+          "kickoff": "2026-07-07T17:30:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:762",
+            "name": "Floriana",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/26/762.png"
+          },
+          "away": {
+            "id": "sportmonks:team:207",
+            "name": "Shamrock Rovers",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/15/207.png"
+          },
+          "home_score": 2,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719895,
+              "league": "2",
+              "home_team": 762,
+              "away_team": 207
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719897",
+          "kickoff": "2026-07-07T18:30:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3877",
+            "name": "Borac Banja Luka",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/5/3877.png"
+          },
+          "away": {
+            "id": "sportmonks:team:3223",
+            "name": "Levski Sofia",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/23/3223.png"
+          },
+          "home_score": 1,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719897,
+              "league": "2",
+              "home_team": 3877,
+              "away_team": 3223
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719904",
+          "kickoff": "2026-07-07T18:30:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:5444",
+            "name": "Tre Fiori",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/4/5444.png"
+          },
+          "away": {
+            "id": "sportmonks:team:11833",
+            "name": "Larne",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/25/11833.png"
+          },
+          "home_score": 0,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719904,
+              "league": "2",
+              "home_team": 5444,
+              "away_team": 11833
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719891",
+          "kickoff": "2026-07-07T18:45:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:5284",
+            "name": "KÍ",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/4/5284.png"
+          },
+          "away": {
+            "id": "sportmonks:team:266472",
+            "name": "Atert Bissen",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/8/266472.png"
+          },
+          "home_score": 2,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719891,
+              "league": "2",
+              "home_team": 5284,
+              "away_team": 266472
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719896",
+          "kickoff": "2026-07-07T19:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:2688",
+            "name": "Víkingur Reykjavík",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/0/2688.png"
+          },
+          "away": {
+            "id": "sportmonks:team:7926",
+            "name": "Győri ETO",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/22/7926.png"
+          },
+          "home_score": 1,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719896,
+              "league": "2",
+              "home_team": 2688,
+              "away_team": 7926
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719893",
+          "kickoff": "2026-07-08T15:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3108",
+            "name": "Kairat",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/4/3108.png"
+          },
+          "away": {
+            "id": "sportmonks:team:3712",
+            "name": "Sutjeska",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/0/3712.png"
+          },
+          "home_score": 2,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719893,
+              "league": "2",
+              "home_team": 3108,
+              "away_team": 3712
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719894",
+          "kickoff": "2026-07-08T16:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:8697",
+            "name": "Flora",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/25/8697.png"
+          },
+          "away": {
+            "id": "sportmonks:team:6392",
+            "name": "FC Iberia 1999",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/24/6392.png"
+          },
+          "home_score": 2,
+          "away_score": 3,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719894,
+              "league": "2",
+              "home_team": 8697,
+              "away_team": 6392
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719899",
+          "kickoff": "2026-07-08T17:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:6131",
+            "name": "Petrocub",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/19/6131.png"
+          },
+          "away": {
+            "id": "sportmonks:team:63383",
+            "name": "Egnatia Rrogozhinë",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/23/63383.png"
+          },
+          "home_score": 1,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719899,
+              "league": "2",
+              "home_team": 6131,
+              "away_team": 63383
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719900",
+          "kickoff": "2026-07-08T17:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:6641",
+            "name": "ML Vitebsk",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/17/6641.png"
+          },
+          "away": {
+            "id": "sportmonks:team:11676",
+            "name": "Universitatea Craiova",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/28/11676.png"
+          },
+          "home_score": 1,
+          "away_score": 4,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719900,
+              "league": "2",
+              "home_team": 6641,
+              "away_team": 11676
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719887",
+          "kickoff": "2026-07-14T15:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:4323",
+            "name": "KuPS",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/3/4323.png"
+          },
+          "away": {
+            "id": "sportmonks:team:5492",
+            "name": "Vardar",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/20/5492.png"
+          },
+          "home_score": 2,
+          "away_score": 3,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719887,
+              "league": "2",
+              "home_team": 4323,
+              "away_team": 5492
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719877",
+          "kickoff": "2026-07-14T16:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:17303",
+            "name": "Inter Club d'Escaldes",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/23/17303.png"
+          },
+          "away": {
+            "id": "sportmonks:team:10068",
+            "name": "Lincoln Red Imps",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/20/10068.png"
+          },
+          "home_score": 1,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719877,
+              "league": "2",
+              "home_team": 17303,
+              "away_team": 10068
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719879",
+          "kickoff": "2026-07-14T16:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:6392",
+            "name": "FC Iberia 1999",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/24/6392.png"
+          },
+          "away": {
+            "id": "sportmonks:team:8697",
+            "name": "Flora",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/25/8697.png"
+          },
+          "home_score": 2,
+          "away_score": 2,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719879,
+              "league": "2",
+              "home_team": 6392,
+              "away_team": 8697
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719881",
+          "kickoff": "2026-07-14T17:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:7926",
+            "name": "Győri ETO",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/22/7926.png"
+          },
+          "away": {
+            "id": "sportmonks:team:2688",
+            "name": "Víkingur Reykjavík",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/0/2688.png"
+          },
+          "home_score": 2,
+          "away_score": 2,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719881,
+              "league": "2",
+              "home_team": 7926,
+              "away_team": 2688
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719888",
+          "kickoff": "2026-07-14T17:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3546",
+            "name": "Riga",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/26/3546.png"
+          },
+          "away": {
+            "id": "sportmonks:team:132649",
+            "name": "Ararat-Armenia",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/9/132649.png"
+          },
+          "home_score": 3,
+          "away_score": 2,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719888,
+              "league": "2",
+              "home_team": 3546,
+              "away_team": 132649
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719882",
+          "kickoff": "2026-07-14T17:30:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3223",
+            "name": "Levski Sofia",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/23/3223.png"
+          },
+          "away": {
+            "id": "sportmonks:team:3877",
+            "name": "Borac Banja Luka",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/5/3877.png"
+          },
+          "home_score": 4,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719882,
+              "league": "2",
+              "home_team": 3223,
+              "away_team": 3877
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719883",
+          "kickoff": "2026-07-14T17:30:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:579",
+            "name": "The New Saints",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/3/579.png"
+          },
+          "away": {
+            "id": "sportmonks:team:138649",
+            "name": "Sabah",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/25/138649.png"
+          },
+          "home_score": 1,
+          "away_score": 2,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719883,
+              "league": "2",
+              "home_team": 579,
+              "away_team": 138649
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719886",
+          "kickoff": "2026-07-14T18:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:148038",
+            "name": "Drita",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/6/148038.png"
+          },
+          "away": {
+            "id": "sportmonks:team:928",
+            "name": "Kauno Žalgiris",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/0/928.png"
+          },
+          "home_score": 2,
+          "away_score": 3,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719886,
+              "league": "2",
+              "home_team": 148038,
+              "away_team": 928
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719880",
+          "kickoff": "2026-07-14T19:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:207",
+            "name": "Shamrock Rovers",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/15/207.png"
+          },
+          "away": {
+            "id": "sportmonks:team:762",
+            "name": "Floriana",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/26/762.png"
+          },
+          "home_score": 5,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719880,
+              "league": "2",
+              "home_team": 207,
+              "away_team": 762
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719889",
+          "kickoff": "2026-07-14T19:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:11833",
+            "name": "Larne",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/25/11833.png"
+          },
+          "away": {
+            "id": "sportmonks:team:5444",
+            "name": "Tre Fiori",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/4/5444.png"
+          },
+          "home_score": 2,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719889,
+              "league": "2",
+              "home_team": 11833,
+              "away_team": 5444
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719885",
+          "kickoff": "2026-07-15T17:30:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:11676",
+            "name": "Universitatea Craiova",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/28/11676.png"
+          },
+          "away": {
+            "id": "sportmonks:team:6641",
+            "name": "ML Vitebsk",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/17/6641.png"
+          },
+          "home_score": 1,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:11.368748+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719885,
+              "league": "2",
+              "home_team": 11676,
+              "away_team": 6641
+            }
+          },
+          "round": null
+        }
+      ]
+    },
+    {
+      "competition": {
+        "id": "sportmonks:league:5",
+        "name": "Europa League",
+        "country": "Europe",
+        "competition_type": "cup_international",
+        "logo_url": "https://cdn.sportmonks.com/images/soccer/leagues/5/5.png",
+        "trace": {
+          "provider": "sportmonks",
+          "endpoint": "/leagues",
+          "collected_at": "2026-08-07T07:22:07.248344+00:00",
+          "scope": {},
+          "calculation": null,
+          "provider_ids": {
+            "league": 5
+          }
+        },
+        "current_season_id": 27913
+      },
+      "matches": [
+        {
+          "id": "sportmonks:fixture:19719402",
+          "kickoff": "2026-07-09T16:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:5317",
+            "name": "Qarabağ",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/5/5317.png"
+          },
+          "away": {
+            "id": "sportmonks:team:8503",
+            "name": "Vestri",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/23/8503.png"
+          },
+          "home_score": 3,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719402,
+              "league": "5",
+              "home_team": 5317,
+              "away_team": 8503
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719403",
+          "kickoff": "2026-07-09T17:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:556",
+            "name": "Dynamo Kyiv",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/12/556.png"
+          },
+          "away": {
+            "id": "sportmonks:team:9426",
+            "name": "Universitatea Cluj",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/18/9426.png"
+          },
+          "home_score": 0,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719403,
+              "league": "5",
+              "home_team": 556,
+              "away_team": 9426
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719405",
+          "kickoff": "2026-07-09T17:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:627",
+            "name": "Sheriff",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/19/627.png"
+          },
+          "away": {
+            "id": "sportmonks:team:3291",
+            "name": "Aluminij",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/27/3291.png"
+          },
+          "home_score": 0,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719405,
+              "league": "5",
+              "home_team": 627,
+              "away_team": 3291
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719404",
+          "kickoff": "2026-07-09T18:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:2945",
+            "name": "Vojvodina",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/1/2945.png"
+          },
+          "away": {
+            "id": "sportmonks:team:112",
+            "name": "Ferencvárosi",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/16/112.png"
+          },
+          "home_score": 1,
+          "away_score": 2,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719404,
+              "league": "5",
+              "home_team": 2945,
+              "away_team": 112
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719406",
+          "kickoff": "2026-07-09T18:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:392",
+            "name": "CSKA Sofia",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/8/392.png"
+          },
+          "away": {
+            "id": "sportmonks:team:1097",
+            "name": "Derry City",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/9/1097.png"
+          },
+          "home_score": 3,
+          "away_score": 2,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719406,
+              "league": "5",
+              "home_team": 392,
+              "away_team": 1097
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719407",
+          "kickoff": "2026-07-09T18:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:906",
+            "name": "Hajduk Split",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/10/906.png"
+          },
+          "away": {
+            "id": "sportmonks:team:5905",
+            "name": "Žilina",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/17/5905.png"
+          },
+          "home_score": 2,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719407,
+              "league": "5",
+              "home_team": 906,
+              "away_team": 5905
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719397",
+          "kickoff": "2026-07-16T17:30:00+00:00",
+          "status": "unknown",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:9426",
+            "name": "Universitatea Cluj",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/18/9426.png"
+          },
+          "away": {
+            "id": "sportmonks:team:556",
+            "name": "Dynamo Kyiv",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/12/556.png"
+          },
+          "home_score": 0,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719397,
+              "league": "5",
+              "home_team": 9426,
+              "away_team": 556
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719400",
+          "kickoff": "2026-07-16T17:30:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:1097",
+            "name": "Derry City",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/9/1097.png"
+          },
+          "away": {
+            "id": "sportmonks:team:392",
+            "name": "CSKA Sofia",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/8/392.png"
+          },
+          "home_score": 1,
+          "away_score": 2,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719400,
+              "league": "5",
+              "home_team": 1097,
+              "away_team": 392
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719399",
+          "kickoff": "2026-07-16T18:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3291",
+            "name": "Aluminij",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/27/3291.png"
+          },
+          "away": {
+            "id": "sportmonks:team:627",
+            "name": "Sheriff",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/19/627.png"
+          },
+          "home_score": 0,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719399,
+              "league": "5",
+              "home_team": 3291,
+              "away_team": 627
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719398",
+          "kickoff": "2026-07-16T18:15:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:112",
+            "name": "Ferencvárosi",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/16/112.png"
+          },
+          "away": {
+            "id": "sportmonks:team:2945",
+            "name": "Vojvodina",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/1/2945.png"
+          },
+          "home_score": 3,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719398,
+              "league": "5",
+              "home_team": 112,
+              "away_team": 2945
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719401",
+          "kickoff": "2026-07-16T18:30:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:5905",
+            "name": "Žilina",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/17/5905.png"
+          },
+          "away": {
+            "id": "sportmonks:team:906",
+            "name": "Hajduk Split",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/10/906.png"
+          },
+          "home_score": 2,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719401,
+              "league": "5",
+              "home_team": 5905,
+              "away_team": 906
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719396",
+          "kickoff": "2026-07-16T20:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:8503",
+            "name": "Vestri",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/23/8503.png"
+          },
+          "away": {
+            "id": "sportmonks:team:5317",
+            "name": "Qarabağ",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/5/5317.png"
+          },
+          "home_score": 0,
+          "away_score": 3,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719396,
+              "league": "5",
+              "home_team": 8503,
+              "away_team": 5317
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19720998",
+          "kickoff": "2026-07-23T16:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:5317",
+            "name": "Qarabağ",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/5/5317.png"
+          },
+          "away": {
+            "id": "sportmonks:team:392",
+            "name": "CSKA Sofia",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/8/392.png"
+          },
+          "home_score": 0,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19720998,
+              "league": "5",
+              "home_team": 5317,
+              "away_team": 392
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19720997",
+          "kickoff": "2026-07-23T17:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:7242",
+            "name": "Tromsø",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/10/7242.png"
+          },
+          "away": {
+            "id": "sportmonks:team:3552",
+            "name": "Hradec Králové",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/0/3552.png"
+          },
+          "home_score": 0,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19720997,
+              "league": "5",
+              "home_team": 7242,
+              "away_team": 3552
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19720999",
+          "kickoff": "2026-07-23T17:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:2353",
+            "name": "Hammarby",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/17/2353.png"
+          },
+          "away": {
+            "id": "sportmonks:team:2555",
+            "name": "Anderlecht",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/27/2555.png"
+          },
+          "home_score": 1,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19720999,
+              "league": "5",
+              "home_team": 2353,
+              "away_team": 2555
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19721000",
+          "kickoff": "2026-07-23T17:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:556",
+            "name": "Dynamo Kyiv",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/12/556.png"
+          },
+          "away": {
+            "id": "sportmonks:team:649",
+            "name": "PAOK",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/9/649.png"
+          },
+          "home_score": 2,
+          "away_score": 3,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19721000,
+              "league": "5",
+              "home_team": 556,
+              "away_team": 649
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19721002",
+          "kickoff": "2026-07-23T17:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:627",
+            "name": "Sheriff",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/19/627.png"
+          },
+          "away": {
+            "id": "sportmonks:team:2997",
+            "name": "Maccabi Tel Aviv",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/21/2997.png"
+          },
+          "home_score": 0,
+          "away_score": 5,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19721002,
+              "league": "5",
+              "home_team": 627,
+              "away_team": 2997
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19720995",
+          "kickoff": "2026-07-23T18:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:554",
+            "name": "Beşiktaş",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/10/554.png"
+          },
+          "away": {
+            "id": "sportmonks:team:939",
+            "name": "FC Midtjylland",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/11/939.png"
+          },
+          "home_score": 1,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19720995,
+              "league": "5",
+              "home_team": 554,
+              "away_team": 939
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19720996",
+          "kickoff": "2026-07-23T18:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:593",
+            "name": "FC Twente",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/17/593.png"
+          },
+          "away": {
+            "id": "sportmonks:team:112",
+            "name": "Ferencvárosi",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/16/112.png"
+          },
+          "home_score": 1,
+          "away_score": 2,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19720996,
+              "league": "5",
+              "home_team": 593,
+              "away_team": 112
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19721001",
+          "kickoff": "2026-07-23T18:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:362",
+            "name": "St. Gallen",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/10/362.png"
+          },
+          "away": {
+            "id": "sportmonks:team:605",
+            "name": "Benfica",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/29/605.png"
+          },
+          "home_score": 2,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19721001,
+              "league": "5",
+              "home_team": 362,
+              "away_team": 605
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19721003",
+          "kickoff": "2026-07-23T19:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:906",
+            "name": "Hajduk Split",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/10/906.png"
+          },
+          "away": {
+            "id": "sportmonks:team:8119",
+            "name": "Pafos FC",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/23/8119.png"
+          },
+          "home_score": 2,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19721003,
+              "league": "5",
+              "home_team": 906,
+              "away_team": 8119
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19720991",
+          "kickoff": "2026-07-30T16:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:2997",
+            "name": "Maccabi Tel Aviv",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/21/2997.png"
+          },
+          "away": {
+            "id": "sportmonks:team:627",
+            "name": "Sheriff",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/19/627.png"
+          },
+          "home_score": 1,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19720991,
+              "league": "5",
+              "home_team": 2997,
+              "away_team": 627
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19720986",
+          "kickoff": "2026-07-30T17:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3552",
+            "name": "Hradec Králové",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/0/3552.png"
+          },
+          "away": {
+            "id": "sportmonks:team:7242",
+            "name": "Tromsø",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/10/7242.png"
+          },
+          "home_score": 3,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19720986,
+              "league": "5",
+              "home_team": 3552,
+              "away_team": 7242
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19720992",
+          "kickoff": "2026-07-30T17:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:8119",
+            "name": "Pafos FC",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/23/8119.png"
+          },
+          "away": {
+            "id": "sportmonks:team:906",
+            "name": "Hajduk Split",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/10/906.png"
+          },
+          "home_score": 4,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19720992,
+              "league": "5",
+              "home_team": 8119,
+              "away_team": 906
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19720994",
+          "kickoff": "2026-07-30T17:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:5",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:939",
+            "name": "FC Midtjylland",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/11/939.png"
+          },
+          "away": {
+            "id": "sportmonks:team:554",
+            "name": "Beşiktaş",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/10/554.png"
+          },
+          "home_score": 0,
+          "away_score": 2,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:24.800735+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:5",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19720994,
+              "league": "5",
+              "home_team": 939,
+              "away_team": 554
+            }
+          },
+          "round": null
+        }
+      ]
+    },
     {
       "competition": {
         "id": "sportmonks:league:8",
@@ -15,7 +1859,7 @@
         "trace": {
           "provider": "sportmonks",
           "endpoint": "/leagues",
-          "collected_at": "2026-08-07T03:33:09.906770+00:00",
+          "collected_at": "2026-08-07T07:22:07.248344+00:00",
           "scope": {},
           "calculation": null,
           "provider_ids": {
@@ -46,7 +1890,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -82,7 +1926,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -118,7 +1962,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -154,7 +1998,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -190,7 +2034,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -226,7 +2070,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -262,7 +2106,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -298,7 +2142,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -334,7 +2178,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -370,7 +2214,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -406,7 +2250,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -442,7 +2286,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -478,7 +2322,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -514,7 +2358,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -550,7 +2394,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -586,7 +2430,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -622,7 +2466,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -658,7 +2502,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -694,7 +2538,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -730,7 +2574,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -766,7 +2610,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -802,7 +2646,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -838,7 +2682,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -874,7 +2718,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -910,7 +2754,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:13.582276+00:00",
+            "collected_at": "2026-08-07T07:22:37.703092+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -946,7 +2790,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.293813+00:00",
+            "collected_at": "2026-08-07T07:22:38.134415+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -982,7 +2826,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.293813+00:00",
+            "collected_at": "2026-08-07T07:22:38.134415+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -1018,7 +2862,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.293813+00:00",
+            "collected_at": "2026-08-07T07:22:38.134415+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -1054,7 +2898,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.293813+00:00",
+            "collected_at": "2026-08-07T07:22:38.134415+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -1090,7 +2934,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.293813+00:00",
+            "collected_at": "2026-08-07T07:22:38.134415+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -1126,7 +2970,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.293813+00:00",
+            "collected_at": "2026-08-07T07:22:38.134415+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -1162,7 +3006,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.293813+00:00",
+            "collected_at": "2026-08-07T07:22:38.134415+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -1198,7 +3042,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.293813+00:00",
+            "collected_at": "2026-08-07T07:22:38.134415+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -1234,7 +3078,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.293813+00:00",
+            "collected_at": "2026-08-07T07:22:38.134415+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -1270,7 +3114,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.293813+00:00",
+            "collected_at": "2026-08-07T07:22:38.134415+00:00",
             "scope": {
               "filters": "fixtureLeagues:8",
               "include": "participants;scores;state;round"
@@ -1297,7 +3141,7 @@
         "trace": {
           "provider": "sportmonks",
           "endpoint": "/leagues",
-          "collected_at": "2026-08-07T03:33:09.906770+00:00",
+          "collected_at": "2026-08-07T07:22:07.248344+00:00",
           "scope": {},
           "calculation": null,
           "provider_ids": {
@@ -1328,7 +3172,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -1364,7 +3208,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -1400,7 +3244,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -1436,7 +3280,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -1472,7 +3316,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -1508,7 +3352,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -1544,7 +3388,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -1580,7 +3424,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -1616,7 +3460,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -1652,7 +3496,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -1688,7 +3532,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -1724,7 +3568,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -1760,7 +3604,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -1796,7 +3640,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -1832,7 +3676,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -1868,7 +3712,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -1904,7 +3748,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -1940,7 +3784,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -1976,7 +3820,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -2012,7 +3856,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -2048,7 +3892,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -2084,7 +3928,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -2120,7 +3964,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -2156,7 +4000,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -2192,7 +4036,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:14.940411+00:00",
+            "collected_at": "2026-08-07T07:22:38.588913+00:00",
             "scope": {
               "filters": "fixtureLeagues:82",
               "include": "participants;scores;state;round"
@@ -2219,7 +4063,7 @@
         "trace": {
           "provider": "sportmonks",
           "endpoint": "/leagues",
-          "collected_at": "2026-08-07T03:33:09.906770+00:00",
+          "collected_at": "2026-08-07T07:22:07.248344+00:00",
           "scope": {},
           "calculation": null,
           "provider_ids": {
@@ -2250,7 +4094,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2286,7 +4130,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2322,7 +4166,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2358,7 +4202,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2394,7 +4238,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2430,7 +4274,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2466,7 +4310,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2502,7 +4346,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2538,7 +4382,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2574,7 +4418,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2610,7 +4454,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2646,7 +4490,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2682,7 +4526,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2718,7 +4562,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2754,7 +4598,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2790,7 +4634,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2826,7 +4670,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2862,7 +4706,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2898,7 +4742,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2934,7 +4778,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -2970,7 +4814,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -3006,7 +4850,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -3042,7 +4886,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -3078,7 +4922,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -3114,7 +4958,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:15.598545+00:00",
+            "collected_at": "2026-08-07T07:22:39.057860+00:00",
             "scope": {
               "filters": "fixtureLeagues:301",
               "include": "participants;scores;state;round"
@@ -3141,7 +4985,7 @@
         "trace": {
           "provider": "sportmonks",
           "endpoint": "/leagues",
-          "collected_at": "2026-08-07T03:33:09.906770+00:00",
+          "collected_at": "2026-08-07T07:22:07.248344+00:00",
           "scope": {},
           "calculation": null,
           "provider_ids": {
@@ -3172,7 +5016,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3208,7 +5052,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3244,7 +5088,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3280,7 +5124,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3316,7 +5160,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3352,7 +5196,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3388,7 +5232,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3424,7 +5268,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3460,7 +5304,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3496,7 +5340,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3532,7 +5376,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3568,7 +5412,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3604,7 +5448,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3640,7 +5484,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3676,7 +5520,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3712,7 +5556,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3748,7 +5592,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3784,7 +5628,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3820,7 +5664,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3856,7 +5700,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3892,7 +5736,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3928,7 +5772,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -3964,7 +5808,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -4000,7 +5844,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -4036,7 +5880,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.242935+00:00",
+            "collected_at": "2026-08-07T07:22:39.480865+00:00",
             "scope": {
               "filters": "fixtureLeagues:384",
               "include": "participants;scores;state;round"
@@ -4063,7 +5907,7 @@
         "trace": {
           "provider": "sportmonks",
           "endpoint": "/leagues",
-          "collected_at": "2026-08-07T03:33:09.906770+00:00",
+          "collected_at": "2026-08-07T07:22:07.248344+00:00",
           "scope": {},
           "calculation": null,
           "provider_ids": {
@@ -4094,7 +5938,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4130,7 +5974,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4166,7 +6010,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4202,7 +6046,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4238,7 +6082,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4274,7 +6118,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4310,7 +6154,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4346,7 +6190,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4382,7 +6226,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4418,7 +6262,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4454,7 +6298,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4490,7 +6334,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4526,7 +6370,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4562,7 +6406,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4598,7 +6442,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4634,7 +6478,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4670,7 +6514,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4706,7 +6550,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4742,7 +6586,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4778,7 +6622,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4814,7 +6658,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4850,7 +6694,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4886,7 +6730,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4922,7 +6766,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4958,7 +6802,7 @@
           "trace": {
             "provider": "sportmonks",
             "endpoint": "/fixtures/between",
-            "collected_at": "2026-08-07T03:33:16.866382+00:00",
+            "collected_at": "2026-08-07T07:22:40.013452+00:00",
             "scope": {
               "filters": "fixtureLeagues:564",
               "include": "participants;scores;state;round"
@@ -4972,6 +6816,986 @@
             }
           },
           "round": "3"
+        }
+      ]
+    },
+    {
+      "competition": {
+        "id": "sportmonks:league:1328",
+        "name": "UEFA Super Cup",
+        "country": "Europe",
+        "competition_type": "cup_international",
+        "logo_url": "https://cdn.sportmonks.com/images/soccer/leagues/16/1328.png",
+        "trace": {
+          "provider": "sportmonks",
+          "endpoint": "/leagues",
+          "collected_at": "2026-08-07T07:22:07.248344+00:00",
+          "scope": {},
+          "calculation": null,
+          "provider_ids": {
+            "league": 1328
+          }
+        },
+        "current_season_id": 27306
+      },
+      "matches": [
+        {
+          "id": "sportmonks:fixture:19709410",
+          "kickoff": "2026-08-12T19:00:00+00:00",
+          "status": "scheduled",
+          "competition_id": "sportmonks:league:1328",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:591",
+            "name": "Paris Saint Germain",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/15/591.png"
+          },
+          "away": {
+            "id": "sportmonks:team:15",
+            "name": "Aston Villa",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/15/15.png"
+          },
+          "home_score": null,
+          "away_score": null,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.451555+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:1328",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19709410,
+              "league": "1328",
+              "home_team": 591,
+              "away_team": 15
+            }
+          },
+          "round": null
+        }
+      ]
+    },
+    {
+      "competition": {
+        "id": "sportmonks:league:2286",
+        "name": "Europa Conference League",
+        "country": "Europe",
+        "competition_type": "cup_international",
+        "logo_url": "https://cdn.sportmonks.com/images/soccer/leagues/14/2286.png",
+        "trace": {
+          "provider": "sportmonks",
+          "endpoint": "/leagues",
+          "collected_at": "2026-08-07T07:22:07.248344+00:00",
+          "scope": {},
+          "calculation": null,
+          "provider_ids": {
+            "league": 2286
+          }
+        },
+        "current_season_id": 27911
+      },
+      "matches": [
+        {
+          "id": "sportmonks:fixture:19719435",
+          "kickoff": "2026-07-07T17:15:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:10945",
+            "name": "UNA Strassen",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/1/10945.png"
+          },
+          "away": {
+            "id": "sportmonks:team:847",
+            "name": "La Fiorita",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/15/847.png"
+          },
+          "home_score": 1,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719435,
+              "league": "2286",
+              "home_team": 10945,
+              "away_team": 847
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719448",
+          "kickoff": "2026-07-07T18:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:265650",
+            "name": "AF Elbasani",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/18/265650.png"
+          },
+          "away": {
+            "id": "sportmonks:team:3859",
+            "name": "BATE",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/19/3859.png"
+          },
+          "home_score": 1,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719448,
+              "league": "2286",
+              "home_team": 265650,
+              "away_team": 3859
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719454",
+          "kickoff": "2026-07-08T16:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:4448",
+            "name": "Zira",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/0/4448.png"
+          },
+          "away": {
+            "id": "sportmonks:team:2671",
+            "name": "Torpedo Kutaisi",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/15/2671.png"
+          },
+          "home_score": 3,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719454,
+              "league": "2286",
+              "home_team": 4448,
+              "away_team": 2671
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719453",
+          "kickoff": "2026-07-08T17:30:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3998",
+            "name": "Differdange 03",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/30/3998.png"
+          },
+          "away": {
+            "id": "sportmonks:team:2617",
+            "name": "Ilves",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/25/2617.png"
+          },
+          "home_score": 0,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719453,
+              "league": "2286",
+              "home_team": 3998,
+              "away_team": 2617
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719459",
+          "kickoff": "2026-07-08T17:30:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:1294",
+            "name": "Connah's Quay",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/14/1294.png"
+          },
+          "away": {
+            "id": "sportmonks:team:228494",
+            "name": "KF Ballkani",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/14/228494.png"
+          },
+          "home_score": 0,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719459,
+              "league": "2286",
+              "home_team": 1294,
+              "away_team": 228494
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719424",
+          "kickoff": "2026-07-09T14:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:17301",
+            "name": "Atlètic Club d'Escaldes",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/21/17301.png"
+          },
+          "away": {
+            "id": "sportmonks:team:5290",
+            "name": "Mornar",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/10/5290.png"
+          },
+          "home_score": 2,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719424,
+              "league": "2286",
+              "home_team": 17301,
+              "away_team": 5290
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719426",
+          "kickoff": "2026-07-09T16:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:6142",
+            "name": "Liepāja",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/30/6142.png"
+          },
+          "away": {
+            "id": "sportmonks:team:3750",
+            "name": "Dečić",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/6/3750.png"
+          },
+          "home_score": 1,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719426,
+              "league": "2286",
+              "home_team": 6142,
+              "away_team": 3750
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719438",
+          "kickoff": "2026-07-09T16:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:6571",
+            "name": "Nõmme Kalju",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/11/6571.png"
+          },
+          "away": {
+            "id": "sportmonks:team:260",
+            "name": "Linfield",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/4/260.png"
+          },
+          "home_score": 1,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719438,
+              "league": "2286",
+              "home_team": 6571,
+              "away_team": 260
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719441",
+          "kickoff": "2026-07-09T16:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:5490",
+            "name": "Dila",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/18/5490.png"
+          },
+          "away": {
+            "id": "sportmonks:team:19353",
+            "name": "Virtus",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/25/19353.png"
+          },
+          "home_score": 3,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719441,
+              "league": "2286",
+              "home_team": 5490,
+              "away_team": 19353
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719443",
+          "kickoff": "2026-07-09T16:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:5495",
+            "name": "Alashkert",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/23/5495.png"
+          },
+          "away": {
+            "id": "sportmonks:team:267706",
+            "name": "Yelimay Semey",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/26/267706.png"
+          },
+          "home_score": 1,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719443,
+              "league": "2286",
+              "home_team": 5495,
+              "away_team": 267706
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719444",
+          "kickoff": "2026-07-09T16:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:11360",
+            "name": "Hegelmann Litauen",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/0/11360.png"
+          },
+          "away": {
+            "id": "sportmonks:team:6163",
+            "name": "Paide",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/19/6163.png"
+          },
+          "home_score": 1,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719444,
+              "league": "2286",
+              "home_team": 11360,
+              "away_team": 6163
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719446",
+          "kickoff": "2026-07-09T17:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:11587",
+            "name": "Marsaxlokk",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/3/11587.png"
+          },
+          "away": {
+            "id": "sportmonks:team:5504",
+            "name": "Pyunik",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/0/5504.png"
+          },
+          "home_score": 0,
+          "away_score": 3,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719446,
+              "league": "2286",
+              "home_team": 11587,
+              "away_team": 5504
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719455",
+          "kickoff": "2026-07-09T17:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3791",
+            "name": "Dinamo Minsk",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/15/3791.png"
+          },
+          "away": {
+            "id": "sportmonks:team:5426",
+            "name": "Sileks",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/18/5426.png"
+          },
+          "home_score": 0,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719455,
+              "league": "2286",
+              "home_team": 3791,
+              "away_team": 5426
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719456",
+          "kickoff": "2026-07-09T17:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:5829",
+            "name": "Velez",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/5/5829.png"
+          },
+          "away": {
+            "id": "sportmonks:team:6538",
+            "name": "Milsami",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/10/6538.png"
+          },
+          "home_score": 1,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719456,
+              "league": "2286",
+              "home_team": 5829,
+              "away_team": 6538
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719458",
+          "kickoff": "2026-07-09T17:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:374",
+            "name": "Bohemians",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/22/374.png"
+          },
+          "away": {
+            "id": "sportmonks:team:94900",
+            "name": "St Josephs FC",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/20/94900.png"
+          },
+          "home_score": 2,
+          "away_score": 0,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719458,
+              "league": "2286",
+              "home_team": 374,
+              "away_team": 94900
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719451",
+          "kickoff": "2026-07-09T17:15:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:2600",
+            "name": "Mondorf-les-Bains",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/8/2600.png"
+          },
+          "away": {
+            "id": "sportmonks:team:3451",
+            "name": "Dinamo Tbilisi",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/27/3451.png"
+          },
+          "home_score": 1,
+          "away_score": 2,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719451,
+              "league": "2286",
+              "home_team": 2600,
+              "away_team": 3451
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719439",
+          "kickoff": "2026-07-09T17:30:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:234886",
+            "name": "Europa FC",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/6/234886.png"
+          },
+          "away": {
+            "id": "sportmonks:team:876",
+            "name": "Skendija 79",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/12/876.png"
+          },
+          "home_score": 0,
+          "away_score": 5,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719439,
+              "league": "2286",
+              "home_team": 234886,
+              "away_team": 876
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719445",
+          "kickoff": "2026-07-09T17:30:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:1455",
+            "name": "Caernarfon Town",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/15/1455.png"
+          },
+          "away": {
+            "id": "sportmonks:team:4400",
+            "name": "Levadia",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/16/4400.png"
+          },
+          "home_score": 0,
+          "away_score": 5,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719445,
+              "league": "2286",
+              "home_team": 1455,
+              "away_team": 4400
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719434",
+          "kickoff": "2026-07-09T18:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:5201",
+            "name": "Vllaznia Shkodër",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/17/5201.png"
+          },
+          "away": {
+            "id": "sportmonks:team:252246",
+            "name": "Malisheva",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/22/252246.png"
+          },
+          "home_score": 2,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719434,
+              "league": "2286",
+              "home_team": 5201,
+              "away_team": 252246
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719449",
+          "kickoff": "2026-07-09T18:30:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:746",
+            "name": "Glentoran",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/10/746.png"
+          },
+          "away": {
+            "id": "sportmonks:team:6556",
+            "name": "Rīgas FS",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/28/6556.png"
+          },
+          "home_score": 1,
+          "away_score": 2,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719449,
+              "league": "2286",
+              "home_team": 746,
+              "away_team": 6556
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719436",
+          "kickoff": "2026-07-09T18:45:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:8706",
+            "name": "NSÍ",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/2/8706.png"
+          },
+          "away": {
+            "id": "sportmonks:team:295",
+            "name": "Hamrun Spartans",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/7/295.png"
+          },
+          "home_score": 1,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719436,
+              "league": "2286",
+              "home_team": 8706,
+              "away_team": 295
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719437",
+          "kickoff": "2026-07-09T18:45:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:1614",
+            "name": "Penybont",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/14/1614.png"
+          },
+          "away": {
+            "id": "sportmonks:team:7058",
+            "name": "FC Santa Coloma",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/18/7058.png"
+          },
+          "home_score": 0,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719437,
+              "league": "2286",
+              "home_team": 1614,
+              "away_team": 7058
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719447",
+          "kickoff": "2026-07-09T18:45:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3289",
+            "name": "Petrovac",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/25/3289.png"
+          },
+          "away": {
+            "id": "sportmonks:team:1001",
+            "name": "Žalgiris",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/9/1001.png"
+          },
+          "home_score": 1,
+          "away_score": 3,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719447,
+              "league": "2286",
+              "home_team": 3289,
+              "away_team": 1001
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719416",
+          "kickoff": "2026-07-09T19:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:8680",
+            "name": "Stjarnan",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/8/8680.png"
+          },
+          "away": {
+            "id": "sportmonks:team:8655",
+            "name": "Víkingur",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/15/8655.png"
+          },
+          "home_score": 3,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719416,
+              "league": "2286",
+              "home_team": 8680,
+              "away_team": 8655
+            }
+          },
+          "round": null
+        },
+        {
+          "id": "sportmonks:fixture:19719440",
+          "kickoff": "2026-07-09T19:00:00+00:00",
+          "status": "finished",
+          "competition_id": "sportmonks:league:2286",
+          "season": 2026,
+          "home": {
+            "id": "sportmonks:team:3529",
+            "name": "Sarajevo",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/9/3529.png"
+          },
+          "away": {
+            "id": "sportmonks:team:1666",
+            "name": "Inter Turku",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/2/1666.png"
+          },
+          "home_score": 1,
+          "away_score": 1,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T07:22:40.895858+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:2286",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19719440,
+              "league": "2286",
+              "home_team": 3529,
+              "away_team": 1666
+            }
+          },
+          "round": null
         }
       ]
     }
