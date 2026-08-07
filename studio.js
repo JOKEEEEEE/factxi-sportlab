@@ -114,6 +114,31 @@ function groupByDay(matches){
 function loadImage(src){return new Promise(resolve=>{if(!src){resolve(null);return}const img=new Image();img.crossOrigin="anonymous";img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src=src})}
 function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);}
 
+// Signature commune à tous les générateurs : avatar circulaire + "Fact XI" +
+// badge + handle, dans une pilule ton sur ton avec les cartes. (sigX,sigY) =
+// coin haut-gauche de la pilule (220×58).
+function drawSignature(ctx, brandLogo, sigX, sigY){
+  const sigW=220, sigH=58;
+  ctx.fillStyle=CARD_TINT; roundRect(ctx,sigX,sigY,sigW,sigH,29); ctx.fill();
+  const avR=23, avCx=sigX+29, avCy=sigY+sigH/2;
+  if(brandLogo){
+    ctx.save();
+    ctx.beginPath(); ctx.arc(avCx,avCy,avR,0,Math.PI*2); ctx.clip();
+    ctx.drawImage(brandLogo, avCx-avR, avCy-avR, avR*2, avR*2);
+    ctx.restore();
+  } else {
+    ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(avCx,avCy,avR,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=WHITE; ctx.font="900 16px Arial"; ctx.textAlign="center"; ctx.fillText("S",avCx,avCy+6); ctx.textAlign="left";
+  }
+  const txX=sigX+62;
+  ctx.fillStyle=INK; ctx.font="900 15px Arial"; ctx.fillText("Fact XI", txX, sigY+25);
+  const nameW=ctx.measureText("Fact XI").width;
+  ctx.fillStyle="#1d9bf0"; ctx.beginPath(); ctx.arc(txX+nameW+13,sigY+20,7,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle=WHITE; ctx.lineWidth=1.6; ctx.beginPath();
+  ctx.moveTo(txX+nameW+9,sigY+20); ctx.lineTo(txX+nameW+12,sigY+23); ctx.lineTo(txX+nameW+18,sigY+16); ctx.stroke();
+  ctx.fillStyle=MUTED; ctx.font="700 11px Arial"; ctx.fillText("@FactEleven", txX, sigY+41);
+}
+
 const INK="#20304A", CORAL="#D9705C", GREIGE="#E6DED2", MUTED="#A3A9B2", WHITE="#FFFFFF", IVORY="#FAF7F0", CARD_TINT="#FBF9F5";
 
 // Couleurs de marque vérifiées par de vraies sources (pas de couleur devinée).
@@ -288,28 +313,7 @@ async function generate(){
     const footerY = LOGICAL_H - footerH + 24;
     ctx.fillStyle=MUTED; ctx.font="700 13px Arial";
     ctx.fillText("Positions au classement avant la journée.", leftX, footerY+8);
-
-    // Signature façon carte de profil : avatar circulaire + nom + badge + handle,
-    // dans une pilule ton sur ton avec les cartes de match.
-    const sigW=220, sigH=58, sigX=LOGICAL_W-leftX-sigW, sigY=footerY-38;
-    ctx.fillStyle=CARD_TINT; roundRect(ctx,sigX,sigY,sigW,sigH,29); ctx.fill();
-    const avR=23, avCx=sigX+29, avCy=sigY+sigH/2;
-    if(brandLogo){
-      ctx.save();
-      ctx.beginPath(); ctx.arc(avCx,avCy,avR,0,Math.PI*2); ctx.clip();
-      ctx.drawImage(brandLogo, avCx-avR, avCy-avR, avR*2, avR*2);
-      ctx.restore();
-    } else {
-      ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(avCx,avCy,avR,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle=WHITE; ctx.font="900 16px Arial"; ctx.textAlign="center"; ctx.fillText("S",avCx,avCy+6); ctx.textAlign="left";
-    }
-    const txX=sigX+62;
-    ctx.fillStyle=INK; ctx.font="900 15px Arial"; ctx.fillText("Fact XI", txX, sigY+25);
-    const nameW=ctx.measureText("Fact XI").width;
-    ctx.fillStyle="#1d9bf0"; ctx.beginPath(); ctx.arc(txX+nameW+13,sigY+20,7,0,Math.PI*2); ctx.fill();
-    ctx.strokeStyle=WHITE; ctx.lineWidth=1.6; ctx.beginPath();
-    ctx.moveTo(txX+nameW+9,sigY+20); ctx.lineTo(txX+nameW+12,sigY+23); ctx.lineTo(txX+nameW+18,sigY+16); ctx.stroke();
-    ctx.fillStyle=MUTED; ctx.font="700 11px Arial"; ctx.fillText("@FactEleven", txX, sigY+41);
+    drawSignature(ctx, brandLogo, LOGICAL_W-leftX-220, footerY-38);
 
     const dlBtn = document.createElement("button");
     dlBtn.textContent = pages.length>1 ? `Télécharger ${pageIndex+1}/${pages.length}` : "Télécharger le PNG";
@@ -412,7 +416,7 @@ async function generateScorers(){
   if(!assists.length){ ctx.fillStyle=MUTED; ctx.font="700 11px Arial"; ctx.fillText("Aucune passe décisive pour l'instant.", 40, y+20); }
   else { assists.forEach((e,i)=>{ drawScorerRow(ctx,40,y,i+1,e,xaByPlayer[playerKeyOf(e)],"xA",logos); y+=68; }); }
 
-  if(brandLogo) ctx.drawImage(brandLogo, 724, 754, 36, 36);
+  drawSignature(ctx, brandLogo, 540, 724);
   document.querySelector("#scorersDlBtn").disabled=false;
 }
 document.querySelector("#scorersGenBtn").onclick=generateScorers;
@@ -510,7 +514,7 @@ async function generateStreaks(){
     y+=134;
   });
 
-  if(brandLogo) ctx.drawImage(brandLogo, 724, 754, 36, 36);
+  drawSignature(ctx, brandLogo, 540, 724);
   document.querySelector("#streaksDlBtn").disabled=false;
 }
 document.querySelector("#streaksGenBtn").onclick=generateStreaks;
@@ -649,7 +653,7 @@ async function generateRated(){
 
   ctx.fillStyle=MUTED; ctx.font="700 9px Arial";
   ctx.fillText(`Note moyenne sur ${RATED_MATCH_CAP} derniers matchs maximum · minimum ${RATED_MIN_APPEARANCES} apparitions.`, 40, 750);
-  if(brandLogo) ctx.drawImage(brandLogo, 724, 730, 36, 36);
+  drawSignature(ctx, brandLogo, 540, 700);
   document.querySelector("#ratedDlBtn").disabled=false;
 }
 document.querySelector("#ratedGenBtn").onclick=generateRated;
