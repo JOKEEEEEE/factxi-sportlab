@@ -1,0 +1,64 @@
+{
+  "generated_at": "2026-08-07T14:13:21.210106+00:00",
+  "note": "Backfill historique via fetch_season.py, distinct de la fenêtre glissante quotidienne.",
+  "competitions": [
+    {
+      "competition": {
+        "id": "sportmonks:league:1328",
+        "name": "UEFA Super Cup",
+        "country": "Europe",
+        "competition_type": "cup_international",
+        "logo_url": "https://cdn.sportmonks.com/images/soccer/leagues/16/1328.png",
+        "trace": {
+          "provider": "sportmonks",
+          "endpoint": "/leagues",
+          "collected_at": "2026-08-07T14:13:09.144079+00:00",
+          "scope": {},
+          "calculation": null,
+          "provider_ids": {
+            "league": 1328
+          }
+        },
+        "current_season_id": 27306
+      },
+      "matches": [
+        {
+          "id": "sportmonks:fixture:19422645",
+          "kickoff": "2025-08-13T19:00:00+00:00",
+          "status": "unknown",
+          "competition_id": "sportmonks:league:1328",
+          "season": 2025,
+          "home": {
+            "id": "sportmonks:team:591",
+            "name": "Paris Saint Germain",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/15/591.png"
+          },
+          "away": {
+            "id": "sportmonks:team:6",
+            "name": "Tottenham Hotspur",
+            "logo_url": "https://cdn.sportmonks.com/images/soccer/teams/6/6.png"
+          },
+          "home_score": 2,
+          "away_score": 2,
+          "trace": {
+            "provider": "sportmonks",
+            "endpoint": "/fixtures/between",
+            "collected_at": "2026-08-07T14:13:19.920660+00:00",
+            "scope": {
+              "filters": "fixtureLeagues:1328",
+              "include": "participants;scores;state;round"
+            },
+            "calculation": null,
+            "provider_ids": {
+              "fixture": 19422645,
+              "league": "1328",
+              "home_team": 591,
+              "away_team": 6
+            }
+          },
+          "round": null
+        }
+      ]
+    }
+  ]
+}
