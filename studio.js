@@ -242,7 +242,9 @@ async function generate(){
   const compLogo = comp.logo_url ? await loadImage(comp.logo_url) : null;
   const brandLogo = await loadImage("logo-factxi.png");
 
-  const colW = 520, gap = 30, leftX = 50, rightX = leftX + colW + gap;
+  const gap = 30, leftX = 50;
+  const colW = (1200 - leftX*2 - gap) / 2; // les deux colonnes + l'écart occupent exactement la largeur du bandeau
+  const rightX = leftX + colW + gap;
   const cardH = 78, cardGap = 14, dayGap = 46, blockGap = 16;
   const bannerH = 166, headerH = bannerH + 46, footerH = 110;
   const LOGICAL_W = 1200, MAX_LOGICAL_H = 1200;
@@ -301,8 +303,9 @@ async function generate(){
     let y = headerH;
     pageChunks.forEach((chunk,idx)=>{
       const label = chunk.day.toUpperCase() + (chunk.continued ? " (SUITE)" : "");
-      ctx.fillStyle=CORAL; roundRect(ctx,leftX,y,Math.min(440,180+label.length*7.5),dayBadgeH,10); ctx.fill();
-      ctx.fillStyle=WHITE; ctx.font="900 14px Arial"; ctx.fillText(label, leftX+18, y+24);
+      ctx.fillStyle=CORAL; ctx.font="900 14px Arial"; ctx.fillText(label, leftX, y+14);
+      ctx.strokeStyle=GREIGE; ctx.lineWidth=2; ctx.beginPath();
+      ctx.moveTo(leftX, y+26); ctx.lineTo(rightX+colW, y+26); ctx.stroke();
       y += dayGap;
       chunk.rows.forEach(pair=>{
         pair.forEach((m,col)=>{
@@ -381,9 +384,26 @@ function isXaEntry(entry){
 }
 function playerKeyOf(entry){ return entry.player_id || (entry.player && entry.player.id) || (entry.player && entry.player.name); }
 
+// Peuple un couple (sélecteur compétition, sélecteur saison) de façon
+// générique — même logique que le calendrier, réutilisée par les 3 autres
+// générateurs pour éviter que chacun reparte de zéro sur les saisons.
+function populateCompAndSeason(compSelId, seasonSelId){
+  const compSel = document.querySelector(compSelId);
+  compSel.innerHTML = COMPETITIONS.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
+  const refreshSeasons = ()=>{
+    const seasons = seasonsForComp(compSel.value);
+    const seasonSel = document.querySelector(seasonSelId);
+    if(!seasons.length){ seasonSel.innerHTML = `<option>Aucune saison</option>`; return; }
+    seasonSel.innerHTML = seasons.map(s=>`<option value="${s}">${seasonLabel(s)}</option>`).join("");
+    const def = bestSeasonForStreaks(compSel.value);
+    if(def!=null) seasonSel.value = def;
+  };
+  compSel.onchange = refreshSeasons;
+  refreshSeasons();
+}
+
 async function initScorersSelect(){
-  const sel = document.querySelector("#scorersCompSelect");
-  sel.innerHTML = COMPETITIONS.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
+  populateCompAndSeason("#scorersCompSelect", "#scorersSeasonSelect");
 }
 function drawScorerRow(ctx,x,y,rank,entry,expectedVal,expectedLabel,logos){
   ctx.fillStyle=WHITE; roundRect(ctx,x,y,720,60,10); ctx.fill();
@@ -488,7 +508,7 @@ function teamStreaks(teamName, compId, season){
 }
 
 async function initStreaksSelect(){
-  document.querySelector("#streaksCompSelect").innerHTML = COMPETITIONS.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
+  populateCompAndSeason("#streaksCompSelect", "#streaksSeasonSelect");
 }
 function bestStreak(compId, key, season){
   const matches = (MATCHES_BY_COMP[compId]||[]).filter(m=>String(m.season)===String(season));
@@ -507,7 +527,8 @@ async function generateStreaks(){
   ctx.scale(1.5,1.5);
   ctx.fillStyle=WHITE; ctx.fillRect(0,0,800,800);
   if(!comp){ document.querySelector("#streaksGenNote").textContent="Compétition introuvable."; return; }
-  const season = bestSeasonForStreaks(compId);
+  const seasonSelVal = document.querySelector("#streaksSeasonSelect").value;
+  const season = seasonSelVal && seasonSelVal!=="Aucune saison" ? seasonSelVal : bestSeasonForStreaks(compId);
   if(season==null){ document.querySelector("#streaksGenNote").textContent="Aucun match terminé disponible pour cette compétition."; return; }
 
   const categories = [
@@ -580,7 +601,7 @@ const RATED_MATCH_CAP = 60;
 const RATED_MIN_APPEARANCES = 3;
 
 async function initRatedSelect(){
-  document.querySelector("#ratedCompSelect").innerHTML = COMPETITIONS.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
+  populateCompAndSeason("#ratedCompSelect", "#ratedSeasonSelect");
 }
 
 // NOTE : le poste ("position") du joueur n'a pas encore été vérifié sur un
@@ -657,7 +678,8 @@ async function generateRated(){
   const canvas = document.querySelector("#cRated");
   if(!comp){ document.querySelector("#ratedGenNote").textContent="Compétition introuvable."; return; }
 
-  const season = bestSeasonForStreaks(compId); // même règle de choix que les séries : une seule saison, jamais de mélange
+  const seasonSelVal = document.querySelector("#ratedSeasonSelect").value;
+  const season = seasonSelVal && seasonSelVal!=="Aucune saison" ? seasonSelVal : bestSeasonForStreaks(compId);
   if(season==null){ document.querySelector("#ratedGenNote").textContent="Aucun match terminé disponible pour cette compétition."; return; }
 
   document.querySelector("#ratedGenNote").textContent="Agrégation des matchs en cours…";
