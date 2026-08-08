@@ -449,28 +449,40 @@ function populateCompAndSeason(compSelId, seasonSelId){
 async function initScorersSelect(){
   populateCompAndSeason("#scorersCompSelect", "#scorersSeasonSelect");
 }
-function drawScorerRow(ctx,x,y,rank,entry,expectedVal,expectedLabel,logos){
-  ctx.fillStyle=WHITE; roundRect(ctx,x,y,1100,86,16); ctx.fill();
-  ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,y,1100,86,16); ctx.stroke();
-  ctx.fillStyle=MUTED; ctx.font="900 16px Arial"; ctx.fillText(String(rank), x+20, y+52);
+function drawScorerCardMini(ctx,x,y,w,h,rank,entry,expectedVal,expectedLabel,logos){
+  ctx.fillStyle=WHITE; roundRect(ctx,x,y,w,h,18); ctx.fill();
+  ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,y,w,h,18); ctx.stroke();
+
+  ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(x+26,y+26,16,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle=WHITE; ctx.font="900 14px Arial"; ctx.textAlign="center"; ctx.fillText(String(rank), x+26, y+31); ctx.textAlign="left";
+
+  const cx=x+w/2, photoY=y+38, photoR=42;
   const player=entry.player||{}, team=entry.participant||{};
   const img = player.image_path && logos[player.image_path];
-  if(img) ctx.drawImage(img, x+54, y+13, 60, 60);
-  else { ctx.fillStyle=GREIGE; ctx.beginPath(); ctx.arc(x+84,y+43,30,0,7); ctx.fill(); }
-  ctx.fillStyle=INK; ctx.font="800 20px Arial"; ctx.fillText(player.display_name||player.name||"—", x+132, y+38);
-  ctx.fillStyle=MUTED; ctx.font="700 13px Arial"; ctx.fillText(team.name||"", x+132, y+62);
-  const val = scorerValue(entry);
-  ctx.fillStyle=CORAL; ctx.font="900 32px Arial"; ctx.textAlign="right"; ctx.fillText(String(val??"—"), x+1060, y+48); ctx.textAlign="left";
+  if(img){ ctx.save(); ctx.beginPath(); ctx.arc(cx,photoY+photoR,photoR,0,Math.PI*2); ctx.clip(); ctx.drawImage(img,cx-photoR,photoY,photoR*2,photoR*2); ctx.restore(); }
+  else { ctx.fillStyle=GREIGE; ctx.beginPath(); ctx.arc(cx,photoY+photoR,photoR,0,Math.PI*2); ctx.fill(); }
+
+  ctx.fillStyle=INK; ctx.font="800 15px Arial"; ctx.textAlign="center";
+  ctx.fillText(player.display_name||player.name||"—", cx, photoY+photoR*2+30, w-16);
+  ctx.fillStyle=MUTED; ctx.font="700 11px Arial";
+  ctx.fillText(team.name||"", cx, photoY+photoR*2+47, w-16);
+
   if(expectedVal!=null){
-    ctx.fillStyle=MUTED; ctx.font="700 12px Arial"; ctx.textAlign="right";
-    ctx.fillText(`${expectedLabel} ${Number(expectedVal).toFixed(2)}`, x+1060, y+68); ctx.textAlign="left";
+    ctx.fillStyle=MUTED; ctx.font="700 11px Arial";
+    ctx.fillText(`${expectedLabel} ${Number(expectedVal).toFixed(2)}`, cx, photoY+photoR*2+66, w-12);
   }
+  ctx.textAlign="left";
+
+  const val = scorerValue(entry);
+  const badgeW=76, badgeY=y+h-50;
+  ctx.fillStyle="#f3dcd5"; roundRect(ctx,cx-badgeW/2,badgeY,badgeW,36,10); ctx.fill();
+  ctx.fillStyle="#b95845"; ctx.font="900 18px Arial"; ctx.textAlign="center"; ctx.fillText(String(val??"—"), cx, badgeY+25); ctx.textAlign="left";
 }
+
 async function generateScorers(){
   const compId = document.querySelector("#scorersCompSelect").value;
   const comp = COMPETITIONS.find(c=>c.id===compId);
-  const canvas = document.querySelector("#cScorers"), ctx = setupCanvas(canvas,1200,1200);
-  ctx.fillStyle=WHITE; ctx.fillRect(0,0,1200,1200);
+  const canvas = document.querySelector("#cScorers");
   if(!comp){ document.querySelector("#scorersGenNote").textContent="Compétition introuvable."; return; }
   const numId = leagueNumericId(compId);
   const seasonSelVal = document.querySelector("#scorersSeasonSelect").value;
@@ -491,9 +503,10 @@ async function generateScorers(){
   const fallbackNote = usedFallback && hasSeasonVal ? ` (données de la saison ${seasonLabel(seasonSelVal)} pas encore récupérées, saison courante affichée à la place)` : "";
   if(!goals.length && !assists.length){
     document.querySelector("#scorersGenNote").textContent=`Aucun but ni passe décisive enregistrés pour l'instant.${fallbackNote}`;
-  } else {
-    document.querySelector("#scorersGenNote").textContent=`${goals.length} buteur(s) · ${assists.length} passeur(s)${fallbackNote}`;
+    document.querySelector("#scorersDlBtn").disabled=true;
+    return;
   }
+  document.querySelector("#scorersGenNote").textContent=`${goals.length} buteur(s) · ${assists.length} passeur(s)${fallbackNote}`;
 
   const logos={};
   for(const e of [...goals,...assists]){
@@ -503,19 +516,33 @@ async function generateScorers(){
   const brandLogo = await loadImage("logo-factxi.png");
   const compLogo = comp.logo_url ? await loadImage(comp.logo_url) : null;
 
+  // Même grille 5 cartes/ligne que "Meilleurs joueurs", hauteur calculée sur
+  // le contenu réel (1 ou 2 lignes selon ce qui existe).
+  const leftX=50, gap=16, cardW=(1100-4*gap)/5, cardH=294, labelH=22, rowGap=50, contentStartY=260;
+  const nRows = (goals.length?1:0) + (assists.length?1:0);
+  const LOGICAL_H = contentStartY + nRows*(labelH+cardH) + (nRows>1?rowGap:0) + 130;
+  const ctx = setupCanvas(canvas,1200,LOGICAL_H);
+  ctx.fillStyle=WHITE; ctx.fillRect(0,0,1200,LOGICAL_H);
+
   drawBanner(ctx, comp, compLogo, "Buteurs & passeurs", hasSeasonVal?seasonSelVal:null, 1200, 166, 50);
 
-  let y=250;
-  ctx.fillStyle=CORAL; ctx.font="900 16px Arial"; ctx.fillText("MEILLEURS BUTEURS", 50, y); y+=32;
-  if(!goals.length){ ctx.fillStyle=MUTED; ctx.font="700 14px Arial"; ctx.fillText("Aucun but marqué pour l'instant.", 50, y+20); y+=60; }
-  else { goals.forEach((e,i)=>{ drawScorerRow(ctx,50,y,i+1,e,xgByPlayer[playerKeyOf(e)],"xG",logos); y+=100; }); }
+  const drawRow=(label, list, y, expectedMap, expectedLabel)=>{
+    if(!list.length) return y;
+    ctx.fillStyle=CORAL; ctx.font="900 16px Arial"; ctx.fillText(label, leftX, y);
+    const rowY=y+labelH;
+    list.forEach((e,i)=>{
+      const x = leftX + i*(cardW+gap);
+      drawScorerCardMini(ctx,x,rowY,cardW,cardH,i+1,e,expectedMap[playerKeyOf(e)],expectedLabel,logos);
+    });
+    return rowY+cardH;
+  };
 
-  y+=24;
-  ctx.fillStyle=CORAL; ctx.font="900 16px Arial"; ctx.fillText("MEILLEURS PASSEURS", 50, y); y+=32;
-  if(!assists.length){ ctx.fillStyle=MUTED; ctx.font="700 14px Arial"; ctx.fillText("Aucune passe décisive pour l'instant.", 50, y+20); }
-  else { assists.forEach((e,i)=>{ drawScorerRow(ctx,50,y,i+1,e,xaByPlayer[playerKeyOf(e)],"xA",logos); y+=100; }); }
+  let y = contentStartY;
+  y = drawRow("MEILLEURS BUTEURS", goals, y, xgByPlayer, "xG");
+  if(goals.length && assists.length) y += rowGap;
+  drawRow("MEILLEURS PASSEURS", assists, y, xaByPlayer, "xA");
 
-  drawSignature(ctx, brandLogo, 1200-50-220, 1200-90);
+  drawSignature(ctx, brandLogo, 1200-50-220, LOGICAL_H-90);
   document.querySelector("#scorersDlBtn").disabled=false;
 }
 document.querySelector("#scorersGenBtn").onclick=generateScorers;
@@ -559,8 +586,11 @@ function teamStreaks(teamName, compId, season){
   };
   for(const m of matches){
     const isHome = m.home.name===teamName;
-    const gf = isHome?m.home_score:m.away_score, ga = isHome?m.away_score:m.home_score;
-    if(gf==null||ga==null) continue;
+    const gfRaw = isHome?m.home_score:m.away_score, gaRaw = isHome?m.away_score:m.home_score;
+    if(gfRaw==null||gaRaw==null) continue;
+    // Number() explicite : si un score arrive en texte ("0" plutôt que 0),
+    // une comparaison stricte (===0) échoue silencieusement sans ça.
+    const gf = Number(gfRaw), ga = Number(gaRaw);
     const result = gf>ga?"w":gf<ga?"l":"d";
     bump("win", result==="w", m);
     bump("unbeaten", result!=="l", m);
@@ -601,6 +631,53 @@ function bestStreak(compId, key, season){
   if(!tied.length) return null;
   return {value:bestValue, teams:tied};
 }
+
+// Conditions match par match pour chaque catégorie de série, réutilisées
+// pour le suivi de la série en cours (bestStreak) ET pour le scan
+// historique ci-dessous (mostRecentEndedStreak).
+const STREAK_CONDITIONS = {
+  win: (gf,ga)=>gf>ga,
+  unbeaten: (gf,ga)=>gf>=ga,
+  loss: (gf,ga)=>gf<ga,
+  cleanSheet: (gf,ga)=>ga===0,
+  scoring: (gf,ga)=>gf>0,
+  winless: (gf,ga)=>gf<=ga,
+};
+
+// Quand personne n'atteint le seuil ACTUELLEMENT, on cherche dans tout
+// l'historique de la saison la dernière série qualifiante déjà achevée
+// (n'importe quelle équipe), pour donner un repère plutôt qu'une case vide.
+function mostRecentEndedStreak(compId, key, season){
+  const condition = STREAK_CONDITIONS[key];
+  const matches = (MATCHES_BY_COMP[compId]||[]).filter(m=>String(m.season)===String(season));
+  const teams = [...new Set(matches.flatMap(m=>[m.home.name, m.away.name]))];
+  let best = null;
+  teams.forEach(teamName=>{
+    const teamMatches = (MATCHES_BY_COMP[compId]||[])
+      .filter(m=>m.status==="finished" && String(m.season)===String(season) && (m.home.name===teamName || m.away.name===teamName))
+      .sort((a,b)=>new Date(a.kickoff)-new Date(b.kickoff));
+    let run=null;
+    const runs=[];
+    teamMatches.forEach(m=>{
+      const isHome = m.home.name===teamName;
+      const gfRaw = isHome?m.home_score:m.away_score, gaRaw = isHome?m.away_score:m.home_score;
+      if(gfRaw==null||gaRaw==null) return;
+      const gf=Number(gfRaw), ga=Number(gaRaw);
+      if(condition(gf,ga)){
+        if(!run) run={startMatch:m, endMatch:m, count:0};
+        run.count++; run.endMatch=m;
+      } else {
+        if(run) runs.push(run);
+        run=null;
+      }
+    });
+    if(run) runs.push(run); // série encore active en fin de saison : compte aussi comme "achevée" pour ce repli
+    runs.filter(r=>r.count>=STREAK_THRESHOLD).forEach(r=>{
+      if(!best || new Date(r.endMatch.kickoff) > new Date(best.endMatch.kickoff)) best = {...r, team:teamName};
+    });
+  });
+  return best;
+}
 async function generateStreaks(){
   const compId = document.querySelector("#streaksCompSelect").value;
   const comp = COMPETITIONS.find(c=>c.id===compId);
@@ -618,14 +695,22 @@ async function generateStreaks(){
     {key:"scoring", label:"Série de buts marqués", suffix:"matchs consécutifs en marquant"},
     {key:"winless", label:"Série sans victoire", suffix:"matchs consécutifs sans gagner"}
   ];
-  const results = categories.map(c=>({...c, best:bestStreak(compId,c.key,season)}));
+  const results = categories.map(c=>{
+    const best = bestStreak(compId,c.key,season);
+    const fallback = best ? null : mostRecentEndedStreak(compId,c.key,season);
+    return {...c, best, fallback};
+  });
 
   const anyFound = results.some(r=>r.best);
   document.querySelector("#streaksGenNote").textContent = anyFound
     ? `Séries calculées sur la saison ${seasonLabel(season)} uniquement.`
     : `Aucune série ne dépasse le seuil de 3 sur la saison ${seasonLabel(season)}.`;
 
-  const teamLogosNeeded = results.flatMap(r=>r.best ? r.best.teams.map(t=>t.team) : []);
+  const teamLogosNeeded = results.flatMap(r=>{
+    if(r.best) return r.best.teams.map(t=>t.team);
+    if(r.fallback) return [r.fallback.team];
+    return [];
+  });
   const logos={};
   for(const t of teamLogosNeeded){
     const matches = MATCHES_BY_COMP[compId]||[];
@@ -665,15 +750,29 @@ async function generateStreaks(){
     ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,y,colW,cellH,18); ctx.stroke();
     ctx.fillStyle=CORAL; ctx.font="900 13px Arial"; ctx.fillText(r.label.toUpperCase(), x+26, y+34);
 
-    // Bloc chiffre + unité, centré verticalement dans la carte (pas plaqué en haut).
+    // Bloc chiffre + unité, centré verticalement dans la carte (pas plaqué en haut) —
+    // aussi affiché pour le repli historique (grisé, la série n'est plus active).
     const numX = x+colW-30, numCy = y+cellH/2;
     if(r.best){
       ctx.fillStyle=CORAL; ctx.font="900 52px Arial"; ctx.textAlign="right"; ctx.fillText(String(r.best.value), numX, numCy+10); ctx.textAlign="left";
       ctx.fillStyle=MUTED; ctx.font="800 10px Arial"; ctx.textAlign="right"; ctx.fillText("MATCHS", numX, numCy+26); ctx.textAlign="left";
+    } else if(r.fallback){
+      ctx.fillStyle=GREIGE; ctx.font="900 52px Arial"; ctx.textAlign="right"; ctx.fillText(String(r.fallback.count), numX, numCy+10); ctx.textAlign="left";
+      ctx.fillStyle=MUTED; ctx.font="800 10px Arial"; ctx.textAlign="right"; ctx.fillText("MATCHS", numX, numCy+26); ctx.textAlign="left";
     }
 
-    if(!r.best){
-      ctx.fillStyle=MUTED; ctx.font="700 13px Arial"; ctx.fillText("Aucune équipe n'atteint le seuil de 3.", x+26, y+70);
+    if(r.fallback && !r.best){
+      const t=r.fallback, logo=logos[t.team];
+      ctx.globalAlpha=0.55;
+      if(logo) ctx.drawImage(logo, x+26, y+62, 50, 50);
+      else { ctx.fillStyle=GREIGE; roundRect(ctx,x+26,y+62,50,50,12); ctx.fill(); }
+      ctx.globalAlpha=1;
+      ctx.fillStyle=MUTED; ctx.font="800 19px Arial"; ctx.fillText(t.team, x+88, y+91, colW-150);
+      const dEnd = new Date(t.endMatch.kickoff).toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+      const roundTxt = t.endMatch.round ? ` (Journée ${t.endMatch.round})` : "";
+      ctx.fillStyle=MUTED; ctx.font="700 12px Arial"; ctx.fillText(`Dernière fois, jusqu'au ${dEnd}${roundTxt}`, x+26, y+142, colW-52);
+    } else if(!r.best){
+      ctx.fillStyle=MUTED; ctx.font="700 13px Arial"; ctx.fillText("Aucune équipe n'a atteint le seuil de 3 cette saison.", x+26, y+70);
     } else if(r.best.teams.length===1){
       const t=r.best.teams[0], logo=logos[t.team];
       if(logo) ctx.drawImage(logo, x+26, y+62, 50, 50);
@@ -725,7 +824,13 @@ init();
 // On plafonne le nombre de matchs agrégés pour rester réactif dans le
 // navigateur : une saison complète peut faire 380 matchs pour la Premier
 // League, inutile de tout charger pour une moyenne représentative.
-const RATED_MATCH_CAP = 60;
+// Plafond de sécurité, pas une limite fonctionnelle : une saison complète de
+// n'importe quel des 5 championnats couverts tient largement dedans (~380
+// matchs pour la Premier League). Un plafond plus bas (60, utilisé avant)
+// faussait silencieusement les stats "saison" en ne couvrant qu'une poignée
+// de journées — c'est ce qui donnait des passes décisives très inférieures
+// aux vrais totaux de saison.
+const RATED_MATCH_CAP = 500;
 const RATED_MIN_APPEARANCES = 3;
 
 async function initRatedSelect(){
@@ -842,8 +947,9 @@ function drawRatedCardMini(ctx,x,y,w,h,rank,p,value,stats,logos){
   // Ligne compacte buts / passes / temps de jeu, calculée sur la même
   // fenêtre que le classement affiché (saison entière ou 5 derniers matchs).
   const statLine = `⚽ ${Math.round(stats.goals)} · 🅰️ ${Math.round(stats.assists)} · ⏱️ ${Math.round(stats.minutes)}’`;
-  ctx.fillStyle=INK; ctx.font="700 11px Arial";
+  ctx.fillStyle=INK; ctx.font="700 11px Arial"; ctx.textAlign="center";
   ctx.fillText(statLine, cx, statLineY, w-12);
+  ctx.textAlign="left";
 
   const cls = value>=7.5?"#dcebe3":value>=6.5?"#e3edf2":value>=5.5?"#f1e5cc":"#f3dcd5";
   const txt = value>=7.5?"#2d6a4f":value>=6.5?"#3e6c81":value>=5.5?"#805e1f":"#b95845";
