@@ -64,6 +64,9 @@ async function init(){
 const COUNTRY_FR = {"England":"Angleterre","Germany":"Allemagne","France":"France","Italy":"Italie","Spain":"Espagne"};
 function countryLabel(c){ return COUNTRY_FR[c] || c || ""; }
 function seasonLabel(year){ return `${year}–${String(Number(year)+1)}`; }
+// Doit correspondre EXACTEMENT à _season_slug() côté Python (fetch_season.py) :
+// tiret simple, pas le tiret cadratin utilisé pour l'affichage.
+function seasonSlug(year){ return `${year}-${String(Number(year)+1)}`; }
 
 function seasonsForComp(compId){
   const matches = MATCHES_BY_COMP[compId] || [];
@@ -406,30 +409,37 @@ async function initScorersSelect(){
   populateCompAndSeason("#scorersCompSelect", "#scorersSeasonSelect");
 }
 function drawScorerRow(ctx,x,y,rank,entry,expectedVal,expectedLabel,logos){
-  ctx.fillStyle=WHITE; roundRect(ctx,x,y,720,60,10); ctx.fill();
-  ctx.fillStyle=MUTED; ctx.font="900 12px Arial"; ctx.fillText(String(rank), x+14, y+36);
+  ctx.fillStyle=WHITE; roundRect(ctx,x,y,1100,86,16); ctx.fill();
+  ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,y,1100,86,16); ctx.stroke();
+  ctx.fillStyle=MUTED; ctx.font="900 16px Arial"; ctx.fillText(String(rank), x+20, y+52);
   const player=entry.player||{}, team=entry.participant||{};
   const img = player.image_path && logos[player.image_path];
-  if(img) ctx.drawImage(img, x+38, y+9, 42, 42);
-  else { ctx.fillStyle=GREIGE; ctx.beginPath(); ctx.arc(x+59,y+30,21,0,7); ctx.fill(); }
-  ctx.fillStyle=INK; ctx.font="800 14px Arial"; ctx.fillText(player.display_name||player.name||"—", x+92, y+27);
-  ctx.fillStyle=MUTED; ctx.font="700 10px Arial"; ctx.fillText(team.name||"", x+92, y+44);
+  if(img) ctx.drawImage(img, x+54, y+13, 60, 60);
+  else { ctx.fillStyle=GREIGE; ctx.beginPath(); ctx.arc(x+84,y+43,30,0,7); ctx.fill(); }
+  ctx.fillStyle=INK; ctx.font="800 20px Arial"; ctx.fillText(player.display_name||player.name||"—", x+132, y+38);
+  ctx.fillStyle=MUTED; ctx.font="700 13px Arial"; ctx.fillText(team.name||"", x+132, y+62);
   const val = scorerValue(entry);
-  ctx.fillStyle=CORAL; ctx.font="900 22px Arial"; ctx.textAlign="right"; ctx.fillText(String(val??"—"), x+700, y+34); ctx.textAlign="left";
+  ctx.fillStyle=CORAL; ctx.font="900 32px Arial"; ctx.textAlign="right"; ctx.fillText(String(val??"—"), x+1060, y+48); ctx.textAlign="left";
   if(expectedVal!=null){
-    ctx.fillStyle=MUTED; ctx.font="700 9px Arial"; ctx.textAlign="right";
-    ctx.fillText(`${expectedLabel} ${Number(expectedVal).toFixed(2)}`, x+700, y+48); ctx.textAlign="left";
+    ctx.fillStyle=MUTED; ctx.font="700 12px Arial"; ctx.textAlign="right";
+    ctx.fillText(`${expectedLabel} ${Number(expectedVal).toFixed(2)}`, x+1060, y+68); ctx.textAlign="left";
   }
 }
 async function generateScorers(){
   const compId = document.querySelector("#scorersCompSelect").value;
   const comp = COMPETITIONS.find(c=>c.id===compId);
   const canvas = document.querySelector("#cScorers"), ctx = setupCanvas(canvas,1200,1200);
-  ctx.scale(1.5,1.5); // le contenu ci-dessous est dessiné pour un cadre logique de 800 ; on l'agrandit proportionnellement au nouveau format 1200×1200
-  ctx.fillStyle=WHITE; ctx.fillRect(0,0,800,800);
+  ctx.fillStyle=WHITE; ctx.fillRect(0,0,1200,1200);
   if(!comp){ document.querySelector("#scorersGenNote").textContent="Compétition introuvable."; return; }
   const numId = leagueNumericId(compId);
-  const payload = await fetchJson(`data/topscorers-${numId}.json`);
+  const seasonSelVal = document.querySelector("#scorersSeasonSelect").value;
+  const hasSeasonVal = seasonSelVal && seasonSelVal!=="Aucune saison";
+  // Fichier spécifique à la saison choisie (backfill via fetch_season.py) en
+  // priorité ; à défaut, repli sur le fichier "saison courante" habituel —
+  // qui peut être vide si la saison en cours n'a pas encore de buts marqués.
+  let payload = hasSeasonVal ? await fetchJson(`data/topscorers-${numId}-${seasonSlug(seasonSelVal)}.json`) : null;
+  let usedFallback = false;
+  if(!payload){ payload = await fetchJson(`data/topscorers-${numId}.json`); usedFallback = true; }
   const entries = payload && Array.isArray(payload.topscorers) ? payload.topscorers : [];
   const goals = entries.filter(isGoalEntry).sort((a,b)=>(scorerValue(b)||0)-(scorerValue(a)||0)).slice(0,5);
   const assists = entries.filter(isAssistEntry).sort((a,b)=>(scorerValue(b)||0)-(scorerValue(a)||0)).slice(0,5);
@@ -437,10 +447,11 @@ async function generateScorers(){
   entries.filter(isXgEntry).forEach(e=>xgByPlayer[playerKeyOf(e)]=scorerValue(e));
   entries.filter(isXaEntry).forEach(e=>xaByPlayer[playerKeyOf(e)]=scorerValue(e));
 
+  const fallbackNote = usedFallback && hasSeasonVal ? ` (données de la saison ${seasonLabel(seasonSelVal)} pas encore récupérées, saison courante affichée à la place)` : "";
   if(!goals.length && !assists.length){
-    document.querySelector("#scorersGenNote").textContent="Aucun but ni passe décisive enregistrés pour l'instant cette saison.";
+    document.querySelector("#scorersGenNote").textContent=`Aucun but ni passe décisive enregistrés pour l'instant.${fallbackNote}`;
   } else {
-    document.querySelector("#scorersGenNote").textContent=`${goals.length} buteur(s) · ${assists.length} passeur(s)`;
+    document.querySelector("#scorersGenNote").textContent=`${goals.length} buteur(s) · ${assists.length} passeur(s)${fallbackNote}`;
   }
 
   const logos={};
@@ -451,19 +462,19 @@ async function generateScorers(){
   const brandLogo = await loadImage("logo-factxi.png");
   const compLogo = comp.logo_url ? await loadImage(comp.logo_url) : null;
 
-  drawBanner(ctx, comp, compLogo, "Buteurs & passeurs", null, 800, 150, 40);
+  drawBanner(ctx, comp, compLogo, "Buteurs & passeurs", hasSeasonVal?seasonSelVal:null, 1200, 166, 50);
 
-  let y=190;
-  ctx.fillStyle=CORAL; ctx.font="900 11px Arial"; ctx.fillText("MEILLEURS BUTEURS", 40, y); y+=14;
-  if(!goals.length){ ctx.fillStyle=MUTED; ctx.font="700 11px Arial"; ctx.fillText("Aucun but marqué pour l'instant.", 40, y+20); y+=50; }
-  else { goals.forEach((e,i)=>{ drawScorerRow(ctx,40,y,i+1,e,xgByPlayer[playerKeyOf(e)],"xG",logos); y+=68; }); }
+  let y=250;
+  ctx.fillStyle=CORAL; ctx.font="900 16px Arial"; ctx.fillText("MEILLEURS BUTEURS", 50, y); y+=32;
+  if(!goals.length){ ctx.fillStyle=MUTED; ctx.font="700 14px Arial"; ctx.fillText("Aucun but marqué pour l'instant.", 50, y+20); y+=60; }
+  else { goals.forEach((e,i)=>{ drawScorerRow(ctx,50,y,i+1,e,xgByPlayer[playerKeyOf(e)],"xG",logos); y+=100; }); }
 
-  y+=16;
-  ctx.fillStyle=CORAL; ctx.font="900 11px Arial"; ctx.fillText("MEILLEURS PASSEURS", 40, y); y+=14;
-  if(!assists.length){ ctx.fillStyle=MUTED; ctx.font="700 11px Arial"; ctx.fillText("Aucune passe décisive pour l'instant.", 40, y+20); }
-  else { assists.forEach((e,i)=>{ drawScorerRow(ctx,40,y,i+1,e,xaByPlayer[playerKeyOf(e)],"xA",logos); y+=68; }); }
+  y+=24;
+  ctx.fillStyle=CORAL; ctx.font="900 16px Arial"; ctx.fillText("MEILLEURS PASSEURS", 50, y); y+=32;
+  if(!assists.length){ ctx.fillStyle=MUTED; ctx.font="700 14px Arial"; ctx.fillText("Aucune passe décisive pour l'instant.", 50, y+20); }
+  else { assists.forEach((e,i)=>{ drawScorerRow(ctx,50,y,i+1,e,xaByPlayer[playerKeyOf(e)],"xA",logos); y+=100; }); }
 
-  drawSignature(ctx, brandLogo, 540, 724);
+  drawSignature(ctx, brandLogo, 1200-50-220, 1200-90);
   document.querySelector("#scorersDlBtn").disabled=false;
 }
 document.querySelector("#scorersGenBtn").onclick=generateScorers;
@@ -492,8 +503,8 @@ function teamStreaks(teamName, compId, season){
   const matches = (MATCHES_BY_COMP[compId]||[])
     .filter(m=>m.status==="finished" && String(m.season)===String(season) && (m.home.name===teamName || m.away.name===teamName))
     .sort((a,b)=>new Date(b.kickoff)-new Date(a.kickoff));
-  let win=0, unbeaten=0, loss=0, cleanSheet=0;
-  let stopWin=false, stopUnbeaten=false, stopLoss=false, stopClean=false;
+  let win=0, unbeaten=0, loss=0, cleanSheet=0, scoring=0, winless=0;
+  let stopWin=false, stopUnbeaten=false, stopLoss=false, stopClean=false, stopScoring=false, stopWinless=false;
   for(const m of matches){
     const isHome = m.home.name===teamName;
     const gf = isHome?m.home_score:m.away_score, ga = isHome?m.away_score:m.home_score;
@@ -503,8 +514,10 @@ function teamStreaks(teamName, compId, season){
     if(!stopUnbeaten){ if(result!=="l") unbeaten++; else stopUnbeaten=true; }
     if(!stopLoss){ if(result==="l") loss++; else stopLoss=true; }
     if(!stopClean){ if(ga===0) cleanSheet++; else stopClean=true; }
+    if(!stopScoring){ if(gf>0) scoring++; else stopScoring=true; }
+    if(!stopWinless){ if(result!=="w") winless++; else stopWinless=true; }
   }
-  return {win,unbeaten,loss,cleanSheet};
+  return {win,unbeaten,loss,cleanSheet,scoring,winless};
 }
 
 async function initStreaksSelect(){
@@ -524,8 +537,7 @@ async function generateStreaks(){
   const compId = document.querySelector("#streaksCompSelect").value;
   const comp = COMPETITIONS.find(c=>c.id===compId);
   const canvas = document.querySelector("#cStreaks"), ctx = setupCanvas(canvas,1200,1200);
-  ctx.scale(1.5,1.5);
-  ctx.fillStyle=WHITE; ctx.fillRect(0,0,800,800);
+  ctx.fillStyle=WHITE; ctx.fillRect(0,0,1200,1200);
   if(!comp){ document.querySelector("#streaksGenNote").textContent="Compétition introuvable."; return; }
   const seasonSelVal = document.querySelector("#streaksSeasonSelect").value;
   const season = seasonSelVal && seasonSelVal!=="Aucune saison" ? seasonSelVal : bestSeasonForStreaks(compId);
@@ -535,7 +547,9 @@ async function generateStreaks(){
     {key:"win", label:"Série de victoires", suffix:"victoires consécutives"},
     {key:"unbeaten", label:"Série d'invincibilité", suffix:"matchs sans défaite"},
     {key:"loss", label:"Série de défaites", suffix:"défaites consécutives"},
-    {key:"cleanSheet", label:"Clean sheets", suffix:"matchs sans encaisser"}
+    {key:"cleanSheet", label:"Séries sans encaisser", suffix:"matchs sans encaisser (clean sheets)"},
+    {key:"scoring", label:"Série de buts marqués", suffix:"matchs consécutifs en marquant"},
+    {key:"winless", label:"Série sans victoire", suffix:"matchs consécutifs sans gagner"}
   ];
   const results = categories.map(c=>({...c, best:bestStreak(compId,c.key,season)}));
 
@@ -555,26 +569,28 @@ async function generateStreaks(){
   const compLogo = comp.logo_url ? await loadImage(comp.logo_url) : null;
   const brandLogo = await loadImage("logo-factxi.png");
 
-  drawBanner(ctx, comp, compLogo, "Séries en cours", season, 800, 150, 40);
+  drawBanner(ctx, comp, compLogo, "Séries en cours", season, 1200, 166, 50);
 
-  let y=190;
+  const rowH = 96, cardGap = 18;
+  let y=250;
   results.forEach(r=>{
-    ctx.fillStyle=WHITE; roundRect(ctx,40,y,720,120,14); ctx.fill();
-    ctx.fillStyle=CORAL; ctx.font="900 10px Arial"; ctx.fillText(r.label.toUpperCase(), 64, y+30);
+    ctx.fillStyle=WHITE; roundRect(ctx,50,y,1100,rowH,16); ctx.fill();
+    ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,50,y,1100,rowH,16); ctx.stroke();
+    ctx.fillStyle=CORAL; ctx.font="900 12px Arial"; ctx.fillText(r.label.toUpperCase(), 78, y+26);
     if(r.best){
       const logo=logos[r.best.team];
-      if(logo) ctx.drawImage(logo, 64, y+44, 46, 46);
-      else { ctx.fillStyle=GREIGE; roundRect(ctx,64,y+44,46,46,10); ctx.fill(); }
-      ctx.fillStyle=INK; ctx.font="800 18px Arial"; ctx.fillText(r.best.team, 122, y+65);
-      ctx.fillStyle=MUTED; ctx.font="700 11px Arial"; ctx.fillText(`${r.best.value} ${r.suffix}`, 122, y+85);
-      ctx.fillStyle=CORAL; ctx.font="900 34px Arial"; ctx.textAlign="right"; ctx.fillText(String(r.best.value), 730, y+80); ctx.textAlign="left";
+      if(logo) ctx.drawImage(logo, 78, y+38, 46, 46);
+      else { ctx.fillStyle=GREIGE; roundRect(ctx,78,y+38,46,46,10); ctx.fill(); }
+      ctx.fillStyle=INK; ctx.font="800 20px Arial"; ctx.fillText(r.best.team, 138, y+58);
+      ctx.fillStyle=MUTED; ctx.font="700 12px Arial"; ctx.fillText(`${r.best.value} ${r.suffix}`, 138, y+78);
+      ctx.fillStyle=CORAL; ctx.font="900 40px Arial"; ctx.textAlign="right"; ctx.fillText(String(r.best.value), 1130, y+66); ctx.textAlign="left";
     } else {
-      ctx.fillStyle=MUTED; ctx.font="700 11px Arial"; ctx.fillText("Aucune équipe n'atteint le seuil de 3 pour l'instant.", 64, y+65);
+      ctx.fillStyle=MUTED; ctx.font="700 13px Arial"; ctx.fillText("Aucune équipe n'atteint le seuil de 3 pour l'instant.", 78, y+58);
     }
-    y+=134;
+    y += rowH + cardGap;
   });
 
-  drawSignature(ctx, brandLogo, 540, 724);
+  drawSignature(ctx, brandLogo, 1200-50-220, 1200-90);
   document.querySelector("#streaksDlBtn").disabled=false;
 }
 document.querySelector("#streaksGenBtn").onclick=generateStreaks;
@@ -653,23 +669,33 @@ async function aggregatePlayerRatings(compId, season){
   return {players, matchesLoaded:loaded, matchesConsidered:matches.length};
 }
 
-function drawRatedCard(ctx,x,y,rank,p,value,logos){
-  ctx.fillStyle=WHITE; roundRect(ctx,x,y,720,84,14); ctx.fill();
-  ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,y,720,84,14); ctx.stroke();
-  ctx.fillStyle=MUTED; ctx.font="900 13px Arial"; ctx.fillText(String(rank), x+16, y+48);
+function drawRatedCardMini(ctx,x,y,w,h,rank,p,value,logos){
+  ctx.fillStyle=WHITE; roundRect(ctx,x,y,w,h,18); ctx.fill();
+  ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,y,w,h,18); ctx.stroke();
+
+  ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(x+26,y+26,16,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle=WHITE; ctx.font="900 14px Arial"; ctx.textAlign="center"; ctx.fillText(String(rank), x+26, y+31); ctx.textAlign="left";
+
+  const cx=x+w/2, photoY=y+40, photoR=44;
   const img = p.photo && logos[p.photo];
-  if(img) ctx.drawImage(img, x+40, y+14, 56, 56);
-  else { ctx.fillStyle=GREIGE; ctx.beginPath(); ctx.arc(x+68,y+42,28,0,7); ctx.fill(); }
+  if(img){ ctx.save(); ctx.beginPath(); ctx.arc(cx,photoY+photoR,photoR,0,Math.PI*2); ctx.clip(); ctx.drawImage(img,cx-photoR,photoY,photoR*2,photoR*2); ctx.restore(); }
+  else { ctx.fillStyle=GREIGE; ctx.beginPath(); ctx.arc(cx,photoY+photoR,photoR,0,Math.PI*2); ctx.fill(); }
+
   const tlogo = p.teamLogo && logos[p.teamLogo];
-  if(tlogo) ctx.drawImage(tlogo, x+104, y+16, 20, 20);
-  ctx.fillStyle=INK; ctx.font="800 16px Arial"; ctx.fillText(p.name||"—", x+130, y+34);
-  const meta = [p.team, p.position].filter(Boolean).join(" · ");
-  ctx.fillStyle=MUTED; ctx.font="700 10px Arial"; ctx.fillText(meta, x+130, y+50);
+  if(tlogo) ctx.drawImage(tlogo, cx+photoR-18, photoY+photoR*2-18, 26, 26);
+
+  ctx.fillStyle=INK; ctx.font="800 15px Arial"; ctx.textAlign="center";
+  ctx.fillText(p.name||"—", cx, photoY+photoR*2+34, w-16);
+  const meta = [p.position, p.team].filter(Boolean).join(" · ") || p.team || "";
+  ctx.fillStyle=MUTED; ctx.font="700 11px Arial";
+  ctx.fillText(meta, cx, photoY+photoR*2+52, w-16);
 
   const cls = value>=7.5?"#dcebe3":value>=6.5?"#e3edf2":value>=5.5?"#f1e5cc":"#f3dcd5";
   const txt = value>=7.5?"#2d6a4f":value>=6.5?"#3e6c81":value>=5.5?"#805e1f":"#b95845";
-  ctx.fillStyle=cls; roundRect(ctx,x+616,y+16,84,52,10); ctx.fill();
-  ctx.fillStyle=txt; ctx.font="900 22px Arial"; ctx.textAlign="center"; ctx.fillText(value.toFixed(1),x+658,y+50); ctx.textAlign="left";
+  const badgeW=76, badgeY=y+h-52;
+  ctx.fillStyle=cls; roundRect(ctx,cx-badgeW/2,badgeY,badgeW,36,10); ctx.fill();
+  ctx.fillStyle=txt; ctx.font="900 18px Arial"; ctx.fillText(value.toFixed(1), cx, badgeY+25);
+  ctx.textAlign="left";
 }
 
 async function generateRated(){
@@ -698,6 +724,7 @@ async function generateRated(){
 
   const LOGICAL_H = 1200;
   const ctx = setupCanvas(canvas,1200,LOGICAL_H);
+  ctx.fillStyle=WHITE; ctx.fillRect(0,0,1200,LOGICAL_H);
 
   if(!bySeasonAvg.length){
     document.querySelector("#ratedGenNote").textContent = matchesLoaded
@@ -718,13 +745,22 @@ async function generateRated(){
 
   drawBanner(ctx, comp, compLogo, "Meilleurs joueurs", season, 1200, 166, 50);
 
-  let y=250;
-  ctx.fillStyle=CORAL; ctx.font="900 15px Arial"; ctx.fillText("TOP 5 · MOYENNE SAISON", 50, y); y+=26;
-  bySeasonAvg.forEach((p,i)=>{ drawRatedCard(ctx,50,y,i+1,p,p.value,logos); y+=96; });
+  const leftX=50, gap=16, cardW=(1100-4*gap)/5, cardH=270;
+  const drawRow=(label, list, y)=>{
+    ctx.fillStyle=CORAL; ctx.font="900 16px Arial"; ctx.fillText(label, leftX, y);
+    const rowY=y+22;
+    for(let i=0;i<5;i++){
+      const x = leftX + i*(cardW+gap);
+      if(list[i]) drawRatedCardMini(ctx,x,rowY,cardW,cardH,i+1,list[i],list[i].value,logos);
+      else { ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,rowY,cardW,cardH,18); ctx.stroke(); }
+    }
+    return rowY+cardH;
+  };
 
-  y+=20;
-  ctx.fillStyle=CORAL; ctx.font="900 15px Arial"; ctx.fillText("TOP 5 · 5 DERNIERS MATCHS", 50, y); y+=26;
-  byLast5.forEach((p,i)=>{ drawRatedCard(ctx,50,y,i+1,p,p.value,logos); y+=96; });
+  let y = 260;
+  y = drawRow("TOP 5 · MOYENNE SAISON", bySeasonAvg, y);
+  y += 50;
+  drawRow("TOP 5 · 5 DERNIERS MATCHS", byLast5, y);
 
   ctx.fillStyle=MUTED; ctx.font="700 12px Arial";
   ctx.fillText(`Saison ${seasonLabel(season)} uniquement · minimum ${RATED_MIN_APPEARANCES} apparitions.`, 50, LOGICAL_H-56);
