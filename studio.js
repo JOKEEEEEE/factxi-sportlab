@@ -417,14 +417,10 @@ function isAssistEntry(entry){
   const code = (entry.type && (entry.type.code||entry.type.name||"")).toLowerCase();
   return code.includes("assist") && !code.includes("expected") && !code.includes("xa");
 }
-function isXgEntry(entry){
-  const code = (entry.type && (entry.type.code||entry.type.name||"")).toLowerCase();
-  return code.includes("expected") && code.includes("goal") && !code.includes("assist");
-}
-function isXaEntry(entry){
-  const code = (entry.type && (entry.type.code||entry.type.name||"")).toLowerCase();
-  return (code.includes("expected") && code.includes("assist")) || code.includes("xa");
-}
+// xG/xA retirés : vérifié auprès de la doc officielle SportMonks, l'endpoint
+// Topscorers ne gère que 3 types (Goals, Cards, Assists) — pas d'expected
+// goals/assists ici. Si on veut du xG/xA par joueur un jour, il faudra une
+// source différente (statistiques de saison par joueur), pas cet endpoint.
 function playerKeyOf(entry){ return entry.player_id || (entry.player && entry.player.id) || (entry.player && entry.player.name); }
 
 // Peuple un couple (sélecteur compétition, sélecteur saison) de façon
@@ -449,34 +445,53 @@ function populateCompAndSeason(compSelId, seasonSelId){
 async function initScorersSelect(){
   populateCompAndSeason("#scorersCompSelect", "#scorersSeasonSelect");
 }
-function drawScorerCardMini(ctx,x,y,w,h,rank,entry,expectedVal,expectedLabel,logos){
+function drawScorerCardMini(ctx,x,y,w,h,rank,goalsEntry,assistsEntry,position,logos){
   ctx.fillStyle=WHITE; roundRect(ctx,x,y,w,h,18); ctx.fill();
   ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,y,w,h,18); ctx.stroke();
 
   ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(x+26,y+26,16,0,Math.PI*2); ctx.fill();
   ctx.fillStyle=WHITE; ctx.font="900 14px Arial"; ctx.textAlign="center"; ctx.fillText(String(rank), x+26, y+31); ctx.textAlign="left";
 
+  const entry = goalsEntry || assistsEntry;
+  const player = entry.player||{}, team = entry.participant||{};
   const cx=x+w/2, photoY=y+38, photoR=42;
-  const player=entry.player||{}, team=entry.participant||{};
   const img = player.image_path && logos[player.image_path];
   if(img){ ctx.save(); ctx.beginPath(); ctx.arc(cx,photoY+photoR,photoR,0,Math.PI*2); ctx.clip(); ctx.drawImage(img,cx-photoR,photoY,photoR*2,photoR*2); ctx.restore(); }
   else { ctx.fillStyle=GREIGE; ctx.beginPath(); ctx.arc(cx,photoY+photoR,photoR,0,Math.PI*2); ctx.fill(); }
+
+  const tlogo = team.image_path && logos[team.image_path];
+  if(tlogo) ctx.drawImage(tlogo, cx+photoR-16, photoY+photoR*2-16, 24, 24);
 
   ctx.fillStyle=INK; ctx.font="800 15px Arial"; ctx.textAlign="center";
   ctx.fillText(player.display_name||player.name||"—", cx, photoY+photoR*2+30, w-16);
   ctx.fillStyle=MUTED; ctx.font="700 11px Arial";
   ctx.fillText(team.name||"", cx, photoY+photoR*2+47, w-16);
 
-  if(expectedVal!=null){
-    ctx.fillStyle=MUTED; ctx.font="700 11px Arial";
-    ctx.fillText(`${expectedLabel} ${Number(expectedVal).toFixed(2)}`, cx, photoY+photoR*2+66, w-12);
+  let pillY = photoY+photoR*2+58;
+  if(position){
+    ctx.font="800 10px Arial";
+    const pillW = ctx.measureText(position.toUpperCase()).width + 22;
+    ctx.fillStyle=GREIGE; roundRect(ctx,cx-pillW/2,pillY,pillW,20,10); ctx.fill();
+    ctx.fillStyle=INK; ctx.fillText(position.toUpperCase(), cx, pillY+14);
+    pillY += 28;
   }
-  ctx.textAlign="left";
 
-  const val = scorerValue(entry);
-  const badgeW=76, badgeY=y+h-50;
-  ctx.fillStyle="#f3dcd5"; roundRect(ctx,cx-badgeW/2,badgeY,badgeW,36,10); ctx.fill();
-  ctx.fillStyle="#b95845"; ctx.font="900 18px Arial"; ctx.textAlign="center"; ctx.fillText(String(val??"—"), cx, badgeY+25); ctx.textAlign="left";
+  // Deux pilules distinctes plutôt qu'une ligne de texte : buts puis passes,
+  // chacune sur sa propre ligne pour rester lisible. Pas de xG/xA ici :
+  // vérifié auprès de la doc officielle SportMonks, l'endpoint Topscorers ne
+  // les fournit pas (seulement Goals/Cards/Assists) — pas la peine de garder
+  // un code qui cherche une donnée qui n'existe pas à cet endroit.
+  const drawStatPill=(emoji, val, py)=>{
+    const label = `${emoji} ${val??"—"}`;
+    ctx.font="800 12px Arial";
+    const pw = ctx.measureText(label).width + 24;
+    ctx.fillStyle="#f3dcd5"; roundRect(ctx,cx-pw/2,py,pw,26,13); ctx.fill();
+    ctx.fillStyle="#b95845"; ctx.fillText(label, cx, py+18);
+  };
+  ctx.textAlign="center";
+  drawStatPill("\u26bd", goalsEntry?scorerValue(goalsEntry):0, pillY);
+  drawStatPill("\ud83c\udd70\ufe0f", assistsEntry?scorerValue(assistsEntry):0, pillY+34);
+  ctx.textAlign="left";
 }
 
 async function generateScorers(){
@@ -496,9 +511,13 @@ async function generateScorers(){
   const entries = payload && Array.isArray(payload.topscorers) ? payload.topscorers : [];
   const goals = entries.filter(isGoalEntry).sort((a,b)=>(scorerValue(b)||0)-(scorerValue(a)||0)).slice(0,5);
   const assists = entries.filter(isAssistEntry).sort((a,b)=>(scorerValue(b)||0)-(scorerValue(a)||0)).slice(0,5);
-  const xgByPlayer={}, xaByPlayer={};
-  entries.filter(isXgEntry).forEach(e=>xgByPlayer[playerKeyOf(e)]=scorerValue(e));
-  entries.filter(isXaEntry).forEach(e=>xaByPlayer[playerKeyOf(e)]=scorerValue(e));
+  const goalsByPlayer={}, assistsByPlayer={}, positionByPlayer={};
+  entries.filter(isGoalEntry).forEach(e=>goalsByPlayer[playerKeyOf(e)]=e);
+  entries.filter(isAssistEntry).forEach(e=>assistsByPlayer[playerKeyOf(e)]=e);
+  entries.forEach(e=>{
+    const pos = e.player && e.player.position && (e.player.position.name || e.player.position.developer_name);
+    if(pos) positionByPlayer[playerKeyOf(e)] = POSITION_FR[pos] || pos;
+  });
 
   const fallbackNote = usedFallback && hasSeasonVal ? ` (données de la saison ${seasonLabel(seasonSelVal)} pas encore récupérées, saison courante affichée à la place)` : "";
   if(!goals.length && !assists.length){
@@ -512,13 +531,15 @@ async function generateScorers(){
   for(const e of [...goals,...assists]){
     const p=(e.player&&e.player.image_path);
     if(p && !logos[p]) logos[p]=await loadImage(p);
+    const t=(e.participant&&e.participant.image_path);
+    if(t && !logos[t]) logos[t]=await loadImage(t);
   }
   const brandLogo = await loadImage("logo-factxi.png");
   const compLogo = comp.logo_url ? await loadImage(comp.logo_url) : null;
 
   // Même grille 5 cartes/ligne que "Meilleurs joueurs", hauteur calculée sur
   // le contenu réel (1 ou 2 lignes selon ce qui existe).
-  const leftX=50, gap=16, cardW=(1100-4*gap)/5, cardH=294, labelH=22, rowGap=50, contentStartY=260;
+  const leftX=50, gap=16, cardW=(1100-4*gap)/5, cardH=290, labelH=22, rowGap=50, contentStartY=260;
   const nRows = (goals.length?1:0) + (assists.length?1:0);
   const LOGICAL_H = contentStartY + nRows*(labelH+cardH) + (nRows>1?rowGap:0) + 130;
   const ctx = setupCanvas(canvas,1200,LOGICAL_H);
@@ -526,21 +547,24 @@ async function generateScorers(){
 
   drawBanner(ctx, comp, compLogo, "Buteurs & passeurs", hasSeasonVal?seasonSelVal:null, 1200, 166, 50);
 
-  const drawRow=(label, list, y, expectedMap, expectedLabel)=>{
+  const drawRow=(label, list, y)=>{
     if(!list.length) return y;
     ctx.fillStyle=CORAL; ctx.font="900 16px Arial"; ctx.fillText(label, leftX, y);
     const rowY=y+labelH;
     list.forEach((e,i)=>{
       const x = leftX + i*(cardW+gap);
-      drawScorerCardMini(ctx,x,rowY,cardW,cardH,i+1,e,expectedMap[playerKeyOf(e)],expectedLabel,logos);
+      const key = playerKeyOf(e);
+      drawScorerCardMini(ctx,x,rowY,cardW,cardH,i+1,
+        goalsByPlayer[key]||null, assistsByPlayer[key]||null,
+        positionByPlayer[key], logos);
     });
     return rowY+cardH;
   };
 
   let y = contentStartY;
-  y = drawRow("MEILLEURS BUTEURS", goals, y, xgByPlayer, "xG");
+  y = drawRow("MEILLEURS BUTEURS", goals, y);
   if(goals.length && assists.length) y += rowGap;
-  drawRow("MEILLEURS PASSEURS", assists, y, xaByPlayer, "xA");
+  drawRow("MEILLEURS PASSEURS", assists, y);
 
   drawSignature(ctx, brandLogo, 1200-50-220, LOGICAL_H-90);
   document.querySelector("#scorersDlBtn").disabled=false;
@@ -953,9 +977,9 @@ function drawRatedCardMini(ctx,x,y,w,h,rank,p,value,stats,logos){
 
   const cls = value>=7.5?"#dcebe3":value>=6.5?"#e3edf2":value>=5.5?"#f1e5cc":"#f3dcd5";
   const txt = value>=7.5?"#2d6a4f":value>=6.5?"#3e6c81":value>=5.5?"#805e1f":"#b95845";
-  const badgeW=76, badgeY=y+h-50;
-  ctx.fillStyle=cls; roundRect(ctx,cx-badgeW/2,badgeY,badgeW,36,10); ctx.fill();
-  ctx.fillStyle=txt; ctx.font="900 18px Arial"; ctx.fillText(value.toFixed(1), cx, badgeY+25);
+  const badgeW=64, badgeY=y+h-48;
+  ctx.fillStyle=cls; roundRect(ctx,cx-badgeW/2,badgeY,badgeW,32,10); ctx.fill();
+  ctx.fillStyle=txt; ctx.font="900 17px Arial"; ctx.textAlign="center"; ctx.fillText(value.toFixed(1), cx, badgeY+22);
   ctx.textAlign="left";
 }
 
