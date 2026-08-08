@@ -42,7 +42,7 @@ jobs:
           shopt -s nullglob
           git config user.name "sportlab-bot"
           git config user.email "actions@github.com"
-          FILES=(data/match-detail-*.json data/matches-history.json)
+          FILES=(data/match-detail-*.json data/matches-history.json data/standings-*.json data/topscorers-*.json)
           if [ ${#FILES[@]} -eq 0 ]; then
             echo "Aucun fichier de données trouvé, rien à publier."
             exit 0
