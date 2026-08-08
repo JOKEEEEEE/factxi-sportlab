@@ -178,6 +178,19 @@ function groupByDay(matches){
 function loadImage(src){return new Promise(resolve=>{if(!src){resolve(null);return}const img=new Image();img.crossOrigin="anonymous";img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src=src})}
 function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);}
 
+// Centrage calculé à la main plutôt que via ctx.textAlign="center" — les
+// emoji ont une largeur de rendu imprévisible selon les navigateurs, ce qui
+// peut décaler le centrage automatique. Ici on mesure le texte réel et on
+// positionne nous-mêmes, sans dépendre du textAlign ni du maxWidth de
+// fillText (dont le comportement de compression n'est pas fiable non plus).
+function fillTextCentered(ctx, text, cx, y){
+  const prevAlign = ctx.textAlign;
+  ctx.textAlign = "left";
+  const w = ctx.measureText(text).width;
+  ctx.fillText(text, cx - w/2, y);
+  ctx.textAlign = prevAlign;
+}
+
 // Signature commune à tous les générateurs : avatar circulaire + "Fact XI" +
 // badge + handle, dans une pilule ton sur ton avec les cartes. (sigX,sigY) =
 // coin haut-gauche de la pilule (220×58).
@@ -450,7 +463,7 @@ function drawScorerCardMini(ctx,x,y,w,h,rank,goalsEntry,assistsEntry,position,mi
   ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,y,w,h,18); ctx.stroke();
 
   ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(x+26,y+26,16,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle=WHITE; ctx.font="900 14px Arial"; ctx.textAlign="center"; ctx.fillText(String(rank), x+26, y+31); ctx.textAlign="left";
+  ctx.fillStyle=WHITE; ctx.font="900 14px Arial"; fillTextCentered(ctx, String(rank), x+26, y+31);
 
   const entry = goalsEntry || assistsEntry;
   const player = entry.player||{}, team = entry.participant||{};
@@ -465,32 +478,36 @@ function drawScorerCardMini(ctx,x,y,w,h,rank,goalsEntry,assistsEntry,position,mi
   // Même empilement vertical que "Meilleurs joueurs", tout centré sur le
   // même axe cx : photo, nom, club, poste. Rien d'autre entre le club et la
   // pilule finale — plus de ligne de stats séparée.
-  ctx.fillStyle=INK; ctx.font="800 15px Arial"; ctx.textAlign="center";
-  ctx.fillText(player.display_name||player.name||"—", cx, photoY+photoR*2+30, w-16);
+  ctx.fillStyle=INK; ctx.font="800 15px Arial";
+  fillTextCentered(ctx, player.display_name||player.name||"—", cx, photoY+photoR*2+30);
   ctx.fillStyle=MUTED; ctx.font="700 11px Arial";
-  ctx.fillText(team.name||"", cx, photoY+photoR*2+47, w-16);
+  fillTextCentered(ctx, team.name||"", cx, photoY+photoR*2+47);
 
   if(position){
     ctx.font="800 10px Arial";
-    const pillW = ctx.measureText(position.toUpperCase()).width + 22;
+    const posLabel = position.toUpperCase();
+    const pillW = ctx.measureText(posLabel).width + 22;
     const pillY = photoY+photoR*2+56;
     ctx.fillStyle=GREIGE; roundRect(ctx,cx-pillW/2,pillY,pillW,20,10); ctx.fill();
-    ctx.fillStyle=INK; ctx.fillText(position.toUpperCase(), cx, pillY+14);
+    ctx.fillStyle=INK; fillTextCentered(ctx, posLabel, cx, pillY+14);
   }
 
   // Les trois stats (buts, passes, minutes) regroupées dans une seule grande
   // pilule en bas, à la place d'un simple chiffre isolé. Les minutes ne
   // viennent pas de Topscorers (confirmé absent, seulement Goals/Cards/
   // Assists) mais de l'agrégation des détails de match, même source que la
-  // carte "Meilleurs joueurs".
+  // carte "Meilleurs joueurs". Police alignée sur celle de "Meilleurs
+  // joueurs" (11px, pas 13px) : à 13px le texte débordait de la largeur de
+  // carte — c'est ce qui coupait "2995\u2019" en "29" sur les cartes larges.
+  // Couleur neutre (grège/encre) plutôt que corail, qui suggérait une alerte.
   const goalsVal = goalsEntry?scorerValue(goalsEntry):0, assistsVal = assistsEntry?scorerValue(assistsEntry):0;
   const combo = `\u26bd ${goalsVal??0} \u00b7 \ud83c\udd70\ufe0f ${assistsVal??0} \u00b7 \u23f1\ufe0f ${minutes!=null?Math.round(minutes):"—"}${minutes!=null?"\u2019":""}`;
-  ctx.font="800 13px Arial"; ctx.textAlign="center";
-  const badgeW = ctx.measureText(combo).width + 28;
+  ctx.font="700 11px Arial";
+  const naturalW = ctx.measureText(combo).width + 24;
+  const badgeW = Math.min(naturalW, w-8); // ne dépasse jamais la largeur de la carte
   const badgeY=y+h-48;
-  ctx.fillStyle="#f3dcd5"; roundRect(ctx,cx-badgeW/2,badgeY,badgeW,32,16); ctx.fill();
-  ctx.fillStyle="#b95845"; ctx.fillText(combo, cx, badgeY+21);
-  ctx.textAlign="left";
+  ctx.fillStyle=GREIGE; roundRect(ctx,cx-badgeW/2,badgeY,badgeW,32,16); ctx.fill();
+  ctx.fillStyle=INK; fillTextCentered(ctx, combo, cx, badgeY+21);
 }
 
 async function generateScorers(){
@@ -965,7 +982,7 @@ function drawRatedCardMini(ctx,x,y,w,h,rank,p,value,stats,logos){
   ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,y,w,h,18); ctx.stroke();
 
   ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(x+26,y+26,16,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle=WHITE; ctx.font="900 14px Arial"; ctx.textAlign="center"; ctx.fillText(String(rank), x+26, y+31); ctx.textAlign="left";
+  ctx.fillStyle=WHITE; ctx.font="900 14px Arial"; fillTextCentered(ctx, String(rank), x+26, y+31);
 
   const cx=x+w/2, photoY=y+38, photoR=42;
   const img = p.photo && logos[p.photo];
@@ -975,35 +992,35 @@ function drawRatedCardMini(ctx,x,y,w,h,rank,p,value,stats,logos){
   const tlogo = p.teamLogo && logos[p.teamLogo];
   if(tlogo) ctx.drawImage(tlogo, cx+photoR-16, photoY+photoR*2-16, 24, 24);
 
-  ctx.fillStyle=INK; ctx.font="800 15px Arial"; ctx.textAlign="center";
-  ctx.fillText(p.name||"—", cx, photoY+photoR*2+30, w-16);
+  ctx.fillStyle=INK; ctx.font="800 15px Arial";
+  fillTextCentered(ctx, p.name||"—", cx, photoY+photoR*2+30);
   ctx.fillStyle=MUTED; ctx.font="700 11px Arial";
-  ctx.fillText(p.team||"", cx, photoY+photoR*2+47, w-16);
+  fillTextCentered(ctx, p.team||"", cx, photoY+photoR*2+47);
 
   // Poste dans sa propre pilule, sous le nom du club plutôt qu'accolé dessus.
   let statLineY = photoY+photoR*2+66;
   if(p.position){
     ctx.font="800 10px Arial";
-    const pillW = ctx.measureText(p.position.toUpperCase()).width + 22;
+    const posLabel = p.position.toUpperCase();
+    const pillW = ctx.measureText(posLabel).width + 22;
     const pillY = photoY+photoR*2+56;
     ctx.fillStyle=GREIGE; roundRect(ctx,cx-pillW/2,pillY,pillW,20,10); ctx.fill();
-    ctx.fillStyle=INK; ctx.fillText(p.position.toUpperCase(), cx, pillY+14);
+    ctx.fillStyle=INK; fillTextCentered(ctx, posLabel, cx, pillY+14);
     statLineY = pillY + 38;
   }
 
   // Ligne compacte buts / passes / temps de jeu, calculée sur la même
   // fenêtre que le classement affiché (saison entière ou 5 derniers matchs).
   const statLine = `⚽ ${Math.round(stats.goals)} · 🅰️ ${Math.round(stats.assists)} · ⏱️ ${Math.round(stats.minutes)}’`;
-  ctx.fillStyle=INK; ctx.font="700 11px Arial"; ctx.textAlign="center";
-  ctx.fillText(statLine, cx, statLineY, w-12);
-  ctx.textAlign="left";
+  ctx.fillStyle=INK; ctx.font="700 11px Arial";
+  fillTextCentered(ctx, statLine, cx, statLineY);
 
   const cls = value>=7.5?"#dcebe3":value>=6.5?"#e3edf2":value>=5.5?"#f1e5cc":"#f3dcd5";
   const txt = value>=7.5?"#2d6a4f":value>=6.5?"#3e6c81":value>=5.5?"#805e1f":"#b95845";
   const badgeW=64, badgeY=y+h-48;
   ctx.fillStyle=cls; roundRect(ctx,cx-badgeW/2,badgeY,badgeW,32,10); ctx.fill();
-  ctx.fillStyle=txt; ctx.font="900 17px Arial"; ctx.textAlign="center"; ctx.fillText(value.toFixed(1), cx, badgeY+22);
-  ctx.textAlign="left";
+  ctx.fillStyle=txt; ctx.font="900 17px Arial";
+  fillTextCentered(ctx, value.toFixed(1), cx, badgeY+22);
 }
 
 async function generateRated(){
