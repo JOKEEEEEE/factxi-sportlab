@@ -514,8 +514,10 @@ async function generateScorers(){
   entries.filter(isGoalEntry).forEach(e=>goalsByPlayer[playerKeyOf(e)]=e);
   entries.filter(isAssistEntry).forEach(e=>assistsByPlayer[playerKeyOf(e)]=e);
   entries.forEach(e=>{
-    const pos = e.player && e.player.position && (e.player.position.name || e.player.position.developer_name);
-    if(pos) positionByPlayer[playerKeyOf(e)] = POSITION_FR[pos] || pos;
+    // Confirmé sur un vrai exemple : position_id numérique brut directement
+    // sur l'objet player, pas de player.position.name imbriqué.
+    const pos = positionFromId(e.player && e.player.position_id);
+    if(pos) positionByPlayer[playerKeyOf(e)] = pos;
   });
 
   const fallbackNote = usedFallback && hasSeasonVal ? ` (données de la saison ${seasonLabel(seasonSelVal)} pas encore récupérées, saison courante affichée à la place)` : "";
@@ -887,26 +889,21 @@ async function initRatedSelect(){
   populateCompAndSeason("#ratedCompSelect", "#ratedSeasonSelect");
 }
 
-// NOTE : le poste ("position") du joueur n'a pas encore été vérifié sur un
-// vrai exemple de données — l'include utilisé jusqu'ici pour les lineups ne
-// demandait pas explicitement cette relation. Détection défensive ci-dessous
-// (plusieurs noms de champ possibles) ; si rien ne matche, la case reste
-// vide plutôt que d'inventer un poste. À reconfirmer une fois les scripts de
-// récupération mis à jour pour inclure "lineups.player.position".
-// Traduction des postes SportMonks (retournés en anglais) vers le français.
-// Repli sur la valeur brute si un poste imprévu apparaît, plutôt que de
-// rien afficher.
-const POSITION_FR = {
-  "Goalkeeper":"Gardien", "Defender":"Défenseur", "Midfielder":"Milieu", "Attacker":"Attaquant",
-  "Centre Back":"Défenseur central", "Left Back":"Latéral gauche", "Right Back":"Latéral droit",
-  "Defensive Midfield":"Milieu défensif", "Central Midfield":"Milieu central", "Attacking Midfield":"Milieu offensif",
-  "Left Midfield":"Milieu gauche", "Right Midfield":"Milieu droit",
-  "Left Winger":"Ailier gauche", "Right Winger":"Ailier droit", "Centre Forward":"Avant-centre", "Striker":"Attaquant",
-};
+// Poste du joueur : confirmé sur un vrai exemple de réponse SportMonks —
+// PAS d'objet "position.name" imbriqué, seulement un "position_id" numérique
+// brut (24=Gardien, 25=Défenseur, 26=Milieu, 27=Attaquant), table de
+// référence stable et documentée officiellement. On reste volontairement sur
+// ces 4 catégories simples (pas le detailed_position_id, plus précis mais
+// avec une dizaine de valeurs — trop pour une petite carte).
+const POSITION_ID_FR = {24:"Gardien", 25:"Défenseur", 26:"Milieu", 27:"Attaquant"};
+function positionFromId(id){ return id!=null ? (POSITION_ID_FR[id] || null) : null; }
+// Cherche l'ID de poste à plusieurs endroits possibles selon la source
+// (lineup de match-detail vs entrée topscorers), sans jamais inventer une
+// valeur si rien n'est trouvé.
 function playerPosition(l){
   const p = l.player || {};
-  const raw = (p.position && (p.position.name || p.position.developer_name)) || (l.position && l.position.name) || null;
-  return raw ? (POSITION_FR[raw] || raw) : null;
+  const id = l.position_id ?? p.position_id ?? null;
+  return positionFromId(id);
 }
 
 // Détection défensive de statistiques dans les détails d'une composition —

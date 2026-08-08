@@ -175,7 +175,13 @@ class SportMonksProvider(FootballDataProvider):
     def get_raw_topscorers(
         self, season_id: int, *, include: str = "player;participant;type"
     ) -> list[JsonObject]:
-        """Meilleurs buteurs/passeurs/cartons d'une saison, réponse brute (non normalisée)."""
+        """Meilleurs buteurs/passeurs/cartons d'une saison, réponse brute (non normalisée).
+
+        Le poste du joueur (position_id) est un champ numérique déjà présent
+        directement sur "player" avec ce seul include — confirmé sur un vrai
+        exemple de réponse. Pas besoin d'un include "player.position" séparé,
+        qui ne résout de toute façon rien d'utile sur cet endpoint.
+        """
         rows, _ = self._get(f"topscorers/seasons/{season_id}", {"include": include})
         return rows
 

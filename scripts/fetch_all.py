@@ -36,7 +36,7 @@ OUT_PATH = DATA_DIR / "matches.json"
 DETAIL_INCLUDES = (
     "participants;scores;state;venue;round;coaches.country;"
     "events.type;events.period;events.player;"
-    "lineups.player.country;lineups.player.position;lineups.details.type;lineups.xGlineup;"
+    "lineups.player.country;lineups.details.type;lineups.xGlineup;"
     "statistics.type;"
     "xGFixture;pressure;weatherReport"
 )
