@@ -445,7 +445,7 @@ function populateCompAndSeason(compSelId, seasonSelId){
 async function initScorersSelect(){
   populateCompAndSeason("#scorersCompSelect", "#scorersSeasonSelect");
 }
-function drawScorerCardMini(ctx,x,y,w,h,rank,goalsEntry,assistsEntry,position,minutes,rankValue,logos){
+function drawScorerCardMini(ctx,x,y,w,h,rank,goalsEntry,assistsEntry,position,minutes,logos){
   ctx.fillStyle=WHITE; roundRect(ctx,x,y,w,h,18); ctx.fill();
   ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,y,w,h,18); ctx.stroke();
 
@@ -462,36 +462,34 @@ function drawScorerCardMini(ctx,x,y,w,h,rank,goalsEntry,assistsEntry,position,mi
   const tlogo = team.image_path && logos[team.image_path];
   if(tlogo) ctx.drawImage(tlogo, cx+photoR-16, photoY+photoR*2-16, 24, 24);
 
+  // Même empilement vertical que "Meilleurs joueurs", tout centré sur le
+  // même axe cx : photo, nom, club, poste. Rien d'autre entre le club et la
+  // pilule finale — plus de ligne de stats séparée.
   ctx.fillStyle=INK; ctx.font="800 15px Arial"; ctx.textAlign="center";
   ctx.fillText(player.display_name||player.name||"—", cx, photoY+photoR*2+30, w-16);
   ctx.fillStyle=MUTED; ctx.font="700 11px Arial";
   ctx.fillText(team.name||"", cx, photoY+photoR*2+47, w-16);
 
-  // Poste dans sa propre pilule, même traitement que sur la carte
-  // "Meilleurs joueurs" — vient de player.position sur l'entrée Topscorers.
-  let statLineY = photoY+photoR*2+66;
   if(position){
     ctx.font="800 10px Arial";
     const pillW = ctx.measureText(position.toUpperCase()).width + 22;
     const pillY = photoY+photoR*2+56;
     ctx.fillStyle=GREIGE; roundRect(ctx,cx-pillW/2,pillY,pillW,20,10); ctx.fill();
     ctx.fillStyle=INK; ctx.fillText(position.toUpperCase(), cx, pillY+14);
-    statLineY = pillY + 38;
   }
 
-  // Une seule ligne combinée, même format que "Meilleurs joueurs" — pas deux
-  // pilules séparées. Les minutes ne viennent pas de Topscorers (confirmé
-  // absent, seulement Goals/Cards/Assists) mais de l'agrégation des détails
-  // de match, la même source que la carte Meilleurs joueurs.
+  // Les trois stats (buts, passes, minutes) regroupées dans une seule grande
+  // pilule en bas, à la place d'un simple chiffre isolé. Les minutes ne
+  // viennent pas de Topscorers (confirmé absent, seulement Goals/Cards/
+  // Assists) mais de l'agrégation des détails de match, même source que la
+  // carte "Meilleurs joueurs".
   const goalsVal = goalsEntry?scorerValue(goalsEntry):0, assistsVal = assistsEntry?scorerValue(assistsEntry):0;
-  const statLine = `\u26bd ${goalsVal??0} \u00b7 \ud83c\udd70\ufe0f ${assistsVal??0} \u00b7 \u23f1\ufe0f ${minutes!=null?Math.round(minutes):"—"}${minutes!=null?"\u2019":""}`;
-  ctx.fillStyle=INK; ctx.font="700 11px Arial"; ctx.textAlign="center";
-  ctx.fillText(statLine, cx, statLineY, w-12);
-  ctx.textAlign="left";
-
-  const badgeW=64, badgeY=y+h-48;
-  ctx.fillStyle="#f3dcd5"; roundRect(ctx,cx-badgeW/2,badgeY,badgeW,32,10); ctx.fill();
-  ctx.fillStyle="#b95845"; ctx.font="900 17px Arial"; ctx.textAlign="center"; ctx.fillText(String(rankValue??"—"), cx, badgeY+22);
+  const combo = `\u26bd ${goalsVal??0} \u00b7 \ud83c\udd70\ufe0f ${assistsVal??0} \u00b7 \u23f1\ufe0f ${minutes!=null?Math.round(minutes):"—"}${minutes!=null?"\u2019":""}`;
+  ctx.font="800 13px Arial"; ctx.textAlign="center";
+  const badgeW = ctx.measureText(combo).width + 28;
+  const badgeY=y+h-48;
+  ctx.fillStyle="#f3dcd5"; roundRect(ctx,cx-badgeW/2,badgeY,badgeW,32,16); ctx.fill();
+  ctx.fillStyle="#b95845"; ctx.fillText(combo, cx, badgeY+21);
   ctx.textAlign="left";
 }
 
@@ -570,7 +568,7 @@ async function generateScorers(){
       const key = playerKeyOf(e);
       drawScorerCardMini(ctx,x,rowY,cardW,cardH,i+1,
         goalsByPlayer[key]||null, assistsByPlayer[key]||null,
-        positionByPlayer[key], minutesByPlayer[key], scorerValue(e), logos);
+        positionByPlayer[key], minutesByPlayer[key], logos);
     });
     return rowY+cardH;
   };
