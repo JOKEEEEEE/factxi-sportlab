@@ -503,35 +503,62 @@ function teamStreaks(teamName, compId, season){
   const matches = (MATCHES_BY_COMP[compId]||[])
     .filter(m=>m.status==="finished" && String(m.season)===String(season) && (m.home.name===teamName || m.away.name===teamName))
     .sort((a,b)=>new Date(b.kickoff)-new Date(a.kickoff));
-  let win=0, unbeaten=0, loss=0, cleanSheet=0, scoring=0, winless=0;
-  let stopWin=false, stopUnbeaten=false, stopLoss=false, stopClean=false, stopScoring=false, stopWinless=false;
+  const state = {
+    win: {count:0, stopped:false, startMatch:null},
+    unbeaten: {count:0, stopped:false, startMatch:null},
+    loss: {count:0, stopped:false, startMatch:null},
+    cleanSheet: {count:0, stopped:false, startMatch:null},
+    scoring: {count:0, stopped:false, startMatch:null},
+    winless: {count:0, stopped:false, startMatch:null},
+  };
+  const bump = (key, condition, m) => {
+    const s = state[key];
+    if(s.stopped) return;
+    if(condition){ s.count++; s.startMatch = m; } else s.stopped = true;
+  };
   for(const m of matches){
     const isHome = m.home.name===teamName;
     const gf = isHome?m.home_score:m.away_score, ga = isHome?m.away_score:m.home_score;
     if(gf==null||ga==null) continue;
     const result = gf>ga?"w":gf<ga?"l":"d";
-    if(!stopWin){ if(result==="w") win++; else stopWin=true; }
-    if(!stopUnbeaten){ if(result!=="l") unbeaten++; else stopUnbeaten=true; }
-    if(!stopLoss){ if(result==="l") loss++; else stopLoss=true; }
-    if(!stopClean){ if(ga===0) cleanSheet++; else stopClean=true; }
-    if(!stopScoring){ if(gf>0) scoring++; else stopScoring=true; }
-    if(!stopWinless){ if(result!=="w") winless++; else stopWinless=true; }
+    bump("win", result==="w", m);
+    bump("unbeaten", result!=="l", m);
+    bump("loss", result==="l", m);
+    bump("cleanSheet", ga===0, m);
+    bump("scoring", gf>0, m);
+    bump("winless", result!=="w", m);
   }
-  return {win,unbeaten,loss,cleanSheet,scoring,winless};
+  const out = {};
+  for(const k in state) out[k] = state[k].count;
+  out._startMatch = {};
+  for(const k in state) out._startMatch[k] = state[k].startMatch;
+  return out;
 }
 
 async function initStreaksSelect(){
   populateCompAndSeason("#streaksCompSelect", "#streaksSeasonSelect");
 }
+
+// Renvoie TOUTES les équipes à égalité sur la meilleure valeur — jamais une
+// seule choisie arbitrairement. Chaque entrée porte sa propre date de début
+// de série (premier match de la série en cours, avec sa journée).
 function bestStreak(compId, key, season){
   const matches = (MATCHES_BY_COMP[compId]||[]).filter(m=>String(m.season)===String(season));
   const teams = [...new Set(matches.flatMap(m=>[m.home.name, m.away.name]))];
-  let best=null;
+  let bestValue = 0;
+  const perTeam = {};
   teams.forEach(t=>{
     const s = teamStreaks(t, compId, season);
-    if(s[key] >= STREAK_THRESHOLD && (!best || s[key] > best.value)) best = {team:t, value:s[key]};
+    if(s[key] >= STREAK_THRESHOLD){
+      perTeam[t] = {value:s[key], startMatch:s._startMatch[key]};
+      if(s[key] > bestValue) bestValue = s[key];
+    }
   });
-  return best;
+  const tied = Object.entries(perTeam)
+    .filter(([,v])=>v.value===bestValue)
+    .map(([team,v])=>({team, startMatch:v.startMatch}));
+  if(!tied.length) return null;
+  return {value:bestValue, teams:tied};
 }
 async function generateStreaks(){
   const compId = document.querySelector("#streaksCompSelect").value;
@@ -558,7 +585,7 @@ async function generateStreaks(){
     ? `Séries calculées sur la saison ${seasonLabel(season)} uniquement.`
     : `Aucune série ne dépasse le seuil de 3 sur la saison ${seasonLabel(season)}.`;
 
-  const teamLogosNeeded = results.map(r=>r.best && r.best.team).filter(Boolean);
+  const teamLogosNeeded = results.flatMap(r=>r.best ? r.best.teams.map(t=>t.team) : []);
   const logos={};
   for(const t of teamLogosNeeded){
     const matches = MATCHES_BY_COMP[compId]||[];
@@ -571,23 +598,64 @@ async function generateStreaks(){
 
   drawBanner(ctx, comp, compLogo, "Séries en cours", season, 1200, 166, 50);
 
-  const rowH = 96, cardGap = 18;
+  const startDateLabel=(m)=>{
+    if(!m) return "";
+    const d = new Date(m.kickoff).toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+    const round = m.round ? ` (Journée ${m.round}, saison ${seasonLabel(m.season)})` : "";
+    return `Depuis le ${d}${round}`;
+  };
+
+  // Hauteur de carte adaptée au nombre d'équipes à égalité : plus il y en a,
+  // plus il faut de place, jusqu'à un plafond où on bascule en logos seuls.
+  const cardH=(r)=>{
+    if(!r.best) return 70;
+    const n=r.best.teams.length;
+    if(n===1) return 112;
+    if(n<=5) return 96;
+    return 84;
+  };
+  const rowGap = 18;
   let y=250;
   results.forEach(r=>{
-    ctx.fillStyle=WHITE; roundRect(ctx,50,y,1100,rowH,16); ctx.fill();
-    ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,50,y,1100,rowH,16); ctx.stroke();
+    const h = cardH(r);
+    ctx.fillStyle=WHITE; roundRect(ctx,50,y,1100,h,16); ctx.fill();
+    ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,50,y,1100,h,16); ctx.stroke();
     ctx.fillStyle=CORAL; ctx.font="900 12px Arial"; ctx.fillText(r.label.toUpperCase(), 78, y+26);
-    if(r.best){
-      const logo=logos[r.best.team];
-      if(logo) ctx.drawImage(logo, 78, y+38, 46, 46);
-      else { ctx.fillStyle=GREIGE; roundRect(ctx,78,y+38,46,46,10); ctx.fill(); }
-      ctx.fillStyle=INK; ctx.font="800 20px Arial"; ctx.fillText(r.best.team, 138, y+58);
+
+    if(!r.best){
+      ctx.fillStyle=MUTED; ctx.font="700 13px Arial"; ctx.fillText("Aucune équipe n'atteint le seuil de 3 pour l'instant.", 78, y+50);
+    } else if(r.best.teams.length===1){
+      const t=r.best.teams[0], logo=logos[t.team];
+      if(logo) ctx.drawImage(logo, 78, y+40, 46, 46);
+      else { ctx.fillStyle=GREIGE; roundRect(ctx,78,y+40,46,46,10); ctx.fill(); }
+      ctx.fillStyle=INK; ctx.font="800 20px Arial"; ctx.fillText(t.team, 138, y+58);
       ctx.fillStyle=MUTED; ctx.font="700 12px Arial"; ctx.fillText(`${r.best.value} ${r.suffix}`, 138, y+78);
+      ctx.fillStyle=MUTED; ctx.font="700 11px Arial"; ctx.fillText(startDateLabel(t.startMatch), 138, y+96);
       ctx.fillStyle=CORAL; ctx.font="900 40px Arial"; ctx.textAlign="right"; ctx.fillText(String(r.best.value), 1130, y+66); ctx.textAlign="left";
+    } else if(r.best.teams.length<=5){
+      ctx.fillStyle=CORAL; ctx.font="900 36px Arial"; ctx.textAlign="right"; ctx.fillText(String(r.best.value), 1130, y+50); ctx.textAlign="left";
+      ctx.fillStyle=MUTED; ctx.font="700 11px Arial"; ctx.textAlign="right"; ctx.fillText(r.suffix, 1130, y+68); ctx.textAlign="left";
+      let tx=78;
+      r.best.teams.forEach(t=>{
+        const logo=logos[t.team];
+        if(logo) ctx.drawImage(logo, tx, y+40, 32, 32);
+        else { ctx.fillStyle=GREIGE; roundRect(ctx,tx,y+40,32,32,8); ctx.fill(); }
+        ctx.fillStyle=INK; ctx.font="700 13px Arial"; ctx.fillText(t.team, tx+40, y+62);
+        tx += 40 + ctx.measureText(t.team).width + 26;
+      });
     } else {
-      ctx.fillStyle=MUTED; ctx.font="700 13px Arial"; ctx.fillText("Aucune équipe n'atteint le seuil de 3 pour l'instant.", 78, y+58);
+      ctx.fillStyle=INK; ctx.font="800 18px Arial"; ctx.fillText(`Plusieurs équipes (${r.best.teams.length})`, 78, y+50);
+      ctx.fillStyle=MUTED; ctx.font="700 12px Arial"; ctx.fillText(`${r.best.value} ${r.suffix}, à égalité`, 78, y+70);
+      let lx=78;
+      r.best.teams.forEach(t=>{
+        const logo=logos[t.team];
+        if(logo) ctx.drawImage(logo, lx, y+78, 24, 24);
+        else { ctx.fillStyle=GREIGE; roundRect(ctx,lx,y+78,24,24,6); ctx.fill(); }
+        lx += 30;
+      });
+      ctx.fillStyle=CORAL; ctx.font="900 32px Arial"; ctx.textAlign="right"; ctx.fillText(String(r.best.value), 1130, y+52); ctx.textAlign="left";
     }
-    y += rowH + cardGap;
+    y += h + rowGap;
   });
 
   drawSignature(ctx, brandLogo, 1200-50-220, 1200-90);
