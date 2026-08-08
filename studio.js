@@ -537,11 +537,11 @@ async function generateScorers(){
   const brandLogo = await loadImage("logo-factxi.png");
   const compLogo = comp.logo_url ? await loadImage(comp.logo_url) : null;
 
-  // Même grille 5 cartes/ligne que "Meilleurs joueurs", hauteur calculée sur
-  // le contenu réel (1 ou 2 lignes selon ce qui existe).
+  // Même grille 5 cartes/ligne que "Meilleurs joueurs". Format fixe 1200×1200,
+  // comme les 3 autres générateurs — le bandeau et la signature doivent
+  // rester à la même position exacte quelle que soit l'image affichée.
   const leftX=50, gap=16, cardW=(1100-4*gap)/5, cardH=290, labelH=22, rowGap=50, contentStartY=260;
-  const nRows = (goals.length?1:0) + (assists.length?1:0);
-  const LOGICAL_H = contentStartY + nRows*(labelH+cardH) + (nRows>1?rowGap:0) + 130;
+  const LOGICAL_H = 1200;
   const ctx = setupCanvas(canvas,1200,LOGICAL_H);
   ctx.fillStyle=WHITE; ctx.fillRect(0,0,1200,LOGICAL_H);
 
@@ -566,7 +566,7 @@ async function generateScorers(){
   if(goals.length && assists.length) y += rowGap;
   drawRow("MEILLEURS PASSEURS", assists, y);
 
-  drawSignature(ctx, brandLogo, 1200-50-220, LOGICAL_H-90);
+  drawSignature(ctx, brandLogo, 1200-50-220, 1098); // même position exacte que le calendrier
   document.querySelector("#scorersDlBtn").disabled=false;
 }
 document.querySelector("#scorersGenBtn").onclick=generateScorers;
@@ -745,11 +745,10 @@ async function generateStreaks(){
   const compLogo = comp.logo_url ? await loadImage(comp.logo_url) : null;
   const brandLogo = await loadImage("logo-factxi.png");
 
-  // Hauteur calculée sur le contenu réel (toujours 6 catégories, donc 3
-  // lignes) plutôt que fixée à 1200 — plus de grand vide en bas.
+  // Format fixe 1200×1200, comme les 3 autres générateurs — le bandeau et la
+  // signature doivent rester à la même position exacte sur les 4 images.
   const gap=20, colW=(1100-gap)/2, cellH=200, leftX=50, contentStartY=250;
-  const nRows = Math.ceil(results.length/2);
-  const LOGICAL_H = contentStartY + nRows*cellH + (nRows-1)*gap + 130;
+  const LOGICAL_H = 1200;
   const ctx = setupCanvas(canvasEl,1200,LOGICAL_H);
   ctx.fillStyle=WHITE; ctx.fillRect(0,0,1200,LOGICAL_H);
 
@@ -825,7 +824,7 @@ async function generateStreaks(){
     }
   });
 
-  drawSignature(ctx, brandLogo, 1200-50-220, LOGICAL_H-90);
+  drawSignature(ctx, brandLogo, 1200-50-220, 1098); // même position exacte que le calendrier
   document.querySelector("#streaksDlBtn").disabled=false;
 }
 document.querySelector("#streaksGenBtn").onclick=generateStreaks;
@@ -1010,7 +1009,9 @@ async function generateRated(){
   const leftX=50, gap=16, cardW=(1100-4*gap)/5, cardH=316;
   const labelH=22, rowGap=50;
   const contentStartY=260;
-  const LOGICAL_H = contentStartY + labelH + cardH + rowGap + labelH + cardH + 130; // + marge pied de page
+  // Format fixe 1200×1200, comme les 3 autres générateurs — le bandeau et la
+  // signature doivent rester à la même position exacte sur les 4 images.
+  const LOGICAL_H = 1200;
   const ctx = setupCanvas(canvas,1200,LOGICAL_H);
   ctx.fillStyle=WHITE; ctx.fillRect(0,0,1200,LOGICAL_H);
 
@@ -1059,7 +1060,7 @@ async function generateRated(){
 
   ctx.fillStyle=MUTED; ctx.font="700 12px Arial";
   ctx.fillText(`Saison ${seasonLabel(season)} uniquement · minimum ${RATED_MIN_APPEARANCES} apparitions.`, 50, LOGICAL_H-56);
-  drawSignature(ctx, brandLogo, 1200-50-220, LOGICAL_H-90);
+  drawSignature(ctx, brandLogo, 1200-50-220, 1098); // même position exacte que le calendrier
   document.querySelector("#ratedDlBtn").disabled=false;
 }
 document.querySelector("#ratedGenBtn").onclick=generateRated;
