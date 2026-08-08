@@ -23,6 +23,39 @@ async function fetchJson(url){
   }catch(e){ return null; }
 }
 
+let SYNCING = false; // garde-fou anti-boucle infinie pendant la synchronisation
+
+// Synchronise compétition + saison sur les 4 générateurs à la fois — évite
+// de re-choisir la même chose quatre fois. Propage uniquement vers les
+// sélecteurs où cette compétition/saison existe réellement.
+function syncSelectors(compId, seasonVal){
+  if(SYNCING) return;
+  SYNCING = true;
+  const pairs = [
+    ["#compSelect","#seasonSelect"],
+    ["#scorersCompSelect","#scorersSeasonSelect"],
+    ["#streaksCompSelect","#streaksSeasonSelect"],
+    ["#ratedCompSelect","#ratedSeasonSelect"],
+  ];
+  pairs.forEach(([compSelId, seasonSelId])=>{
+    const compSel = document.querySelector(compSelId);
+    if(!compSel) return;
+    const hasComp = Array.from(compSel.options||[]).some(o=>o.value===compId);
+    if(hasComp && compSel.value!==compId){
+      compSel.value = compId;
+      if(compSel.onchange) compSel.onchange();
+    }
+    if(seasonVal!=null){
+      const seasonSel = document.querySelector(seasonSelId);
+      if(seasonSel){
+        const hasSeason = Array.from(seasonSel.options||[]).some(o=>o.value===String(seasonVal));
+        if(hasSeason) seasonSel.value = String(seasonVal);
+      }
+    }
+  });
+  SYNCING = false;
+}
+
 function leagueNumericId(id){ return (id||"").split(":").pop(); }
 
 async function init(){
@@ -55,7 +88,7 @@ async function init(){
 
   const select = document.querySelector("#compSelect");
   select.innerHTML = COMPETITIONS.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
-  select.onchange = ()=>{ populateSeasons(); };
+  select.onchange = ()=>{ populateSeasons(); if(!SYNCING) syncSelectors(select.value, null); };
   populateSeasons();
 }
 
@@ -78,7 +111,7 @@ function populateSeasons(){
   const sel = document.querySelector("#seasonSelect");
   if(!seasons.length){ sel.innerHTML = `<option>Aucune saison</option>`; populateRounds(); return; }
   sel.innerHTML = seasons.map(s=>`<option value="${s}">${seasonLabel(s)}</option>`).join("");
-  sel.onchange = populateRounds;
+  sel.onchange = ()=>{ populateRounds(); if(!SYNCING) syncSelectors(document.querySelector("#compSelect").value, sel.value); };
   populateRounds();
 }
 
@@ -114,14 +147,21 @@ async function getStandingsMap(compId){
   const numId = leagueNumericId(compId);
   const payload = await fetchJson(`data/standings-${numId}.json`);
   const map = {};
+  let anyPlayed = false;
   if(payload && Array.isArray(payload.standings)){
     payload.standings.forEach(s=>{
       const name = s.participant && s.participant.name;
+      const mj = (s.details||[]).find(d=>d.type_id===129);
+      if(mj && Number(mj.value)>0) anyPlayed = true;
       if(name) map[name] = s.position;
     });
   }
-  STANDINGS_CACHE[compId] = map;
-  return map;
+  // Avant la toute première journée, un "classement" n'a aucun sens (tout le
+  // monde à 0 match joué) — l'afficher induirait en erreur plutôt que
+  // d'informer. On renvoie une correspondance vide dans ce cas précis.
+  const result = anyPlayed ? map : {};
+  STANDINGS_CACHE[compId] = result;
+  return result;
 }
 
 function groupByDay(matches){
@@ -400,8 +440,9 @@ function populateCompAndSeason(compSelId, seasonSelId){
     seasonSel.innerHTML = seasons.map(s=>`<option value="${s}">${seasonLabel(s)}</option>`).join("");
     const def = bestSeasonForStreaks(compSel.value);
     if(def!=null) seasonSel.value = def;
+    seasonSel.onchange = ()=>{ if(!SYNCING) syncSelectors(compSel.value, seasonSel.value); };
   };
-  compSel.onchange = refreshSeasons;
+  compSel.onchange = ()=>{ refreshSeasons(); if(!SYNCING) syncSelectors(compSel.value, null); };
   refreshSeasons();
 }
 
@@ -563,8 +604,7 @@ function bestStreak(compId, key, season){
 async function generateStreaks(){
   const compId = document.querySelector("#streaksCompSelect").value;
   const comp = COMPETITIONS.find(c=>c.id===compId);
-  const canvas = document.querySelector("#cStreaks"), ctx = setupCanvas(canvas,1200,1200);
-  ctx.fillStyle=WHITE; ctx.fillRect(0,0,1200,1200);
+  const canvasEl = document.querySelector("#cStreaks");
   if(!comp){ document.querySelector("#streaksGenNote").textContent="Compétition introuvable."; return; }
   const seasonSelVal = document.querySelector("#streaksSeasonSelect").value;
   const season = seasonSelVal && seasonSelVal!=="Aucune saison" ? seasonSelVal : bestSeasonForStreaks(compId);
@@ -596,6 +636,14 @@ async function generateStreaks(){
   const compLogo = comp.logo_url ? await loadImage(comp.logo_url) : null;
   const brandLogo = await loadImage("logo-factxi.png");
 
+  // Hauteur calculée sur le contenu réel (toujours 6 catégories, donc 3
+  // lignes) plutôt que fixée à 1200 — plus de grand vide en bas.
+  const gap=20, colW=(1100-gap)/2, cellH=200, leftX=50, contentStartY=250;
+  const nRows = Math.ceil(results.length/2);
+  const LOGICAL_H = contentStartY + nRows*cellH + (nRows-1)*gap + 130;
+  const ctx = setupCanvas(canvasEl,1200,LOGICAL_H);
+  ctx.fillStyle=WHITE; ctx.fillRect(0,0,1200,LOGICAL_H);
+
   drawBanner(ctx, comp, compLogo, "Séries en cours", season, 1200, 166, 50);
 
   const startDateLabel=(m)=>{
@@ -609,20 +657,19 @@ async function generateStreaks(){
   // relief à un format qui a maintenant 6 catégories. Le grand chiffre porte
   // toujours son unité ("MATCHS") juste en dessous, donc plus besoin de
   // répéter "N matchs sans défaite" en toutes lettres à côté du nom d'équipe.
-  const gap=20, colW=(1100-gap)/2, cellH=200, leftX=50;
   results.forEach((r,idx)=>{
     const col = idx%2, row = Math.floor(idx/2);
-    const x = leftX + col*(colW+gap), y = 250 + row*(cellH+gap);
+    const x = leftX + col*(colW+gap), y = contentStartY + row*(cellH+gap);
 
     ctx.fillStyle=WHITE; roundRect(ctx,x,y,colW,cellH,18); ctx.fill();
     ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,y,colW,cellH,18); ctx.stroke();
     ctx.fillStyle=CORAL; ctx.font="900 13px Arial"; ctx.fillText(r.label.toUpperCase(), x+26, y+34);
 
-    // Bloc chiffre + unité, toujours en haut à droite de la carte.
-    const numX = x+colW-30;
+    // Bloc chiffre + unité, centré verticalement dans la carte (pas plaqué en haut).
+    const numX = x+colW-30, numCy = y+cellH/2;
     if(r.best){
-      ctx.fillStyle=CORAL; ctx.font="900 52px Arial"; ctx.textAlign="right"; ctx.fillText(String(r.best.value), numX, y+80); ctx.textAlign="left";
-      ctx.fillStyle=MUTED; ctx.font="800 10px Arial"; ctx.textAlign="right"; ctx.fillText("MATCHS", numX, y+96); ctx.textAlign="left";
+      ctx.fillStyle=CORAL; ctx.font="900 52px Arial"; ctx.textAlign="right"; ctx.fillText(String(r.best.value), numX, numCy+10); ctx.textAlign="left";
+      ctx.fillStyle=MUTED; ctx.font="800 10px Arial"; ctx.textAlign="right"; ctx.fillText("MATCHS", numX, numCy+26); ctx.textAlign="left";
     }
 
     if(!r.best){
@@ -655,7 +702,7 @@ async function generateStreaks(){
     }
   });
 
-  drawSignature(ctx, brandLogo, 1200-50-220, 1200-90);
+  drawSignature(ctx, brandLogo, 1200-50-220, LOGICAL_H-90);
   document.querySelector("#streaksDlBtn").disabled=false;
 }
 document.querySelector("#streaksGenBtn").onclick=generateStreaks;
@@ -775,7 +822,7 @@ function drawRatedCardMini(ctx,x,y,w,h,rank,p,value,stats,logos){
 
   // Ligne compacte buts / passes / temps de jeu, calculée sur la même
   // fenêtre que le classement affiché (saison entière ou 5 derniers matchs).
-  const statLine = `${stats.goals} but${stats.goals>1?"s":""} · ${stats.assists} passe${stats.assists>1?"s":""} · ${stats.minutes}’`;
+  const statLine = `⚽ ${stats.goals} · 🅰️ ${stats.assists} · ⏱️ ${stats.minutes}’`;
   ctx.fillStyle=INK; ctx.font="700 11px Arial";
   ctx.fillText(statLine, cx, photoY+photoR*2+66, w-12);
 
