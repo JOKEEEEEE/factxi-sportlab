@@ -33,7 +33,7 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 DETAIL_INCLUDES = (
     "participants;scores;state;venue;round;coaches.country;"
     "events.type;events.period;events.player;"
-    "lineups.player.country;lineups.details;lineups.xGlineup;"
+    "lineups.player.country;lineups.player.position;lineups.details.type;lineups.xGlineup;"
     "statistics.type;"
     "xGFixture;pressure;weatherReport"
 )
@@ -101,6 +101,64 @@ def fetch_match_details(provider: SportMonksProvider, matches: list) -> int:
         )
         written += 1
     return written
+
+
+def _season_slug(season_name: str) -> str:
+    # "2025/2026" -> "2025-2026", pour un nom de fichier valide sur tous les OS.
+    return season_name.replace("/", "-")
+
+
+def fetch_season_standings_and_topscorers(
+    provider: SportMonksProvider, competition, season_id: int, season_name: str
+) -> None:
+    """Récupère classement + buteurs/passeurs pour UNE saison précise (pas
+    forcément la saison en cours) et les écrit dans des fichiers dédiés,
+    distincts de ceux de la fenêtre glissante quotidienne.
+    """
+    league_id = int(competition.id.removeprefix("sportmonks:league:"))
+    slug = _season_slug(season_name)
+
+    standings_path = DATA_DIR / f"standings-{league_id}-{slug}.json"
+    if not standings_path.exists():
+        try:
+            rows = provider.get_raw_standings(season_id)
+            payload = {
+                "fetched_at": datetime.now(UTC).isoformat(),
+                "competition": asdict(competition),
+                "season_id": season_id,
+                "season_name": season_name,
+                "standings": rows,
+            }
+            standings_path.write_text(
+                json.dumps(payload, indent=2, ensure_ascii=False, default=_json_default),
+                encoding="utf-8",
+            )
+            print(f"  Classement saison {season_name} écrit ({len(rows)} ligne(s)).")
+        except ProviderError as exc:
+            print(f"  Erreur classement saison {season_name} : {exc}")
+    else:
+        print(f"  Classement saison {season_name} déjà présent, ignoré.")
+
+    topscorers_path = DATA_DIR / f"topscorers-{league_id}-{slug}.json"
+    if not topscorers_path.exists():
+        try:
+            rows = provider.get_raw_topscorers(season_id)
+            payload = {
+                "fetched_at": datetime.now(UTC).isoformat(),
+                "competition": asdict(competition),
+                "season_id": season_id,
+                "season_name": season_name,
+                "topscorers": rows,
+            }
+            topscorers_path.write_text(
+                json.dumps(payload, indent=2, ensure_ascii=False, default=_json_default),
+                encoding="utf-8",
+            )
+            print(f"  Buteurs/passeurs saison {season_name} écrits ({len(rows)} ligne(s)).")
+        except ProviderError as exc:
+            print(f"  Erreur buteurs/passeurs saison {season_name} : {exc}")
+    else:
+        print(f"  Buteurs/passeurs saison {season_name} déjà présents, ignorés.")
 
 
 def main() -> int:
@@ -183,6 +241,8 @@ def main() -> int:
         # sans jamais écraser le fichier résumé quotidien.
         written = fetch_match_details(provider, matches)
         print(f"  {written} nouveau(x) détail(s) de match écrit(s).")
+
+        fetch_season_standings_and_topscorers(provider, competition, target["id"], args.season_name)
 
         history_entries.append(
             {

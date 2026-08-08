@@ -33,7 +33,7 @@ from sportlab.providers.sportmonks import ProviderError, SportMonksProvider  # n
 INCLUDES = (
     "participants;scores;state;venue;round;coaches.country;"
     "events.type;events.period;events.player;"
-    "lineups.player.country;lineups.details;lineups.xGlineup;"
+    "lineups.player.country;lineups.player.position;lineups.details.type;lineups.xGlineup;"
     "statistics.type;"
     "xGFixture;pressure;weatherReport"
 )

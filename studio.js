@@ -601,61 +601,58 @@ async function generateStreaks(){
   const startDateLabel=(m)=>{
     if(!m) return "";
     const d = new Date(m.kickoff).toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
-    const round = m.round ? ` (Journée ${m.round}, saison ${seasonLabel(m.season)})` : "";
+    const round = m.round ? ` · Journée ${m.round}` : "";
     return `Depuis le ${d}${round}`;
   };
 
-  // Hauteur de carte adaptée au nombre d'équipes à égalité : plus il y en a,
-  // plus il faut de place, jusqu'à un plafond où on bascule en logos seuls.
-  const cardH=(r)=>{
-    if(!r.best) return 70;
-    const n=r.best.teams.length;
-    if(n===1) return 112;
-    if(n<=5) return 96;
-    return 84;
-  };
-  const rowGap = 18;
-  let y=250;
-  results.forEach(r=>{
-    const h = cardH(r);
-    ctx.fillStyle=WHITE; roundRect(ctx,50,y,1100,h,16); ctx.fill();
-    ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,50,y,1100,h,16); ctx.stroke();
-    ctx.fillStyle=CORAL; ctx.font="900 12px Arial"; ctx.fillText(r.label.toUpperCase(), 78, y+26);
+  // Grille 2 colonnes × 3 lignes plutôt qu'une pile verticale — donne plus de
+  // relief à un format qui a maintenant 6 catégories. Le grand chiffre porte
+  // toujours son unité ("MATCHS") juste en dessous, donc plus besoin de
+  // répéter "N matchs sans défaite" en toutes lettres à côté du nom d'équipe.
+  const gap=20, colW=(1100-gap)/2, cellH=200, leftX=50;
+  results.forEach((r,idx)=>{
+    const col = idx%2, row = Math.floor(idx/2);
+    const x = leftX + col*(colW+gap), y = 250 + row*(cellH+gap);
+
+    ctx.fillStyle=WHITE; roundRect(ctx,x,y,colW,cellH,18); ctx.fill();
+    ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,y,colW,cellH,18); ctx.stroke();
+    ctx.fillStyle=CORAL; ctx.font="900 13px Arial"; ctx.fillText(r.label.toUpperCase(), x+26, y+34);
+
+    // Bloc chiffre + unité, toujours en haut à droite de la carte.
+    const numX = x+colW-30;
+    if(r.best){
+      ctx.fillStyle=CORAL; ctx.font="900 52px Arial"; ctx.textAlign="right"; ctx.fillText(String(r.best.value), numX, y+80); ctx.textAlign="left";
+      ctx.fillStyle=MUTED; ctx.font="800 10px Arial"; ctx.textAlign="right"; ctx.fillText("MATCHS", numX, y+96); ctx.textAlign="left";
+    }
 
     if(!r.best){
-      ctx.fillStyle=MUTED; ctx.font="700 13px Arial"; ctx.fillText("Aucune équipe n'atteint le seuil de 3 pour l'instant.", 78, y+50);
+      ctx.fillStyle=MUTED; ctx.font="700 13px Arial"; ctx.fillText("Aucune équipe n'atteint le seuil de 3.", x+26, y+70);
     } else if(r.best.teams.length===1){
       const t=r.best.teams[0], logo=logos[t.team];
-      if(logo) ctx.drawImage(logo, 78, y+40, 46, 46);
-      else { ctx.fillStyle=GREIGE; roundRect(ctx,78,y+40,46,46,10); ctx.fill(); }
-      ctx.fillStyle=INK; ctx.font="800 20px Arial"; ctx.fillText(t.team, 138, y+58);
-      ctx.fillStyle=MUTED; ctx.font="700 12px Arial"; ctx.fillText(`${r.best.value} ${r.suffix}`, 138, y+78);
-      ctx.fillStyle=MUTED; ctx.font="700 11px Arial"; ctx.fillText(startDateLabel(t.startMatch), 138, y+96);
-      ctx.fillStyle=CORAL; ctx.font="900 40px Arial"; ctx.textAlign="right"; ctx.fillText(String(r.best.value), 1130, y+66); ctx.textAlign="left";
+      if(logo) ctx.drawImage(logo, x+26, y+62, 50, 50);
+      else { ctx.fillStyle=GREIGE; roundRect(ctx,x+26,y+62,50,50,12); ctx.fill(); }
+      ctx.fillStyle=INK; ctx.font="800 19px Arial"; ctx.fillText(t.team, x+88, y+82, colW-150);
+      ctx.fillStyle=MUTED; ctx.font="700 12px Arial"; ctx.fillText(startDateLabel(t.startMatch), x+26, y+142, colW-52);
     } else if(r.best.teams.length<=5){
-      ctx.fillStyle=CORAL; ctx.font="900 36px Arial"; ctx.textAlign="right"; ctx.fillText(String(r.best.value), 1130, y+50); ctx.textAlign="left";
-      ctx.fillStyle=MUTED; ctx.font="700 11px Arial"; ctx.textAlign="right"; ctx.fillText(r.suffix, 1130, y+68); ctx.textAlign="left";
-      let tx=78;
+      let ty=y+64;
       r.best.teams.forEach(t=>{
         const logo=logos[t.team];
-        if(logo) ctx.drawImage(logo, tx, y+40, 32, 32);
-        else { ctx.fillStyle=GREIGE; roundRect(ctx,tx,y+40,32,32,8); ctx.fill(); }
-        ctx.fillStyle=INK; ctx.font="700 13px Arial"; ctx.fillText(t.team, tx+40, y+62);
-        tx += 40 + ctx.measureText(t.team).width + 26;
+        if(logo) ctx.drawImage(logo, x+26, ty, 28, 28);
+        else { ctx.fillStyle=GREIGE; roundRect(ctx,x+26,ty,28,28,7); ctx.fill(); }
+        ctx.fillStyle=INK; ctx.font="700 14px Arial"; ctx.fillText(t.team, x+62, ty+19, colW-90);
+        ty += 34;
       });
     } else {
-      ctx.fillStyle=INK; ctx.font="800 18px Arial"; ctx.fillText(`Plusieurs équipes (${r.best.teams.length})`, 78, y+50);
-      ctx.fillStyle=MUTED; ctx.font="700 12px Arial"; ctx.fillText(`${r.best.value} ${r.suffix}, à égalité`, 78, y+70);
-      let lx=78;
+      ctx.fillStyle=INK; ctx.font="800 17px Arial"; ctx.fillText(`${r.best.teams.length} équipes à égalité`, x+26, y+70);
+      let lx=x+26;
       r.best.teams.forEach(t=>{
         const logo=logos[t.team];
-        if(logo) ctx.drawImage(logo, lx, y+78, 24, 24);
-        else { ctx.fillStyle=GREIGE; roundRect(ctx,lx,y+78,24,24,6); ctx.fill(); }
-        lx += 30;
+        if(logo) ctx.drawImage(logo, lx, y+86, 26, 26);
+        else { ctx.fillStyle=GREIGE; roundRect(ctx,lx,y+86,26,26,6); ctx.fill(); }
+        lx += 32;
+        if(lx > x+colW-40){ lx = x+26; }
       });
-      ctx.fillStyle=CORAL; ctx.font="900 32px Arial"; ctx.textAlign="right"; ctx.fillText(String(r.best.value), 1130, y+52); ctx.textAlign="left";
     }
-    y += h + rowGap;
   });
 
   drawSignature(ctx, brandLogo, 1200-50-220, 1200-90);
@@ -701,13 +698,25 @@ function playerPosition(l){
     || null;
 }
 
+// Détection défensive de statistiques dans les détails d'une composition —
+// on ne connaît pas les type_id exacts à l'avance (seul 118=note est confirmé
+// depuis longtemps), donc on cherche par nom/code plutôt que par identifiant.
+function statValue(details, matchers, exclude){
+  for(const d of details||[]){
+    const name = ((d.type && (d.type.name||d.type.code)) || "").toLowerCase();
+    if(exclude && exclude.some(x=>name.includes(x))) continue;
+    if(matchers.some(m=>name.includes(m))) return Number(d.data && d.data.value);
+  }
+  return null;
+}
+
 async function aggregatePlayerRatings(compId, season){
   const matches = (MATCHES_BY_COMP[compId]||[])
     .filter(m=>m.status==="finished" && String(m.season)===String(season))
     .sort((a,b)=>new Date(b.kickoff)-new Date(a.kickoff))
     .slice(0, RATED_MATCH_CAP);
 
-  const players = {}; // key -> {name, photo, team, teamLogo, position, ratings:[{date,value}]}
+  const players = {}; // key -> {name, photo, team, teamLogo, position, ratings:[{date,value,goals,assists,minutes}]}
   let loaded=0;
   for(const m of matches){
     const fixtureId = (m.id||"").split(":").pop();
@@ -731,36 +740,48 @@ async function aggregatePlayerRatings(compId, season){
           ratings: []
         };
       }
-      players[key].ratings.push({date:m.kickoff, value:Number(rating.data.value)});
+      players[key].ratings.push({
+        date:m.kickoff,
+        value:Number(rating.data.value),
+        goals: statValue(l.details, ["goal"], ["conceded","against","own"]) || 0,
+        assists: statValue(l.details, ["assist"]) || 0,
+        minutes: statValue(l.details, ["minutes played","minutes"]) || 0,
+      });
     });
   }
   return {players, matchesLoaded:loaded, matchesConsidered:matches.length};
 }
 
-function drawRatedCardMini(ctx,x,y,w,h,rank,p,value,logos){
+function drawRatedCardMini(ctx,x,y,w,h,rank,p,value,stats,logos){
   ctx.fillStyle=WHITE; roundRect(ctx,x,y,w,h,18); ctx.fill();
   ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,y,w,h,18); ctx.stroke();
 
   ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(x+26,y+26,16,0,Math.PI*2); ctx.fill();
   ctx.fillStyle=WHITE; ctx.font="900 14px Arial"; ctx.textAlign="center"; ctx.fillText(String(rank), x+26, y+31); ctx.textAlign="left";
 
-  const cx=x+w/2, photoY=y+40, photoR=44;
+  const cx=x+w/2, photoY=y+38, photoR=42;
   const img = p.photo && logos[p.photo];
   if(img){ ctx.save(); ctx.beginPath(); ctx.arc(cx,photoY+photoR,photoR,0,Math.PI*2); ctx.clip(); ctx.drawImage(img,cx-photoR,photoY,photoR*2,photoR*2); ctx.restore(); }
   else { ctx.fillStyle=GREIGE; ctx.beginPath(); ctx.arc(cx,photoY+photoR,photoR,0,Math.PI*2); ctx.fill(); }
 
   const tlogo = p.teamLogo && logos[p.teamLogo];
-  if(tlogo) ctx.drawImage(tlogo, cx+photoR-18, photoY+photoR*2-18, 26, 26);
+  if(tlogo) ctx.drawImage(tlogo, cx+photoR-16, photoY+photoR*2-16, 24, 24);
 
   ctx.fillStyle=INK; ctx.font="800 15px Arial"; ctx.textAlign="center";
-  ctx.fillText(p.name||"—", cx, photoY+photoR*2+34, w-16);
+  ctx.fillText(p.name||"—", cx, photoY+photoR*2+30, w-16);
   const meta = [p.position, p.team].filter(Boolean).join(" · ") || p.team || "";
   ctx.fillStyle=MUTED; ctx.font="700 11px Arial";
-  ctx.fillText(meta, cx, photoY+photoR*2+52, w-16);
+  ctx.fillText(meta, cx, photoY+photoR*2+47, w-16);
+
+  // Ligne compacte buts / passes / temps de jeu, calculée sur la même
+  // fenêtre que le classement affiché (saison entière ou 5 derniers matchs).
+  const statLine = `${stats.goals} but${stats.goals>1?"s":""} · ${stats.assists} passe${stats.assists>1?"s":""} · ${stats.minutes}’`;
+  ctx.fillStyle=INK; ctx.font="700 11px Arial";
+  ctx.fillText(statLine, cx, photoY+photoR*2+66, w-12);
 
   const cls = value>=7.5?"#dcebe3":value>=6.5?"#e3edf2":value>=5.5?"#f1e5cc":"#f3dcd5";
   const txt = value>=7.5?"#2d6a4f":value>=6.5?"#3e6c81":value>=5.5?"#805e1f":"#b95845";
-  const badgeW=76, badgeY=y+h-52;
+  const badgeW=76, badgeY=y+h-50;
   ctx.fillStyle=cls; roundRect(ctx,cx-badgeW/2,badgeY,badgeW,36,10); ctx.fill();
   ctx.fillStyle=txt; ctx.font="900 18px Arial"; ctx.fillText(value.toFixed(1), cx, badgeY+25);
   ctx.textAlign="left";
@@ -790,7 +811,10 @@ async function generateRated(){
     })
     .sort((a,b)=>b.value-a.value).slice(0,5);
 
-  const LOGICAL_H = 1200;
+  const leftX=50, gap=16, cardW=(1100-4*gap)/5, cardH=294;
+  const labelH=22, rowGap=50;
+  const contentStartY=260;
+  const LOGICAL_H = contentStartY + labelH + cardH + rowGap + labelH + cardH + 130; // + marge pied de page
   const ctx = setupCanvas(canvas,1200,LOGICAL_H);
   ctx.fillStyle=WHITE; ctx.fillRect(0,0,1200,LOGICAL_H);
 
@@ -813,22 +837,29 @@ async function generateRated(){
 
   drawBanner(ctx, comp, compLogo, "Meilleurs joueurs", season, 1200, 166, 50);
 
-  const leftX=50, gap=16, cardW=(1100-4*gap)/5, cardH=270;
-  const drawRow=(label, list, y)=>{
+  // Buts/passes/temps de jeu additionnés sur la MÊME fenêtre que la note
+  // affichée : saison entière pour la première rangée, 5 derniers matchs
+  // seulement pour la seconde — pas les mêmes totaux dans les deux cas.
+  const sumStats=(ratings)=>ratings.reduce((s,r)=>({goals:s.goals+r.goals, assists:s.assists+r.assists, minutes:s.minutes+r.minutes}), {goals:0,assists:0,minutes:0});
+
+  const drawRow=(label, list, y, statsFn)=>{
     ctx.fillStyle=CORAL; ctx.font="900 16px Arial"; ctx.fillText(label, leftX, y);
-    const rowY=y+22;
+    const rowY=y+labelH;
     for(let i=0;i<5;i++){
       const x = leftX + i*(cardW+gap);
-      if(list[i]) drawRatedCardMini(ctx,x,rowY,cardW,cardH,i+1,list[i],list[i].value,logos);
+      if(list[i]) drawRatedCardMini(ctx,x,rowY,cardW,cardH,i+1,list[i],list[i].value,statsFn(list[i]),logos);
       else { ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,rowY,cardW,cardH,18); ctx.stroke(); }
     }
     return rowY+cardH;
   };
 
-  let y = 260;
-  y = drawRow("TOP 5 · MOYENNE SAISON", bySeasonAvg, y);
-  y += 50;
-  drawRow("TOP 5 · 5 DERNIERS MATCHS", byLast5, y);
+  let y = contentStartY;
+  y = drawRow("TOP 5 · MOYENNE SAISON", bySeasonAvg, y, p=>sumStats(p.ratings));
+  y += rowGap;
+  drawRow("TOP 5 · 5 DERNIERS MATCHS", byLast5, y, p=>{
+    const last5 = [...p.ratings].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5);
+    return sumStats(last5);
+  });
 
   ctx.fillStyle=MUTED; ctx.font="700 12px Arial";
   ctx.fillText(`Saison ${seasonLabel(season)} uniquement · minimum ${RATED_MIN_APPEARANCES} apparitions.`, 50, LOGICAL_H-56);
