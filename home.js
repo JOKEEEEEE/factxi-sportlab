@@ -51,6 +51,31 @@ async function loadLiveData(){
       if(name && Array.isArray(entry.matches)) live[name] = entry.matches;
       if(name && entry.competition.logo_url) COMPETITION_LOGOS[name] = entry.competition.logo_url;
     });
+
+    // Fusionne le backfill de saison historique (scripts/fetch_season.py),
+    // absent tant qu'il n'a pas été lancé — c'est normal, pas une erreur.
+    // Sans ça, les saisons récupérées via ce script n'apparaissaient jamais
+    // dans les filtres de l'accueil, alors qu'elles étaient bien visibles
+    // dans Studio (qui, lui, fait déjà cette fusion).
+    try{
+      const histRes = await fetch("data/matches-history.json", {cache:"no-store"});
+      if(histRes.ok){
+        const histPayload = await histRes.json();
+        if(Array.isArray(histPayload.competitions)){
+          histPayload.competitions.forEach(entry=>{
+            const name = entry.competition && entry.competition.name;
+            if(!name || !Array.isArray(entry.matches)) return;
+            if(!live[name]) live[name] = [];
+            const seenIds = new Set(live[name].map(m=>m.id));
+            entry.matches.forEach(m=>{ if(!seenIds.has(m.id)) live[name].push(m); });
+            if(entry.competition.logo_url && !COMPETITION_LOGOS[name]) COMPETITION_LOGOS[name] = entry.competition.logo_url;
+          });
+        }
+      }
+    }catch(histErr){
+      // Pas grave non plus : fenêtre glissante seule, historique pas encore récupéré.
+    }
+
     if(Object.keys(live).length){
       REAL_DATA = tagFeatured(live);
       dataSource = "live";
