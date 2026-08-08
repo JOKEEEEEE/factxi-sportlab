@@ -52,5 +52,22 @@ jobs:
             echo "Aucun changement détecté."
           else
             git commit -m "Backfill saison ${{ github.event.inputs.season_name }}"
-            git push
+            # Le run peut durer plusieurs minutes (des centaines de matchs) ;
+            # un autre workflow a pu pousser sur main entre-temps. On se
+            # resynchronise avant de pousser, avec quelques tentatives en cas
+            # de nouvelle collision, plutôt que de perdre tout le travail du
+            # run comme précédemment.
+            for i in 1 2 3 4 5; do
+              if git push; then
+                echo "Poussé avec succès."
+                break
+              fi
+              echo "Push rejeté (tentative $i/5), resynchronisation..."
+              git fetch origin main
+              git rebase origin/main
+              if [ "$i" -eq 5 ]; then
+                echo "Échec après 5 tentatives, abandon."
+                exit 1
+              fi
+            done
           fi

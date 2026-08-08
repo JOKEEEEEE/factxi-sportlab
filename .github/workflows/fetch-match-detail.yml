@@ -37,5 +37,17 @@ jobs:
             echo "Aucun changement détecté."
           else
             git commit -m "Détail du match ${{ github.event.inputs.fixture_id }}"
-            git push
+            for i in 1 2 3 4 5; do
+              if git push; then
+                echo "Poussé avec succès."
+                break
+              fi
+              echo "Push rejeté (tentative $i/5), resynchronisation..."
+              git fetch origin main
+              git rebase origin/main
+              if [ "$i" -eq 5 ]; then
+                echo "Échec après 5 tentatives, abandon."
+                exit 1
+              fi
+            done
           fi
