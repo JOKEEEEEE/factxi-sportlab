@@ -445,7 +445,7 @@ function populateCompAndSeason(compSelId, seasonSelId){
 async function initScorersSelect(){
   populateCompAndSeason("#scorersCompSelect", "#scorersSeasonSelect");
 }
-function drawScorerCardMini(ctx,x,y,w,h,rank,goalsEntry,assistsEntry,position,logos){
+function drawScorerCardMini(ctx,x,y,w,h,rank,goalsEntry,assistsEntry,position,minutes,rankValue,logos){
   ctx.fillStyle=WHITE; roundRect(ctx,x,y,w,h,18); ctx.fill();
   ctx.strokeStyle=GREIGE; ctx.lineWidth=1; roundRect(ctx,x,y,w,h,18); ctx.stroke();
 
@@ -467,30 +467,31 @@ function drawScorerCardMini(ctx,x,y,w,h,rank,goalsEntry,assistsEntry,position,lo
   ctx.fillStyle=MUTED; ctx.font="700 11px Arial";
   ctx.fillText(team.name||"", cx, photoY+photoR*2+47, w-16);
 
-  let pillY = photoY+photoR*2+58;
+  // Poste dans sa propre pilule, même traitement que sur la carte
+  // "Meilleurs joueurs" — vient de player.position sur l'entrée Topscorers.
+  let statLineY = photoY+photoR*2+66;
   if(position){
     ctx.font="800 10px Arial";
     const pillW = ctx.measureText(position.toUpperCase()).width + 22;
+    const pillY = photoY+photoR*2+56;
     ctx.fillStyle=GREIGE; roundRect(ctx,cx-pillW/2,pillY,pillW,20,10); ctx.fill();
     ctx.fillStyle=INK; ctx.fillText(position.toUpperCase(), cx, pillY+14);
-    pillY += 28;
+    statLineY = pillY + 38;
   }
 
-  // Deux pilules distinctes plutôt qu'une ligne de texte : buts puis passes,
-  // chacune sur sa propre ligne pour rester lisible. Pas de xG/xA ici :
-  // vérifié auprès de la doc officielle SportMonks, l'endpoint Topscorers ne
-  // les fournit pas (seulement Goals/Cards/Assists) — pas la peine de garder
-  // un code qui cherche une donnée qui n'existe pas à cet endroit.
-  const drawStatPill=(emoji, val, py)=>{
-    const label = `${emoji} ${val??"—"}`;
-    ctx.font="800 12px Arial";
-    const pw = ctx.measureText(label).width + 24;
-    ctx.fillStyle="#f3dcd5"; roundRect(ctx,cx-pw/2,py,pw,26,13); ctx.fill();
-    ctx.fillStyle="#b95845"; ctx.fillText(label, cx, py+18);
-  };
-  ctx.textAlign="center";
-  drawStatPill("\u26bd", goalsEntry?scorerValue(goalsEntry):0, pillY);
-  drawStatPill("\ud83c\udd70\ufe0f", assistsEntry?scorerValue(assistsEntry):0, pillY+34);
+  // Une seule ligne combinée, même format que "Meilleurs joueurs" — pas deux
+  // pilules séparées. Les minutes ne viennent pas de Topscorers (confirmé
+  // absent, seulement Goals/Cards/Assists) mais de l'agrégation des détails
+  // de match, la même source que la carte Meilleurs joueurs.
+  const goalsVal = goalsEntry?scorerValue(goalsEntry):0, assistsVal = assistsEntry?scorerValue(assistsEntry):0;
+  const statLine = `\u26bd ${goalsVal??0} \u00b7 \ud83c\udd70\ufe0f ${assistsVal??0} \u00b7 \u23f1\ufe0f ${minutes!=null?Math.round(minutes):"—"}${minutes!=null?"\u2019":""}`;
+  ctx.fillStyle=INK; ctx.font="700 11px Arial"; ctx.textAlign="center";
+  ctx.fillText(statLine, cx, statLineY, w-12);
+  ctx.textAlign="left";
+
+  const badgeW=64, badgeY=y+h-48;
+  ctx.fillStyle="#f3dcd5"; roundRect(ctx,cx-badgeW/2,badgeY,badgeW,32,10); ctx.fill();
+  ctx.fillStyle="#b95845"; ctx.font="900 17px Arial"; ctx.textAlign="center"; ctx.fillText(String(rankValue??"—"), cx, badgeY+22);
   ctx.textAlign="left";
 }
 
@@ -537,6 +538,19 @@ async function generateScorers(){
   const brandLogo = await loadImage("logo-factxi.png");
   const compLogo = comp.logo_url ? await loadImage(comp.logo_url) : null;
 
+  // Minutes jouées : pas disponibles sur Topscorers (confirmé : seulement
+  // Goals/Cards/Assists), donc récupérées via la même agrégation des détails
+  // de match que la carte "Meilleurs joueurs", croisée par joueur.
+  document.querySelector("#scorersGenNote").textContent += " · calcul des minutes en cours…";
+  const minutesSeason = hasSeasonVal ? seasonSelVal : bestSeasonForStreaks(compId);
+  const minutesByPlayer = {};
+  if(minutesSeason!=null){
+    const {players:ratingPlayers} = await aggregatePlayerRatings(compId, minutesSeason);
+    Object.entries(ratingPlayers).forEach(([key,p])=>{
+      minutesByPlayer[key] = p.ratings.reduce((s,r)=>s+(r.minutes||0),0);
+    });
+  }
+
   // Même grille 5 cartes/ligne que "Meilleurs joueurs". Format fixe 1200×1200,
   // comme les 3 autres générateurs — le bandeau et la signature doivent
   // rester à la même position exacte quelle que soit l'image affichée.
@@ -556,7 +570,7 @@ async function generateScorers(){
       const key = playerKeyOf(e);
       drawScorerCardMini(ctx,x,rowY,cardW,cardH,i+1,
         goalsByPlayer[key]||null, assistsByPlayer[key]||null,
-        positionByPlayer[key], logos);
+        positionByPlayer[key], minutesByPlayer[key], scorerValue(e), logos);
     });
     return rowY+cardH;
   };
@@ -566,6 +580,7 @@ async function generateScorers(){
   if(goals.length && assists.length) y += rowGap;
   drawRow("MEILLEURS PASSEURS", assists, y);
 
+  document.querySelector("#scorersGenNote").textContent = `${goals.length} buteur(s) · ${assists.length} passeur(s)${fallbackNote}`;
   drawSignature(ctx, brandLogo, 1200-50-220, 1098); // même position exacte que le calendrier
   document.querySelector("#scorersDlBtn").disabled=false;
 }
@@ -591,9 +606,14 @@ function bestSeasonForStreaks(compId){
   if(!seasons.length) return null;
   return seasons.reduce((best,s)=> counts[s]>counts[best] ? s : best, seasons[0]);
 }
-function teamStreaks(teamName, compId, season){
+// Une série (victoires, invincibilité, etc.) est un fait continu qui ne
+// s'arrête pas à la frontière artificielle d'une saison — contrairement aux
+// buteurs/passeurs, aux moyennes de note et au calendrier, qui eux sont bien
+// propres à une saison précise. On utilise donc tout l'historique disponible
+// pour la compétition, sans filtre de saison.
+function teamStreaks(teamName, compId){
   const matches = (MATCHES_BY_COMP[compId]||[])
-    .filter(m=>m.status==="finished" && String(m.season)===String(season) && (m.home.name===teamName || m.away.name===teamName))
+    .filter(m=>m.status==="finished" && (m.home.name===teamName || m.away.name===teamName))
     .sort((a,b)=>new Date(b.kickoff)-new Date(a.kickoff));
   const state = {
     win: {count:0, stopped:false, startMatch:null},
@@ -637,13 +657,13 @@ async function initStreaksSelect(){
 // Renvoie TOUTES les équipes à égalité sur la meilleure valeur — jamais une
 // seule choisie arbitrairement. Chaque entrée porte sa propre date de début
 // de série (premier match de la série en cours, avec sa journée).
-function bestStreak(compId, key, season){
-  const matches = (MATCHES_BY_COMP[compId]||[]).filter(m=>String(m.season)===String(season));
+function bestStreak(compId, key){
+  const matches = MATCHES_BY_COMP[compId]||[];
   const teams = [...new Set(matches.flatMap(m=>[m.home.name, m.away.name]))];
   let bestValue = 0;
   const perTeam = {};
   teams.forEach(t=>{
-    const s = teamStreaks(t, compId, season);
+    const s = teamStreaks(t, compId);
     if(s[key] >= STREAK_THRESHOLD){
       perTeam[t] = {value:s[key], startMatch:s._startMatch[key]};
       if(s[key] > bestValue) bestValue = s[key];
@@ -671,14 +691,19 @@ const STREAK_CONDITIONS = {
 // Quand personne n'atteint le seuil ACTUELLEMENT, on cherche dans tout
 // l'historique de la saison la dernière série qualifiante déjà achevée
 // (n'importe quelle équipe), pour donner un repère plutôt qu'une case vide.
-function mostRecentEndedStreak(compId, key, season){
+function mostRecentEndedStreak(compId, key){
   const condition = STREAK_CONDITIONS[key];
-  const matches = (MATCHES_BY_COMP[compId]||[]).filter(m=>String(m.season)===String(season));
+  const matches = MATCHES_BY_COMP[compId]||[];
   const teams = [...new Set(matches.flatMap(m=>[m.home.name, m.away.name]))];
-  let best = null;
+  // On collecte TOUTES les séries qualifiantes de TOUTES les équipes dans une
+  // seule liste plate, sans distinction, puis on trie par date de fin
+  // décroissante. La plus récente gagne, jamais la plus longue — même une
+  // série de 15 matchs vieille de deux ans perd face à une série de 3 matchs
+  // qui vient de se terminer la semaine dernière.
+  const allQualifyingRuns = [];
   teams.forEach(teamName=>{
     const teamMatches = (MATCHES_BY_COMP[compId]||[])
-      .filter(m=>m.status==="finished" && String(m.season)===String(season) && (m.home.name===teamName || m.away.name===teamName))
+      .filter(m=>m.status==="finished" && (m.home.name===teamName || m.away.name===teamName))
       .sort((a,b)=>new Date(a.kickoff)-new Date(b.kickoff));
     let run=null;
     const runs=[];
@@ -695,11 +720,12 @@ function mostRecentEndedStreak(compId, key, season){
         run=null;
       }
     });
-    if(run) runs.push(run); // série encore active en fin de saison : compte aussi comme "achevée" pour ce repli
-    runs.filter(r=>r.count>=STREAK_THRESHOLD).forEach(r=>{
-      if(!best || new Date(r.endMatch.kickoff) > new Date(best.endMatch.kickoff)) best = {...r, team:teamName};
-    });
+    if(run) runs.push(run); // série encore active au dernier match connu : compte aussi comme "achevée" pour ce repli
+    runs.filter(r=>r.count>=STREAK_THRESHOLD).forEach(r=>allQualifyingRuns.push({...r, team:teamName}));
   });
+  if(!allQualifyingRuns.length) return null;
+  allQualifyingRuns.sort((a,b)=>new Date(b.endMatch.kickoff)-new Date(a.endMatch.kickoff));
+  const best = allQualifyingRuns[0];
   return best;
 }
 async function generateStreaks(){
@@ -707,9 +733,12 @@ async function generateStreaks(){
   const comp = COMPETITIONS.find(c=>c.id===compId);
   const canvasEl = document.querySelector("#cStreaks");
   if(!comp){ document.querySelector("#streaksGenNote").textContent="Compétition introuvable."; return; }
-  const seasonSelVal = document.querySelector("#streaksSeasonSelect").value;
-  const season = seasonSelVal && seasonSelVal!=="Aucune saison" ? seasonSelVal : bestSeasonForStreaks(compId);
-  if(season==null){ document.querySelector("#streaksGenNote").textContent="Aucun match terminé disponible pour cette compétition."; return; }
+  // Pas de filtre de saison ici, volontairement : une série (victoires,
+  // invincibilité...) est un fait continu qui traverse l'intersaison, pas
+  // une statistique propre à une saison comme les buteurs ou les moyennes.
+  if(!(MATCHES_BY_COMP[compId]||[]).some(m=>m.status==="finished")){
+    document.querySelector("#streaksGenNote").textContent="Aucun match terminé disponible pour cette compétition."; return;
+  }
 
   const categories = [
     {key:"win", label:"Série de victoires", suffix:"victoires consécutives"},
@@ -720,15 +749,15 @@ async function generateStreaks(){
     {key:"winless", label:"Série sans victoire", suffix:"matchs consécutifs sans gagner"}
   ];
   const results = categories.map(c=>{
-    const best = bestStreak(compId,c.key,season);
-    const fallback = best ? null : mostRecentEndedStreak(compId,c.key,season);
+    const best = bestStreak(compId,c.key);
+    const fallback = best ? null : mostRecentEndedStreak(compId,c.key);
     return {...c, best, fallback};
   });
 
   const anyFound = results.some(r=>r.best);
   document.querySelector("#streaksGenNote").textContent = anyFound
-    ? `Séries calculées sur la saison ${seasonLabel(season)} uniquement.`
-    : `Aucune série ne dépasse le seuil de 3 sur la saison ${seasonLabel(season)}.`;
+    ? "Séries calculées sur tout l'historique disponible — une série n'est pas bornée par saison."
+    : "Aucune série ne dépasse le seuil de 3 sur l'historique disponible.";
 
   const teamLogosNeeded = results.flatMap(r=>{
     if(r.best) return r.best.teams.map(t=>t.team);
@@ -752,7 +781,7 @@ async function generateStreaks(){
   const ctx = setupCanvas(canvasEl,1200,LOGICAL_H);
   ctx.fillStyle=WHITE; ctx.fillRect(0,0,1200,LOGICAL_H);
 
-  drawBanner(ctx, comp, compLogo, "Séries en cours", season, 1200, 166, 50);
+  drawBanner(ctx, comp, compLogo, "Séries en cours", null, 1200, 166, 50);
 
   const startDateLabel=(m)=>{
     if(!m) return "";
