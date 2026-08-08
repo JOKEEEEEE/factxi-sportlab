@@ -678,7 +678,7 @@ async function generateStreaks(){
       const t=r.best.teams[0], logo=logos[t.team];
       if(logo) ctx.drawImage(logo, x+26, y+62, 50, 50);
       else { ctx.fillStyle=GREIGE; roundRect(ctx,x+26,y+62,50,50,12); ctx.fill(); }
-      ctx.fillStyle=INK; ctx.font="800 19px Arial"; ctx.fillText(t.team, x+88, y+82, colW-150);
+      ctx.fillStyle=INK; ctx.font="800 19px Arial"; ctx.fillText(t.team, x+88, y+91, colW-150);
       ctx.fillStyle=MUTED; ctx.font="700 12px Arial"; ctx.fillText(startDateLabel(t.startMatch), x+26, y+142, colW-52);
     } else if(r.best.teams.length<=5){
       let ty=y+64;
@@ -738,11 +738,20 @@ async function initRatedSelect(){
 // (plusieurs noms de champ possibles) ; si rien ne matche, la case reste
 // vide plutôt que d'inventer un poste. À reconfirmer une fois les scripts de
 // récupération mis à jour pour inclure "lineups.player.position".
+// Traduction des postes SportMonks (retournés en anglais) vers le français.
+// Repli sur la valeur brute si un poste imprévu apparaît, plutôt que de
+// rien afficher.
+const POSITION_FR = {
+  "Goalkeeper":"Gardien", "Defender":"Défenseur", "Midfielder":"Milieu", "Attacker":"Attaquant",
+  "Centre Back":"Défenseur central", "Left Back":"Latéral gauche", "Right Back":"Latéral droit",
+  "Defensive Midfield":"Milieu défensif", "Central Midfield":"Milieu central", "Attacking Midfield":"Milieu offensif",
+  "Left Midfield":"Milieu gauche", "Right Midfield":"Milieu droit",
+  "Left Winger":"Ailier gauche", "Right Winger":"Ailier droit", "Centre Forward":"Avant-centre", "Striker":"Attaquant",
+};
 function playerPosition(l){
   const p = l.player || {};
-  return (p.position && (p.position.name || p.position.developer_name))
-    || (l.position && l.position.name)
-    || null;
+  const raw = (p.position && (p.position.name || p.position.developer_name)) || (l.position && l.position.name) || null;
+  return raw ? (POSITION_FR[raw] || raw) : null;
 }
 
 // Détection défensive de statistiques dans les détails d'une composition —
@@ -790,8 +799,8 @@ async function aggregatePlayerRatings(compId, season){
       players[key].ratings.push({
         date:m.kickoff,
         value:Number(rating.data.value),
-        goals: statValue(l.details, ["goal"], ["conceded","against","own"]) || 0,
-        assists: statValue(l.details, ["assist"]) || 0,
+        goals: statValue(l.details, ["goal"], ["conceded","against","own","expected","xg"]) || 0,
+        assists: statValue(l.details, ["assist"], ["expected","xa"]) || 0,
         minutes: statValue(l.details, ["minutes played","minutes"]) || 0,
       });
     });
@@ -816,15 +825,25 @@ function drawRatedCardMini(ctx,x,y,w,h,rank,p,value,stats,logos){
 
   ctx.fillStyle=INK; ctx.font="800 15px Arial"; ctx.textAlign="center";
   ctx.fillText(p.name||"—", cx, photoY+photoR*2+30, w-16);
-  const meta = [p.position, p.team].filter(Boolean).join(" · ") || p.team || "";
   ctx.fillStyle=MUTED; ctx.font="700 11px Arial";
-  ctx.fillText(meta, cx, photoY+photoR*2+47, w-16);
+  ctx.fillText(p.team||"", cx, photoY+photoR*2+47, w-16);
+
+  // Poste dans sa propre pilule, sous le nom du club plutôt qu'accolé dessus.
+  let statLineY = photoY+photoR*2+66;
+  if(p.position){
+    ctx.font="800 10px Arial";
+    const pillW = ctx.measureText(p.position.toUpperCase()).width + 22;
+    const pillY = photoY+photoR*2+56;
+    ctx.fillStyle=GREIGE; roundRect(ctx,cx-pillW/2,pillY,pillW,20,10); ctx.fill();
+    ctx.fillStyle=INK; ctx.fillText(p.position.toUpperCase(), cx, pillY+14);
+    statLineY = pillY + 38;
+  }
 
   // Ligne compacte buts / passes / temps de jeu, calculée sur la même
   // fenêtre que le classement affiché (saison entière ou 5 derniers matchs).
-  const statLine = `⚽ ${stats.goals} · 🅰️ ${stats.assists} · ⏱️ ${stats.minutes}’`;
+  const statLine = `⚽ ${Math.round(stats.goals)} · 🅰️ ${Math.round(stats.assists)} · ⏱️ ${Math.round(stats.minutes)}’`;
   ctx.fillStyle=INK; ctx.font="700 11px Arial";
-  ctx.fillText(statLine, cx, photoY+photoR*2+66, w-12);
+  ctx.fillText(statLine, cx, statLineY, w-12);
 
   const cls = value>=7.5?"#dcebe3":value>=6.5?"#e3edf2":value>=5.5?"#f1e5cc":"#f3dcd5";
   const txt = value>=7.5?"#2d6a4f":value>=6.5?"#3e6c81":value>=5.5?"#805e1f":"#b95845";
@@ -858,7 +877,7 @@ async function generateRated(){
     })
     .sort((a,b)=>b.value-a.value).slice(0,5);
 
-  const leftX=50, gap=16, cardW=(1100-4*gap)/5, cardH=294;
+  const leftX=50, gap=16, cardW=(1100-4*gap)/5, cardH=316;
   const labelH=22, rowGap=50;
   const contentStartY=260;
   const LOGICAL_H = contentStartY + labelH + cardH + rowGap + labelH + cardH + 130; // + marge pied de page
